@@ -1,1 +1,140 @@
+1)Redacción de propuesta de proyectos con descripción y objetivos
+2)Delimitar alcance(inclusiones/exclusiones),y supuestos y restricciones.
+3)Identificacion de interesados y su impacto.4)Definicion de criterios de aceptacion identificables para 
+2-3 
+Funciones nucleos: 
+1.1-contexto/problema 
+1.2-objetivosSMART 
+1.3-alcance resumido 
+1.4-entregado
+1.5-Interesados claves 
+1.6-Supuestos y restricciones 
+1.7-criterios de exitos
+1.8-riesgos iniciales 
+2.1-¿Que si o si debe estar en el mvp?¿Que flujo minimo del usuario resolvemos? 
+2.2-¿Que necesidades legitimas?Exclusiones-¿haremos ahora? ¿Porque? 
+2.3-¿Hata donde llega cada funcion? 
+2.4¿De que dependemos?¿Que lo provee y cuando?
 
+
+Propuesta de Proyecto – Aplicación de Turnos Online
+1. Contexto / Problema
+
+Hoy en día, tanto negocios (como canchas de fútbol, peluquerías, consultorios, gimnasios) como profesionales independientes (profesores particulares, entrenadores, etc.) necesitan organizar sus reservas de turnos.
+El problema actual es la falta de una herramienta centralizada, simple y accesible para que los clientes reserven y los dueños gestionen sus horarios sin depender de llamadas, WhatsApp desordenados o planillas manuales.
+
+1.2 Objetivos SMART
+
+Específico: Desarrollar una aplicación web y móvil que permita a clientes reservar turnos y a dueños gestionarlos en un calendario.
+
+Medible: Lograr que el MVP permita gestionar al menos 50 reservas semanales en un entorno de prueba con 2 negocios piloto.
+
+Alcanzable: Utilizar tecnologías accesibles (Node.js, React, MySQL) para desarrollar el MVP en un plazo de 3 meses.
+
+Relevante: Reducir el tiempo perdido en coordinación manual de turnos en al menos un 70% para los negocios que lo adopten.
+
+Tiempo: MVP listo en 12 semanas, con primera prueba piloto en la semana 13.
+
+1.3 Alcance Resumido
+Inclusiones:
+
+Registro de usuarios (dueños de servicios y clientes).
+
+Módulo de reservas con calendario.
+
+Notificación de confirmación de turno (ej: email o alerta en la app).
+
+Panel básico de gestión de turnos para el dueño.
+
+Exclusiones (en MVP):
+
+Integración con pasarelas de pago (se puede planear a futuro).
+
+Estadísticas avanzadas (se incluirán en versiones posteriores).
+
+Multi-idioma.
+
+1.4 Entregables
+
+Aplicación web responsiva (usable desde móvil y PC).
+
+Documentación de usuario (guía rápida).
+
+Demo funcional con datos de prueba.
+
+1.5 Interesados Claves
+
+Dueños de servicios/negocios: Principal beneficiario, alta influencia.
+
+Clientes/usuarios finales: Alta importancia, necesitan facilidad de uso.
+
+Equipo de desarrollo: Impacto alto, ejecutores del proyecto.
+
+Inversores o sponsors: Baja participación, alta influencia si hay financiación.
+
+1.6 Supuestos y Restricciones
+
+Supuesto: Los usuarios tienen acceso a internet y smartphone.
+
+Restricción: Tiempo máximo de 3 meses para MVP.
+
+Restricción: Presupuesto limitado, se priorizan funciones esenciales.
+
+1.7 Criterios de Éxito
+
+Que un cliente pueda registrarse y reservar un turno en menos de 3 pasos.
+
+Que el dueño pueda ver y gestionar todos los turnos del día/semana.
+
+Que el sistema registre y almacene correctamente las reservas en la base de datos.
+
+1.8 Riesgos Iniciales
+
+Baja adopción por resistencia de los negocios al cambio.
+
+Problemas de usabilidad en usuarios no acostumbrados a apps.
+
+Retrasos por falta de recursos técnicos.
+
+2. Definición del MVP
+2.1 ¿Qué sí o sí debe estar en el MVP?
+
+Flujo mínimo de usuario:
+
+Cliente se registra.
+
+Cliente elige día y hora disponibles.
+
+Reserva confirmada y notificación básica.
+
+Dueño visualiza reservas en un calendario.
+
+2.2 Necesidades legítimas y Exclusiones
+
+Necesidades legítimas: gestión de reservas, facilidad de uso, confirmación al usuario.
+
+Exclusiones ahora:
+
+Pagos online (por complejidad técnica y regulatoria).
+
+Estadísticas avanzadas (no son críticas en la primera versión).
+
+Integraciones externas (ej: Google Calendar).
+
+Justificación: No son necesarias para validar el modelo de negocio inicial.
+
+2.3 Alcance de cada función
+
+Registro/Login: básico con email y contraseña.
+
+Gestión de turnos: ver disponibilidad, reservar, cancelar.
+
+Notificación: mensaje simple de confirmación (en pantalla o email).
+
+2.4 Dependencias
+
+Base de datos para almacenar usuarios y reservas (MySQL/PostgreSQL).
+
+Hosting o servidor para desplegar el MVP (ej: Heroku, Vercel).
+
+Librerías de frontend (React/Bootstrap) y backend (Node.js/Express).
