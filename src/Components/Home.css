@@ -1,0 +1,124 @@
+/* Paleta base:
+   Fondo general: #F4ECE6
+   Nude suave: #E8DAD0
+   Nude medio: #D6C2B7
+   Marrón suave: #A58C78
+   Texto oscuro: #4A3F35
+*/
+
+/* Contenedor principal */
+.home-container {
+  padding-top: 0;
+  margin-top: 0;
+  background-color: #f4ece6;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  color: #4a3f35;
+}
+
+/* Grid principal */
+.home-grid {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Tarjetas */
+.home-card {
+  border-radius: 1rem;
+  background-color: #e8dad0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  color: #4a3f35;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Hover */
+.home-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Títulos */
+.home-card h2 {
+  margin-bottom: 1rem;
+  color: #4a3f35;
+}
+
+/* Botones */
+.card-button {
+  margin-top: 1rem;
+  padding: 0.8rem 1.3rem;
+  border-radius: 0.6rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+/* Botón de agendar */
+.card-button.agendar {
+  background-color: #a58c78;
+  color: #fff;
+}
+
+.card-button.agendar:hover {
+  background-color: #8b725f;
+}
+
+/* Botón proveedores */
+.card-button.proveedores {
+  background-color: #d6c2b7;
+  color: #4a3f35;
+}
+
+.card-button.proveedores:hover {
+  background-color: #bca494;
+}
+
+/* Botón agregar */
+.card-button.agregar {
+  background-color: #a58c78;
+  color: #fff;
+}
+
+.card-button.agregar:hover {
+  background-color: #8b725f;
+}
+
+/* Turnos */
+.turno-item {
+  background-color: #f4ece6;
+  border-radius: 0.5rem;
+  padding: 0.7rem;
+  margin: 0.3rem 0;
+  width: 80%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Sección inferior */
+.bottom-section {
+  margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home-grid {
+    flex-direction: column;
+  }
+
+  .home-card {
+    width: 100% !important;
+    height: auto !important;
+  }
+}

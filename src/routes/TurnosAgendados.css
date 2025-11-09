@@ -1,0 +1,78 @@
+/* Contenedor general */
+.turnos-container {
+  padding: 20px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  font-family: "Arial", sans-serif;
+}
+
+/* Lista de turnos */
+.turnos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Tarjeta de cada turno */
+.turno-card {
+  border-radius: 12px;
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.turno-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Nombre del usuario */
+.turno-card h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+/* Fecha del turno */
+.turno-card p {
+  margin: 5px 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* Lista de horas */
+.turno-card .horas-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.turno-card .hora-item {
+  background-color: #4caf50;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+/* Botón cancelar */
+.cancelar-turno {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #e53935;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  width: fit-content;
+  transition: background-color 0.2s ease;
+}
+
+.cancelar-turno:hover {
+  background-color: #c62828;
+}
