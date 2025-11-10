@@ -1,4 +1,4 @@
-🩺 TurnoSmart
+.TurnoSmart
 
 Autor: Leonel Martín
 Versión: 1.0
@@ -6,19 +6,19 @@ Materia: Metodología de Sistemas I
 Tecnicatura Universitaria en Programación — 2025
 
 
-📘 Propósito / Alcance del Sistema
+. Propósito / Alcance del Sistema
 
 TurnoSmart es una aplicación web desarrollada con React + Node.js + MySQL que permite gestionar turnos entre proveedores (quienes publican sus horarios disponibles) y usuarios clientes (quienes reservan turnos).
 El propósito principal es ofrecer una herramienta ágil y centralizada para la administración de turnos online, reduciendo tiempos y errores de coordinación.
 
-⚙️ Cómo ejecutar localmente
+. Cómo ejecutar localmente
 npm run server   # Inicia el backend (Express + MySQL)
 npm run dev      # Inicia el frontend (React con Vite)
 
 
 Ver detalles de configuración en docs/INSTALL.md
 
-🧩 Dependencias y Variables de Entorno
+. Dependencias y Variables de Entorno
 
 Principales dependencias:
 
@@ -45,19 +45,19 @@ DB_PASSWORD=
 DB_NAME=turnos
 JWT_SECRET=mi_clave_secreta
 
-🚦 Estado del Pipeline
+. Estado del Pipeline
 
 Ver definición en .github/workflows/deploy.yml
 
-🔗 Enlaces a Documentación
+. Enlaces a Documentación
 
-📄 SRS — TurnoSmart
+. SRS — TurnoSmart
 
-🧭 API Documentation
+. API Documentation
 
-⚙️ Instalación y Configuración
+. Instalación y Configuración
 
-🧠 Aprendizajes y Conclusiones
+. Aprendizajes y Conclusiones
 
 Durante el desarrollo de TurnoSmart se implementó una solución full stack integrando React, Node.js y MySQL.
 Se logró el registro y autenticación básica de usuarios, publicación y reserva de turnos, y la sincronización de datos entre proveedores y clientes.
@@ -78,7 +78,7 @@ Panel de administración.
 
 Notificaciones automáticas por correo.
 
-📂 Estructura del Repositorio
+. Estructura del Repositorio
 TurnoSmart/
  ├── src/
  │   ├── Components/
@@ -94,7 +94,7 @@ TurnoSmart/
  ├── package.json
  └── README.md
 
-📄 docs/srs-TurnoSmart.md
+. docs/srs-TurnoSmart.md
 
 Incluye:
 
@@ -110,7 +110,7 @@ Supuestos y restricciones
 
 Matriz de trazabilidad
 
-📘 docs/API_documentation.md
+. docs/API_documentation.md
 
 Endpoints principales:
 
@@ -130,7 +130,7 @@ DELETE /api/cancelarTurno → Cancela turno
 
 Incluye ejemplos, posibles errores (400, 404, 500) y manejo de autenticación (en futuro con JWT).
 
-⚙️ docs/INSTALL.md
+. docs/INSTALL.md
 
 Requisitos previos:
 
@@ -162,7 +162,7 @@ npm run dev
 Verificación:
 Abrir navegador → http://localhost:5173
 
-🧰 .github/workflows/deploy.yml
+. .github/workflows/deploy.yml
 name: CI/CD Pipeline - TurnoSmart
 on:
   push:
