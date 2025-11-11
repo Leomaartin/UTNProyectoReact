@@ -177,3 +177,13 @@ jobs:
         run: npm install
       - name: Ejecutar pruebas
         run: echo "Ejecutando tests..."
+
+##Intentos de despliegue
+Se intentó desplegar el proyecto TurnoSmart utilizando **Vercel** para el frontend (React) y **Render** para el backend (Node.js).  
+Durante el proceso se configuró correctamente el pipeline de CI/CD para que el proyecto se construya y pruebe automáticamente al hacer push en la rama principal.  
+
+Sin embargo, se presentaron dificultades al conectar la base de datos MySQL en el entorno de producción, ya que Render requiere configuración adicional para permitir conexiones externas.  
+Aunque el despliegue completo no se concretó, se logró comprender el flujo de trabajo de integración continua (build + tests) y se dejó la base lista para un despliegue futuro.  
+
+Como mejora futura, se planea usar **Railway** o **Docker Compose** para gestionar las dependencias del backend y la base de datos de forma más integrada.
+
