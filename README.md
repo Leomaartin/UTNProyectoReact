@@ -142,8 +142,8 @@ npm ≥ 9
 
 Instalación:
 
-git clone https://github.com/usuario/TurnoSmart.git
-cd TurnoSmart
+git clone https://github.com/Leomaartin/UTNProyectoReact.git
+cd UTNProyectoReact
 npm install
 
 
