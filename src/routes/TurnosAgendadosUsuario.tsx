@@ -10,25 +10,22 @@ function TurnosAgendadosUsuario() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (proveedorid, id) => {
-    // 👈 ahora recibe el id del turno
     if (!user?.id) return;
-
+    console.log({
+      proveedorid,
+      usuarioid: user.id,
+      id,
+    });
     try {
-      const res = await axios.delete(
-        "http://localhost:3333/api/cancelarTurno",
-        {
-          data: {
-            proveedorid,
-            usuarioid: user.id,
-            id, // 👈 se envía el id del turno
-          },
-        }
-      );
+      const res = await axios.post("http://localhost:3333/api/cancelarTurno", {
+        proveedorid,
+        usuarioid: user.id,
+        id_turno: id,
+      });
 
       if (res.data.success) {
         alert("Turno cancelado correctamente.");
 
-        // Actualizar lista sin recargar
         setTurnosAgendados((prevTurnos) =>
           prevTurnos.filter((turno) => turno.id !== id)
         );
@@ -109,7 +106,9 @@ function TurnosAgendadosUsuario() {
                 )}
 
                 <button
-                  onClick={() => handleSubmit(turno.proveedorid, turno.id)} // 👈 usamos el id
+                  onClick={() =>
+                    handleSubmit(turno.proveedorid, turno.id_turno)
+                  }
                   className="cancelar-turno"
                   style={{ margin: "2%", marginLeft: "40%" }}
                 >

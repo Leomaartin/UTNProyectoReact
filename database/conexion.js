@@ -414,17 +414,21 @@ app.post("/api/turnoGuardado", (req, res) => {
   });
 });
 
-app.delete("/api/cancelarTurno", (req, res) => {
-  const { proveedorid, usuarioid, id } = req.body; // 👈 usamos id del turno
+app.post("/api/cancelarTurno", (req, res) => {
+  const { proveedorid, usuarioid, id_turno } = req.body;
 
-  if (!proveedorid || !usuarioid || !id) {
+  if (!proveedorid || !usuarioid || !id_turno) {
     return res.status(400).json({
       success: false,
       message: "Faltan datos (proveedorid, usuarioid o id del turno)",
     });
   }
 
-  // Paso 1: eliminar el turno del usuario
+  console.log("🧠 Datos recibidos en cancelarTurno:", {
+    proveedorid,
+    usuarioid,
+    id_turno,
+  });
   const SQL_USER = "SELECT turno_guardado FROM usuarios WHERE id = ?";
   conexion.query(SQL_USER, [usuarioid], (err, resultsUser) => {
     if (err)
@@ -435,12 +439,13 @@ app.delete("/api/cancelarTurno", (req, res) => {
     let turnosUsuario = [];
     try {
       turnosUsuario = JSON.parse(resultsUser[0]?.turno_guardado || "[]");
-    } catch (e) {
+    } catch {
       turnosUsuario = [];
     }
 
-    // Filtrar por id
-    const nuevosTurnosUsuario = turnosUsuario.filter((t) => t.id !== id);
+    const nuevosTurnosUsuario = turnosUsuario.filter(
+      (t) => t.id_turno !== id_turno
+    );
 
     const SQL_UPDATE_USER =
       "UPDATE usuarios SET turno_guardado = ? WHERE id = ?";
@@ -454,7 +459,6 @@ app.delete("/api/cancelarTurno", (req, res) => {
             message: "Error al actualizar usuario",
           });
 
-        // Paso 2: eliminar el turno del proveedor
         const SQL_PROV =
           "SELECT turnos_agendados FROM proveedores WHERE id = ?";
         conexion.query(SQL_PROV, [proveedorid], (err3, resultsProv) => {
@@ -467,12 +471,13 @@ app.delete("/api/cancelarTurno", (req, res) => {
           let turnosProv = [];
           try {
             turnosProv = JSON.parse(resultsProv[0]?.turnos_agendados || "[]");
-          } catch (e) {
+          } catch {
             turnosProv = [];
           }
 
-          // Filtrar por id
-          const nuevosTurnosProv = turnosProv.filter((t) => t.id !== id);
+          const nuevosTurnosProv = turnosProv.filter(
+            (t) => t.id_turno !== id_turno
+          );
 
           const SQL_UPDATE_PROV =
             "UPDATE proveedores SET turnos_agendados = ? WHERE id = ?";

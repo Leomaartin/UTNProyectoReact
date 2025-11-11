@@ -134,11 +134,11 @@ function AgendarTurno() {
     if (!user) return alert("No hay usuario logueado");
 
     try {
-      // 🆕 Agregamos un id_turno único a cada registro
       const turnosParaEnviar = Object.entries(agendarTurnosPorFecha).map(
         ([fecha, horas]) => ({
           id_turno: generarIdTurno(),
           nombre: user.nombre,
+          userid: user.id,
           proveedorNombre,
           proveedorid,
           fecha,
@@ -146,13 +146,11 @@ function AgendarTurno() {
         })
       );
 
-      // ✅ Enviar a proveedores
       await axios.post("http://localhost:3333/api/turnoAgendado", {
         proveedorid,
         turnos: turnosParaEnviar,
       });
 
-      // ✅ Enviar a usuarios
       await axios.post("http://localhost:3333/api/turnoGuardado", {
         usuarioid: user.id,
         turnos: turnosParaEnviar,

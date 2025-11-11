@@ -152,7 +152,9 @@ function Home() {
                       {turno.proveedorNombre},{turno.proveedorid}
                     </strong>
                   </p>
-                  <p>Usuario:{turno.nombre}</p>
+                  <p>
+                    Usuario:{turno.nombre},{turno.userid}
+                  </p>
                   <p>
                     Fecha: {new Date(turno.fecha).toLocaleDateString("es-AR")}
                   </p>

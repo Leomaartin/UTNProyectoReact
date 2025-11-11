@@ -9,20 +9,25 @@ function TurnosAgendados() {
   const [turnosAgendados, setTurnosAgendados] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (turnoId) => {
-    if (!turnoId) return;
-
+  const handleSubmit = async (usuarioid, id) => {
+    if (!user?.id) return;
+    console.log({
+      proveedorid: user.id,
+      usuarioid,
+      id,
+    });
     try {
-      const res = await axios.delete(
-        `http://localhost:3333/api/cancelarTurno/${turnoId}`
-      );
+      const res = await axios.post("http://localhost:3333/api/cancelarTurno", {
+        proveedorid: user.id,
+        usuarioid,
+        id_turno: id,
+      });
 
       if (res.data.success) {
         alert("Turno cancelado correctamente.");
 
-        // Eliminar el turno cancelado del estado local
         setTurnosAgendados((prevTurnos) =>
-          prevTurnos.filter((turno) => turno.id !== turnoId)
+          prevTurnos.filter((turno) => turno.id !== id)
         );
       } else {
         alert(res.data.message || "No se pudo cancelar el turno.");
@@ -40,11 +45,16 @@ function TurnosAgendados() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://localhost:3333/api/turnosAgendadosProveedor/${user.id}`
+          `http://localhost:3333/api/turnosDelUsuario/${user.id}`,
+          {
+            params: { tipoCuenta: user.tipoCuenta },
+          }
         );
 
         if (res.data?.turnosAgendados) {
           setTurnosAgendados(res.data.turnosAgendados);
+        } else {
+          setTurnosAgendados([]);
         }
       } catch (err) {
         console.error("Error al traer turnos agendados:", err);
@@ -54,7 +64,7 @@ function TurnosAgendados() {
     };
 
     fetchTurnosAgendados();
-  }, [user]);
+  }, [user?.id, user?.tipoCuenta]);
 
   return (
     <main>
@@ -73,8 +83,8 @@ function TurnosAgendados() {
 
         {!loading && turnosAgendados.length > 0 && (
           <div className="turnos-list">
-            {turnosAgendados.map((turno) => (
-              <div key={turno.id} className="turno-card">
+            {turnosAgendados.map((turno, index) => (
+              <div key={index} className="turno-card">
                 <h3>{turno.proveedorNombre}</h3>
                 <h6>{turno.nombre}</h6>
                 <p>
@@ -94,8 +104,9 @@ function TurnosAgendados() {
                 ) : (
                   <p>Sin horas asignadas</p>
                 )}
+
                 <button
-                  onClick={() => handleSubmit(turno.id)}
+                  onClick={() => handleSubmit(turno.userid, turno.id_turno)}
                   className="cancelar-turno"
                   style={{ margin: "2%", marginLeft: "40%" }}
                 >

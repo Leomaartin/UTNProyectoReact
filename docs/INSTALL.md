@@ -20,7 +20,7 @@
 git clone https://github.com/usuario/TurnoSmart.git
 cd TurnoSmart
 npm install
-🔐 Configuración del entorno
+Configuración del entorno
 Crear archivo .env en la raíz con:
 
 ini
@@ -42,7 +42,7 @@ bash
 Copiar código
 npm run dev
 Abrir en el navegador:
-👉 http://localhost:5173
+http://localhost:5173
 
 ## Verificación
 El servidor mostrará “Conexión exitosa a la base de datos”.
