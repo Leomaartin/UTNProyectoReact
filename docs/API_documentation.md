@@ -1,4 +1,4 @@
-# 🧭 Documentación de la API — TurnoSmart
+## Documentación de la API — TurnoSmart
 
 **Base URL:** `http://localhost:3333/api`  
 **Formato:** JSON  
