@@ -1,4 +1,4 @@
-# ⚙️ Instalación y Configuración — TurnoSmart
+Instalación y Configuración — TurnoSmart
 
 **Autor:** Leonel Martín  
 **Versión:** 1.0  
@@ -6,7 +6,7 @@
 
 ---
 
-## 🧩 Requisitos Previos
+##  Requisitos Previos
 
 - Node.js ≥ 18
 - npm ≥ 9
@@ -14,13 +14,13 @@
 
 ---
 
-## 📦 Instalación
+##  Instalación
 
 ```bash
 git clone https://github.com/usuario/TurnoSmart.git
 cd TurnoSmart
 npm install
-🔐 Configuración del entorno
+Configuración del entorno
 Crear archivo .env en la raíz con:
 
 ini
@@ -31,7 +31,9 @@ DB_USER=root
 DB_PASSWORD=
 DB_NAME=turnos
 JWT_SECRET=mi_clave_secreta
-🚀 Ejecución
+
+
+Ejecución
 Backend:
 bash
 Copiar código
@@ -41,9 +43,9 @@ bash
 Copiar código
 npm run dev
 Abrir en el navegador:
-👉 http://localhost:5173
+http://localhost:5173
 
-✅ Verificación
+Verificación
 El servidor mostrará “Conexión exitosa a la base de datos”.
 
 En el navegador se debe cargar la interfaz de TurnoSmart.
