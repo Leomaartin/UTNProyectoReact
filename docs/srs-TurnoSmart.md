@@ -1,4 +1,4 @@
-# 📘 SRS — TurnoSmart
+#  SRS — TurnoSmart
 
 **Versión:** 1.0  
 **Autor:** Leonel Martín  
