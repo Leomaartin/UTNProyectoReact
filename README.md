@@ -100,7 +100,7 @@ Toda la documentación técnica y formal del proyecto se encuentra disponible en
 
 ### 📄 Archivos principales:
 
-- [Descargar SRS IEEE - TurnoSmart](https://github.com/Leomaartin/TurnoSmart/raw/main/docs/srs_template-Leonel%20Martin.docx)
+- [ Descargar SRS IEEE - TurnoSmart](https://github.com/Leomaartin/TurnoSmart/raw/main/docs/srs_template-Leonel%20Martin.docx)
 - [ Documentación General del Proyecto (Word)](docs/Documentacion_TurnoSmart_LeonelMartin.docx)
 - [ Documentación de la API](docs/API_documentation.md)
 - [ Guía de Instalación](docs/INSTALL.md)
