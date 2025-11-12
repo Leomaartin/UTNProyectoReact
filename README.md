@@ -1,4 +1,4 @@
-.TurnoSmart
+##TurnoSmart
 
 Autor: Leonel Martín
 Versión: 1.0
@@ -6,19 +6,19 @@ Materia: Metodología de Sistemas I
 Tecnicatura Universitaria en Programación — 2025
 
 
-. Propósito / Alcance del Sistema
+## Propósito / Alcance del Sistema
 
 TurnoSmart es una aplicación web desarrollada con React + Node.js + MySQL que permite gestionar turnos entre proveedores (quienes publican sus horarios disponibles) y usuarios clientes (quienes reservan turnos).
 El propósito principal es ofrecer una herramienta ágil y centralizada para la administración de turnos online, reduciendo tiempos y errores de coordinación.
 
-. Cómo ejecutar localmente
+## Cómo ejecutar localmente
 npm run server   # Inicia el backend (Express + MySQL)
 npm run dev      # Inicia el frontend (React con Vite)
 
 
 Ver detalles de configuración en docs/INSTALL.md
 
-. Dependencias y Variables de Entorno
+## Dependencias y Variables de Entorno
 
 Principales dependencias:
 
@@ -45,7 +45,7 @@ DB_PASSWORD=
 DB_NAME=turnos
 JWT_SECRET=mi_clave_secreta
 
-. Estado del Pipeline
+## Estado del Pipeline
 
 Ver definición en .github/workflows/deploy.yml
 
@@ -78,7 +78,7 @@ Panel de administración.
 
 Notificaciones automáticas por correo.
 
-. Estructura del Repositorio
+## Estructura del Repositorio
 TurnoSmart/
  ├── src/
  │   ├── Components/
@@ -94,86 +94,4 @@ TurnoSmart/
  ├── package.json
  └── README.md
 
-. docs/srs-TurnoSmart.md
 
-Incluye:
-
-Descripción general del sistema
-
-Actores principales
-
-Requisitos funcionales con criterios de aceptación
-
-Requisitos no funcionales
-
-Supuestos y restricciones
-
-Matriz de trazabilidad
-
-. docs/API_documentation.md
-
-Endpoints principales:
-
-POST /api/register → Crea usuario o proveedor
-
-POST /api/infoUsuarios → Valida login
-
-GET /api/turnosDisponibles → Lista turnos
-
-POST /api/registrarTurnos → Inserta turnos
-
-DELETE /api/borrarTurno/:id → Elimina turno
-
-POST /api/turnoAgendado / POST /api/turnoGuardado → Guarda reservas
-
-DELETE /api/cancelarTurno → Cancela turno
-
-Incluye ejemplos, posibles errores (400, 404, 500) y manejo de autenticación (en futuro con JWT).
-
-. docs/INSTALL.md
-
-Requisitos previos:
-
-Node.js ≥ 18
-
-MySQL ≥ 8
-
-npm ≥ 9
-
-Instalación:
-
-git clone https://github.com/Leomaartin/UTNProyectoReact.git
-cd UTNProyectoReact
-npm install
-
-
-Configuración:
-
-Crear base de datos turnos
-
-Configurar .env
-
-Ejecutar:
-
-npm run server
-npm run dev
-
-
-Verificación:
-Abrir navegador → http://localhost:5173
-
-. .github/workflows/deploy.yml
-name: CI/CD Pipeline - TurnoSmart
-on:
-  push:
-    branches: [ "main" ]
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout del código
-        uses: actions/checkout@v3
-      - name: Instalar dependencias
-        run: npm install
-      - name: Ejecutar pruebas
-        run: echo "Ejecutando tests..."
