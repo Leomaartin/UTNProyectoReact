@@ -94,4 +94,16 @@ TurnoSmart/
  ├── package.json
  └── README.md
 
+ ## 📚 Documentación del Proyecto
+
+Toda la documentación técnica y formal del proyecto se encuentra disponible en la carpeta [`/docs`](docs/).
+
+### 📄 Archivos principales:
+
+- [📘 SRS IEEE - Especificación de Requisitos de Software](docs/srs_template-Leonel%20Martin.docx)
+- [📙 Documentación General del Proyecto (Word)](docs/Documentacion_TurnoSmart_LeonelMartin.docx)
+- [📗 Documentación de la API](docs/API_documentation.md)
+- [📘 Guía de Instalación](docs/INSTALL.md)
+- [⚙️ Pipeline CI/CD](.github/workflows/deploy.yml)
+
 
