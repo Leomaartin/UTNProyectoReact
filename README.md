@@ -1,4 +1,4 @@
-##TurnoSmart
+TurnoSmart
 
 Autor: Leonel Martín
 Versión: 1.0
