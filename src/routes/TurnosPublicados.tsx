@@ -51,7 +51,6 @@ function TurnosPublicados() {
     navigate(`/asignarturnos/${id}`);
   };
 
-  // filtrar proveedores que tienen turnos
   const proveedoresConTurnos = proveedores.filter((p) =>
     turnos.some((t) => t.id_proveedor === p.id)
   );

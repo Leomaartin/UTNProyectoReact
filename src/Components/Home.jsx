@@ -5,6 +5,7 @@ import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage";
 import usePeticionBD from "./PeticionBD";
 import "./Home.css";
+import { useNavigate } from "react-router-dom";
 
 function StyleCards({ background, width, heigth, className, children }) {
   return (
@@ -25,6 +26,12 @@ function Home() {
   const [user] = useLocalStorage("user", null);
   const [turnosAgendados, setTurnosAgendados] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // 🔹 Redirección según categoría
+  const irACategoria = (categoriaId) => {
+    navigate(`/proveedores/${categoriaId}`);
+  };
 
   useEffect(() => {
     if (!user?.id) return;
@@ -70,8 +77,9 @@ function Home() {
             heigth="20rem"
             background="#E8DAD0"
           >
-            <h2>Agregar Turnos</h2>
-            <button className="card-button agregar">Agregar</button>
+            <h2>
+              <a href="/turnosdisponibles">Agregar Turnos</a>
+            </h2>
           </StyleCards>
 
           {/* CARD DE PROVEEDORES */}
@@ -82,45 +90,46 @@ function Home() {
             background="#D6C2B7"
           >
             <h2>Conoce Proveedores</h2>
+
             <button
               className="card-button proveedores"
               style={{ margin: "3px" }}
+              onClick={() => irACategoria(0)}
             >
               Educación
             </button>
             <button
               className="card-button proveedores"
               style={{ margin: "3px" }}
+              onClick={() => irACategoria(1)}
             >
               Tecnología
             </button>
             <button
               className="card-button proveedores"
               style={{ margin: "3px" }}
+              onClick={() => irACategoria(2)}
             >
               Administrativos / Profesionales
             </button>
             <button
               className="card-button proveedores"
               style={{ margin: "3px" }}
+              onClick={() => irACategoria(3)}
             >
               Mascotas
             </button>
             <button
               className="card-button proveedores"
               style={{ margin: "3px" }}
-            >
-              Servicios y Talleres
-            </button>
-            <button
-              className="card-button proveedores"
-              style={{ margin: "3px" }}
+              onClick={() => irACategoria(4)}
             >
               Salud y Bienestar
             </button>
             <button
               className="card-button proveedores"
               style={{ margin: "3px" }}
+              onClick={() => irACategoria(5)}
             >
               Belleza y Cuidado Personal
             </button>
@@ -153,7 +162,7 @@ function Home() {
                     </strong>
                   </p>
                   <p>
-                    Usuario:{turno.nombre},{turno.userid}
+                    Usuario: {turno.nombre}, {turno.userid}
                   </p>
                   <p>
                     Fecha: {new Date(turno.fecha).toLocaleDateString("es-AR")}
@@ -172,6 +181,7 @@ function Home() {
     </main>
   );
 }
+
 function CrearTurnos() {
   const turnos = usePeticionBD("proveedores");
   return (
@@ -205,6 +215,7 @@ function Productos() {
     </main>
   );
 }
+
 function DetalleProducto() {
   const turnos = usePeticionBD("proveedores");
   return (
@@ -249,8 +260,8 @@ function DetalleProducto() {
     </main>
   );
 }
+
 function Carrito() {
-  // Datos de ejemplo (solo para maquetar)
   const products = [
     {
       id: 1,
@@ -268,7 +279,6 @@ function Carrito() {
     },
   ];
 
-  // Calcular total
   const total = products.reduce(
     (sum, product) => sum + product.price * product.quantity,
     0
@@ -276,7 +286,6 @@ function Carrito() {
 
   return (
     <main>
-      {" "}
       <header>
         Header
         <Navbar />
@@ -320,5 +329,6 @@ function Carrito() {
     </main>
   );
 }
+
 export default Home;
 export { Productos, DetalleProducto, Carrito };

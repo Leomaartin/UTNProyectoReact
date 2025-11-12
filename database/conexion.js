@@ -502,6 +502,61 @@ app.post("/api/cancelarTurno", (req, res) => {
     );
   });
 });
+app.post("/api/actualizarCategoria", (req, res) => {
+  const { categoria, id } = req.body;
+
+  const SQL_UPDATE = "UPDATE proveedores SET categoria = ? WHERE id = ?";
+  conexion.query(SQL_UPDATE, [categoria, id], (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error en el servidor" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado" });
+    }
+
+    return res.json({
+      success: true,
+      message: "Categoría actualizada correctamente",
+    });
+  });
+});
+app.get("/api/buscarCategoria/:categoria", (req, res) => {
+  const categoria = req.params.categoria;
+
+  const SQL_QUERY = `
+    SELECT DISTINCT p.*
+    FROM proveedores p
+    INNER JOIN turnos t ON p.id = t.id_proveedor
+    WHERE p.categoria = ?;
+  `;
+
+  conexion.query(SQL_QUERY, [categoria], (err, result) => {
+    if (err) {
+      console.error("Error al buscar proveedores:", err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error en el servidor" });
+    }
+
+    if (result.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No se encontraron proveedores con turnos disponibles",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Proveedores encontrados correctamente",
+      proveedores: result,
+    });
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);

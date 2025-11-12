@@ -14,6 +14,7 @@ import TusTurnos from "./routes/TusTurnos";
 import AgendarTurno from "./routes/AgendarTurno";
 import TurnosAgendados from "./routes/TurnosAgendados";
 import TurnosAgendadosUsuario from "./routes/TurnosAgendadosUsuario";
+import ProveedoresPorCategoria from "./routes/TurnosCategoria";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <AuthProvider>
@@ -35,6 +36,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route
           path="/turnosagendadosusuario"
           element={<TurnosAgendadosUsuario />}
+        />
+        <Route
+          path="/proveedores/:categoriaId"
+          element={<ProveedoresPorCategoria />}
         />
         <Route path="/tusturnos" element={<TusTurnos />} />
         <Route path="/detalle" element={<DetalleProducto />} />
