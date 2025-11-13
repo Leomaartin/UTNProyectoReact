@@ -424,7 +424,7 @@ app.post("/api/cancelarTurno", (req, res) => {
     });
   }
 
-  console.log("🧠 Datos recibidos en cancelarTurno:", {
+  console.log(" Datos recibidos en cancelarTurno:", {
     proveedorid,
     usuarioid,
     id_turno,
@@ -555,6 +555,48 @@ app.get("/api/buscarCategoria/:categoria", (req, res) => {
       message: "Proveedores encontrados correctamente",
       proveedores: result,
     });
+  });
+});
+app.post("/api/buscarTurnos", (req, res) => {
+  const { id } = req.body;
+  const SQL_QUERY = "SELECT * FROM turnos WHERE id_proveedor = ?";
+
+  conexion.query(SQL_QUERY, [id], (err, result) => {
+    if (err) {
+      console.error("Error SQL:", err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Error en el servidor" });
+    }
+
+    console.log("Resultado de la query:", result);
+
+    if (result.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No se encontraron turnos" });
+    }
+
+    return res.json({
+      success: true,
+      message: "Turnos traídos correctamente",
+      result,
+    });
+  });
+});
+app.post("/api/borrarTurnoDisponible", (req, res) => {
+  const { id } = req.body;
+  const SQL_QUERY = "DELETE FROM turnos WHERE id = ?";
+  conexion.query(SQL_QUERY, [id], (err, result) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ success: false, message: "Error en el servidor" });
+    if (result.affectedRows === 0)
+      return res
+        .status(404)
+        .json({ success: false, message: "Turno no encontrado" });
+    res.json({ success: true, message: "Turno borrado correctamente" });
   });
 });
 

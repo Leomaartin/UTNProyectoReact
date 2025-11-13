@@ -26,9 +26,9 @@ function Home() {
   const [user] = useLocalStorage("user", null);
   const [turnosAgendados, setTurnosAgendados] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [turnos, setTurnos] = useState([]);
   const navigate = useNavigate();
 
-  // 🔹 Redirección según categoría
   const irACategoria = (categoriaId) => {
     navigate(`/proveedores/${categoriaId}`);
   };
@@ -61,6 +61,44 @@ function Home() {
     fetchTurnosAgendados();
   }, [user?.id, user?.tipoCuenta]);
 
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchTurnosDisponibles = async () => {
+      try {
+        const res = await axios.post("http://localhost:3333/api/buscarTurnos", {
+          id: user.id,
+        });
+        console.log("Turnos:", res.data.result);
+        setTurnos(res.data.result || []);
+      } catch (err) {
+        console.error("Error al traer turnos.", err);
+        setTurnos([]);
+      }
+    };
+
+    fetchTurnosDisponibles();
+  }, [user?.id]);
+  const handleSubmit = async (id) => {
+    if (!user?.id) return;
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3333/api/borrarTurnoDisponible",
+        { id }
+      );
+
+      if (res.data.success) {
+        setTurnos((prevTurnos) => prevTurnos.filter((t) => t.id !== id));
+      } else {
+        alert(res.data.message || "No se pudo eliminar el turno.");
+      }
+    } catch (error) {
+      console.error("Error al cancelar turno:", error);
+      alert("Error en el servidor.");
+    }
+  };
+
   return (
     <main className="home-container">
       <header>
@@ -68,7 +106,6 @@ function Home() {
       </header>
 
       <section>
-        {/* Sección principal */}
         <div className="home-grid">
           {/* CARD DE AGREGAR TURNOS */}
           <StyleCards
@@ -78,8 +115,35 @@ function Home() {
             background="#E8DAD0"
           >
             <h2>
-              <a href="/turnosdisponibles">Agregar Turnos</a>
+              <a href="/turnosdisponibles" className="turno-titulo">
+                Agregar Turnos +
+              </a>
             </h2>
+
+            <div className="turnos-lista">
+              {turnos.length > 0 ? (
+                turnos.map((t) => (
+                  <div key={t.id} className="turno-box">
+                    <div className="turno-info">
+                      <p className="turno-fecha">
+                        {new Date(t.fecha).toLocaleDateString("es-AR")}
+                      </p>
+                      <p className="turno-hora">
+                        {t.hora_inicio} a {t.hora_fin}
+                      </p>
+                    </div>
+                    <button
+                      className="btn-eliminar-turno"
+                      onClick={() => handleSubmit(t.id)}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <p className="sin-turnos">No hay turnos disponibles</p>
+              )}
+            </div>
           </StyleCards>
 
           {/* CARD DE PROVEEDORES */}
@@ -89,7 +153,7 @@ function Home() {
             heigth="20rem"
             background="#D6C2B7"
           >
-            <h2>Conoce Proveedores</h2>
+            <h2>Buscar en categorias:</h2>
 
             <button
               className="card-button proveedores"
@@ -136,7 +200,7 @@ function Home() {
           </StyleCards>
         </div>
 
-        {/* Sección inferior - MIS TURNOS */}
+        {/* Sección inferior - MIS TURNOS (igual que antes) */}
         <div className="bottom-section">
           <StyleCards
             className="home-card full-card"
