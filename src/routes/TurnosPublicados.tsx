@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from "../Components/Navbar";
+import Navbar from "../Components/Navbar.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import Card from "../Components/Card.jsx";
+import Card from "../Components/Card.js";
 import { useNavigate } from "react-router-dom";
 
 function StyleCards({ background, width, heigth, children }) {

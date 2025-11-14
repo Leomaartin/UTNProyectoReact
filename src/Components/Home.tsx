@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Card from "./Card.jsx";
-import Navbar from "./Navbar.jsx";
+import Card from "./Card.js";
+import Navbar from "./Navbar.js";
 import axios from "axios";
-import useLocalStorage from "../auth/useLocalStorage";
-import usePeticionBD from "./PeticionBD.jsx";
+import useLocalStorage from "../auth/useLocalStorage.js";
+import usePeticionBD from "./PeticionBD.js";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 

@@ -1,8 +1,8 @@
-import { useAuth } from "../auth/authProvider";
+import { useAuth } from "../auth/authProvider.js";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import useLocalStorage from "../auth/useLocalStorage";
-import Navbar from "../Components/Navbar.jsx";
+import useLocalStorage from "../auth/useLocalStorage.js";
+import Navbar from "../Components/Navbar.js";
 import axios from "axios";
 
 function Dashboard() {
