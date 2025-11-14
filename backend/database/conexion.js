@@ -1,26 +1,37 @@
 import express from "express";
 import mysql from "mysql";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
-const PORT = 3333;
+const PORT = process.env.PORT || 3333;
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+// Configuración de CORS
+app.use(
+  cors({
+    origin: process.env.FRONT_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
+
+// Parseo de JSON y URL encoded
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Conexión a la base de datos
 const conexion = mysql.createConnection({
-  host: "localhost",
-  database: "turnos",
-  user: "root",
-  password: "",
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
 });
 
 conexion.connect((err) => {
   if (err) throw err;
   console.log("Conexión exitosa a la base de datos");
 });
-
 app.get("/api/tusTurnos/:proveedorid", (req, res) => {
   const { proveedorid } = req.params;
   const SQL_QUERY = "SELECT * FROM turnos WHERE id_proveedor = ?";
@@ -601,5 +612,5 @@ app.post("/api/borrarTurnoDisponible", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
