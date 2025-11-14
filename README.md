@@ -94,6 +94,12 @@ TurnoSmart/
  ├── package.json
  └── README.md
 
+##Pagina hosteada y paso a paso:
+La pagina no esta terminada pero se hosteo con Netlify por ahora solo el front.
+Se organizo el proyecto en back y front, y se cambio todos los archivos a typescript es decir tsx.
+Se intentara conectar la base de datos proximamente con usuarios ya creados.
+Link:https://turnosmart2.netlify.app
+
  ##  Documentación del Proyecto
 
 Toda la documentación técnica y formal del proyecto se encuentra disponible en la carpeta [`/docs`](docs/).
