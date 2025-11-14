@@ -147,28 +147,35 @@ function Home() {
           </StyleCards>
 
           {/* CARD DE PROVEEDORES */}
-          <h2>Buscar en categorias:</h2>
+          <StyleCards
+            className="home-card large-card"
+            width="49.5%"
+            heigth="20rem"
+            background="#D6C2B7"
+          >
+            <h2>Buscar en categorias:</h2>
 
-          <div className="categorias-botones">
-            <button className="categoria-btn" onClick={() => irACategoria(0)}>
-              Educación
-            </button>
-            <button className="categoria-btn" onClick={() => irACategoria(1)}>
-              Tecnología
-            </button>
-            <button className="categoria-btn" onClick={() => irACategoria(2)}>
-              Administrativos / Profesionales
-            </button>
-            <button className="categoria-btn" onClick={() => irACategoria(3)}>
-              Mascotas
-            </button>
-            <button className="categoria-btn" onClick={() => irACategoria(4)}>
-              Salud y Bienestar
-            </button>
-            <button className="categoria-btn" onClick={() => irACategoria(5)}>
-              Belleza y Cuidado Personal
-            </button>
-          </div>
+            <div className="categorias-botones">
+              <button className="categoria-btn" onClick={() => irACategoria(0)}>
+                Educación
+              </button>
+              <button className="categoria-btn" onClick={() => irACategoria(1)}>
+                Tecnología
+              </button>
+              <button className="categoria-btn" onClick={() => irACategoria(2)}>
+                Administrativos / Profesionales
+              </button>
+              <button className="categoria-btn" onClick={() => irACategoria(3)}>
+                Mascotas
+              </button>
+              <button className="categoria-btn" onClick={() => irACategoria(4)}>
+                Salud y Bienestar
+              </button>
+              <button className="categoria-btn" onClick={() => irACategoria(5)}>
+                Belleza y Cuidado Personal
+              </button>
+            </div>
+          </StyleCards>
         </div>
 
         {/* Sección inferior - MIS TURNOS (igual que antes) */}

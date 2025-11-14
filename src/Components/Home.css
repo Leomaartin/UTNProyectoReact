@@ -187,6 +187,18 @@
 .turno-titulo:hover {
   text-decoration: underline;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home-grid {
+    flex-direction: column;
+  }
+
+  .home-card {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
 /* GRID de botones de categorías */
 .categorias-botones {
   display: grid;
@@ -222,17 +234,5 @@
 @media (max-width: 900px) {
   .categorias-botones {
     grid-template-columns: 1fr;
-  }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .home-grid {
-    flex-direction: column;
-  }
-
-  .home-card {
-    width: 100% !important;
-    height: auto !important;
   }
 }
