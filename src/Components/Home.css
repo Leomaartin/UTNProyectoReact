@@ -187,6 +187,43 @@
 .turno-titulo:hover {
   text-decoration: underline;
 }
+/* GRID de botones de categorías */
+.categorias-botones {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Botones estilizados como tarjetas */
+.categoria-btn {
+  background-color: #d6c2b7;
+  color: #4a3f35;
+  border: none;
+  padding: 1rem 1.2rem;
+  border-radius: 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+}
+
+/* Hover */
+.categoria-btn:hover {
+  background-color: #bca494;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .categorias-botones {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* Responsive */
 @media (max-width: 768px) {

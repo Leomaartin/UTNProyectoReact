@@ -147,57 +147,28 @@ function Home() {
           </StyleCards>
 
           {/* CARD DE PROVEEDORES */}
-          <StyleCards
-            className="home-card large-card"
-            width="49.5%"
-            heigth="20rem"
-            background="#D6C2B7"
-          >
-            <h2>Buscar en categorias:</h2>
+          <h2>Buscar en categorias:</h2>
 
-            <button
-              className="card-button proveedores"
-              style={{ margin: "3px" }}
-              onClick={() => irACategoria(0)}
-            >
+          <div className="categorias-botones">
+            <button className="categoria-btn" onClick={() => irACategoria(0)}>
               Educación
             </button>
-            <button
-              className="card-button proveedores"
-              style={{ margin: "3px" }}
-              onClick={() => irACategoria(1)}
-            >
+            <button className="categoria-btn" onClick={() => irACategoria(1)}>
               Tecnología
             </button>
-            <button
-              className="card-button proveedores"
-              style={{ margin: "3px" }}
-              onClick={() => irACategoria(2)}
-            >
+            <button className="categoria-btn" onClick={() => irACategoria(2)}>
               Administrativos / Profesionales
             </button>
-            <button
-              className="card-button proveedores"
-              style={{ margin: "3px" }}
-              onClick={() => irACategoria(3)}
-            >
+            <button className="categoria-btn" onClick={() => irACategoria(3)}>
               Mascotas
             </button>
-            <button
-              className="card-button proveedores"
-              style={{ margin: "3px" }}
-              onClick={() => irACategoria(4)}
-            >
+            <button className="categoria-btn" onClick={() => irACategoria(4)}>
               Salud y Bienestar
             </button>
-            <button
-              className="card-button proveedores"
-              style={{ margin: "3px" }}
-              onClick={() => irACategoria(5)}
-            >
+            <button className="categoria-btn" onClick={() => irACategoria(5)}>
               Belleza y Cuidado Personal
             </button>
-          </StyleCards>
+          </div>
         </div>
 
         {/* Sección inferior - MIS TURNOS (igual que antes) */}
