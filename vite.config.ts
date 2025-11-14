@@ -9,6 +9,6 @@ export default defineConfig({
     port: 5173,
   },
   preview: {
-    allowedHosts: ["utnproyectoreact-4.onrender.com"],
+    allowedHosts: ["utnproyectoreact-5.onrender.com"],
   },
 });
