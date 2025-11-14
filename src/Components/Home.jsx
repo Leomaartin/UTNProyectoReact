@@ -3,7 +3,7 @@ import Card from "./Card.jsx";
 import Navbar from "./Navbar.jsx";
 import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage";
-import usePeticionBD from "./PeticionBD";
+import usePeticionBD from "./PeticionBD.jsx";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 

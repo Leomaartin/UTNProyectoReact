@@ -16,7 +16,7 @@ import TurnosAgendados from "./routes/TurnosAgendados";
 import TurnosAgendadosUsuario from "./routes/TurnosAgendadosUsuario";
 import ProveedoresPorCategoria from "./routes/TurnosCategoria";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <Router>
       <Routes>
