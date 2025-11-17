@@ -3,9 +3,11 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "../Components/Navbar";
-import "./TurnosDisponible.css";
+import "./css/TurnosDisponible.css";
 import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 function TurnosDisponible() {
   const [fechasSeleccionadas, setFechasSeleccionadas] = useState<Date[]>([]);
@@ -32,13 +34,13 @@ function TurnosDisponible() {
         }
       );
       if (res.data.success) {
-        alert("Turno registrado correctamente");
+        toast.success("Turno registrado correctamente");
       } else {
-        alert("Error al registrar turnos");
+        toast.error("Error al registrar turnos");
       }
     } catch (error) {
       console.error(error);
-      alert("Hubo un problema con el servidor");
+      toast.error("Debes seleccionar turnos");
     }
   };
 
@@ -63,6 +65,26 @@ function TurnosDisponible() {
   return (
     <main>
       <header>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              fontSize: "1.1rem",
+              padding: "14px 18px",
+              borderRadius: "10px",
+            },
+            error: {
+              style: {
+                background: "#ff4d4d",
+                color: "#fff",
+              },
+              iconTheme: {
+                primary: "#fff",
+                secondary: "#ff4d4d",
+              },
+            },
+          }}
+        />
         <Navbar />
       </header>
       <div className="container mt-4">

@@ -4,8 +4,10 @@ import Navbar from "./Navbar.js";
 import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage.js";
 import usePeticionBD from "./PeticionBD.js";
-import "./Home.css";
+import "../routes/css/Home.css";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 function StyleCards({ background, width, heigth, className, children }) {
   return (
@@ -29,10 +31,12 @@ function Home() {
   const [turnos, setTurnos] = useState([]);
   const navigate = useNavigate();
 
+  // Función para navegar a la página de categorías
   const irACategoria = (categoriaId) => {
     navigate(`/proveedores/${categoriaId}`);
   };
 
+  // useEffect para cargar los turnos agendados del usuario
   useEffect(() => {
     if (!user?.id) return;
 
@@ -53,6 +57,7 @@ function Home() {
         }
       } catch (err) {
         console.error("Error al traer turnos agendados:", err);
+        setTurnosAgendados([]);
       } finally {
         setLoading(false);
       }
@@ -61,6 +66,7 @@ function Home() {
     fetchTurnosAgendados();
   }, [user?.id, user?.tipoCuenta]);
 
+  // useEffect para cargar los turnos disponibles (si el usuario es un proveedor)
   useEffect(() => {
     if (!user?.id) return;
 
@@ -69,16 +75,20 @@ function Home() {
         const res = await axios.post("http://localhost:3333/api/buscarTurnos", {
           id: user.id,
         });
-        console.log("Turnos:", res.data.result);
+        console.log("Turnos Disponibles:", res.data.result);
         setTurnos(res.data.result || []);
-      } catch (err) {
-        console.error("Error al traer turnos.", err);
-        setTurnos([]);
+      } catch (err: any) {
+        console.error(
+          "Error al traer turnos disponibles:",
+          err.response?.data || err.message
+        );
       }
     };
 
     fetchTurnosDisponibles();
   }, [user?.id]);
+
+  // Función para manejar la eliminación de un turno disponible
   const handleSubmit = async (id) => {
     if (!user?.id) return;
 
@@ -90,70 +100,94 @@ function Home() {
 
       if (res.data.success) {
         setTurnos((prevTurnos) => prevTurnos.filter((t) => t.id !== id));
+        toast.success("Turno eliminado con éxito.");
       } else {
-        alert(res.data.message || "No se pudo eliminar el turno.");
+        toast.error(res.data.message || "No se pudo eliminar el turno.");
       }
     } catch (error) {
       console.error("Error al cancelar turno:", error);
-      alert("Error en el servidor.");
+      toast.error("Error en el servidor al intentar eliminar el turno.");
     }
   };
 
   return (
     <main className="home-container">
       <header>
+        {/* Componente Navbar */}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              fontSize: "1.1rem",
+              padding: "14px 18px",
+              borderRadius: "10px",
+            },
+            error: {
+              style: {
+                background: "#ff4d4d",
+                color: "#fff",
+              },
+              iconTheme: {
+                primary: "#fff",
+                secondary: "#ff4d4d",
+              },
+            },
+          }}
+        />
         <Navbar />
       </header>
 
       <section>
         <div className="home-grid">
-          {/* CARD DE AGREGAR TURNOS */}
-          <StyleCards
-            className="home-card small-card"
-            width="49.5%"
-            heigth="20rem"
-            background="#E8DAD0"
-          >
-            <h2>
-              <a href="/turnosdisponibles" className="turno-titulo">
-                Agregar Turnos +
-              </a>
-            </h2>
-
-            <div className="turnos-lista">
-              {turnos.length > 0 ? (
-                turnos.map((t) => (
-                  <div key={t.id} className="turno-box">
-                    <div className="turno-info">
-                      <p className="turno-fecha">
-                        {new Date(t.fecha).toLocaleDateString("es-AR")}
-                      </p>
-                      <p className="turno-hora">
-                        {t.hora_inicio} a {t.hora_fin}
-                      </p>
+          {user?.tipoCuenta == 0 ? (
+            <a className="turno-titulo">Nose</a>
+          ) : (
+            <StyleCards
+              className="home-card small-card"
+              width="49.5%"
+              heigth="20rem"
+              background="#ffffffff"
+            >
+              <h2 className="agregar-turnos-titulo">
+                <a href="/turnosdisponibles" className="turno-titulo">
+                  Agregar Turnos +
+                </a>
+              </h2>
+              <div className="turnos-lista">
+                {turnos.length > 0 ? (
+                  turnos.map((t) => (
+                    <div key={t.id} className="turno-box">
+                      <div className="turno-info">
+                        <p className="turno-fecha">
+                          {new Date(t.fecha).toLocaleDateString("es-AR")}
+                        </p>
+                        <p className="turno-hora">
+                          {t.hora_inicio} a {t.hora_fin}
+                        </p>
+                      </div>
+                      <button
+                        className="btn-eliminar-turno"
+                        onClick={() => handleSubmit(t.id)}
+                      >
+                        ✕
+                      </button>
                     </div>
-                    <button
-                      className="btn-eliminar-turno"
-                      onClick={() => handleSubmit(t.id)}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))
-              ) : (
-                <p className="sin-turnos">No hay turnos disponibles</p>
-              )}
-            </div>
-          </StyleCards>
+                  ))
+                ) : (
+                  <p className="sin-turnos">No hay turnos disponibles</p>
+                )}
+              </div>
+            </StyleCards>
+          )}
 
-          {/* CARD DE PROVEEDORES */}
+          {/* CARD DE BUSCAR EN CATEGORÍAS */}
           <StyleCards
             className="home-card large-card"
             width="49.5%"
             heigth="20rem"
-            background="#D6C2B7"
+            background="#ffffffff" // Color de fondo de la tarjeta
           >
-            <h2>Buscar en categorias:</h2>
+            <h2 className="buscar-categoria">Buscar en categorías:</h2>
 
             <div className="categorias-botones">
               <button className="categoria-btn" onClick={() => irACategoria(0)}>
@@ -178,45 +212,55 @@ function Home() {
           </StyleCards>
         </div>
 
-        {/* Sección inferior - MIS TURNOS (igual que antes) */}
+        {/* Sección inferior - MIS TURNOS (ACTUALIZADO CON NUEVOS ESTILOS) */}
         <div className="bottom-section">
           <StyleCards
             className="home-card full-card"
             width="100%"
             heigth="100%"
-            background="#A58C78"
+            background="#f4f4f4"
           >
-            <h2 style={{ color: "#fff" }}>Mis Turnos</h2>
-
-            {loading && <p style={{ color: "#fff" }}>Cargando...</p>}
-
-            {!loading && turnosAgendados.length === 0 && (
-              <p style={{ color: "#fff" }}>No hay turnos agendados.</p>
+            <h2 style={{ color: "#2196f3" }}>Mis Turnos</h2>{" "}
+            {/* Título blanco */}
+            {loading && (
+              <p style={{ color: "#2196f3" }}>Cargando turnos agendados...</p>
             )}
-
-            {!loading &&
-              turnosAgendados.map((turno, index) => (
-                <div key={index} className="turno-item">
-                  <p>
-                    Nombre del proveedor:{" "}
-                    <strong>
-                      {turno.proveedorNombre},{turno.proveedorid}
-                    </strong>
-                  </p>
-                  <p>
-                    Usuario: {turno.nombre}, {turno.userid}
-                  </p>
-                  <p>
-                    Fecha: {new Date(turno.fecha).toLocaleDateString("es-AR")}
-                  </p>
-
-                  {Array.isArray(turno.horas) && turno.horas.length > 0 ? (
-                    <p>Horas: {turno.horas.join(", ")}</p>
-                  ) : (
-                    <p>Sin horas asignadas</p>
-                  )}
-                </div>
-              ))}
+            {!loading && turnosAgendados.length === 0 && (
+              <p style={{ color: "#2196f3" }}>No hay turnos agendados.</p>
+            )}
+            {!loading && turnosAgendados.length > 0 && (
+              <div className="turnos-agendados-lista">
+                {" "}
+                {turnosAgendados.map((turno, index) => (
+                  <div key={index} className="turno-agendado-item">
+                    {" "}
+                    <div className="info-principal">
+                      <span className="proveedor-nombre">
+                        Agendado por: {turno.nombre}{" "}
+                      </span>
+                      <span className="usuario-nombre">
+                        {turno.proveedorNombre}{" "}
+                      </span>
+                    </div>
+                    <div className="info-detalle">
+                      <p className="detalle-fecha">
+                        Fecha:{" "}
+                        <strong>
+                          {new Date(turno.fecha).toLocaleDateString("es-AR")}
+                        </strong>
+                      </p>
+                      {Array.isArray(turno.horas) && turno.horas.length > 0 ? (
+                        <p className="detalle-hora">
+                          Horas: <strong>{turno.horas.join(", ")}</strong>
+                        </p>
+                      ) : (
+                        <p className="detalle-hora">Sin horas asignadas</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </StyleCards>
         </div>
       </section>

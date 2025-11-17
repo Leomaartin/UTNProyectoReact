@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3333;
 
 app.use(
   cors({
-    origin: process.env.FRONT_URL,
+    origin: "http://localhost:5173",
     credentials: true,
   })
 );
@@ -19,7 +19,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Registrar todos los endpoints
+// Registrar todos los endpoints (acá pasa la magia)
 registrarEndpoints(app);
 
 app.get("/", (req, res) => {

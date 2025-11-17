@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../Components/Navbar";
-
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 function Singup() {
   const [username, setUsername] = useState("");
   const [gmail, setGmail] = useState("");
@@ -23,20 +24,40 @@ function Singup() {
       });
 
       if (res.data.success) {
-        alert("Usuario registrado correctamente");
+        toast.success("Usuario registrado correctamente");
         navegar("/Login");
       } else {
-        alert("Error al registrar usuario");
+        toast.error("Error al registrar usuario");
       }
     } catch (error) {
       console.error(error);
-      alert("Hubo un problema con el servidor");
+      toast.error("Hubo un problema con el servidor");
     }
   };
 
   return (
     <main>
       <header>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              fontSize: "1.1rem",
+              padding: "14px 18px",
+              borderRadius: "10px",
+            },
+            error: {
+              style: {
+                background: "#ff4d4d",
+                color: "#fff",
+              },
+              iconTheme: {
+                primary: "#fff",
+                secondary: "#ff4d4d",
+              },
+            },
+          }}
+        />
         <Navbar />
       </header>
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light">

@@ -7,6 +7,7 @@ import {
   faRightToBracket,
   faRegistered,
 } from "@fortawesome/free-solid-svg-icons";
+import logo from "../img/logo.png";
 
 function Navbar() {
   const [user, setUser] = useLocalStorage("user", null);
@@ -28,25 +29,28 @@ function Navbar() {
     <nav
       className="navbar navbar-expand-lg"
       style={{
-        backgroundColor: "#E8D8C3", // tono nude claro
-        borderBottom: "1px solid #d3bfa3",
+        backgroundColor: "#6eb8f5",
+        borderBottom: "1px solid #9acef8",
       }}
       data-bs-theme="light"
     >
-      <div className="container-fluid">
-        <a
-          className="navbar-brand"
-          href="/"
+      <a className="navbar-brand" href="/">
+        <img
+          src={logo}
+          alt="TurnosSmart Logo"
           style={{
             marginLeft: "0%",
-            color: "#5C4033",
-            fontWeight: "bold",
-            fontFamily: "'Poppins', sans-serif",
+            color: "#fafafaff",
+            position: "absolute",
+            width: "70px",
+            height: "70px",
+            borderRadius: "15px",
+            top: "5px",
+            left: "2%",
           }}
-        >
-          TurnosApp
-        </a>
-
+        />
+      </a>
+      <div className="container-fluid">
         <button
           className="navbar-toggler"
           type="button"
@@ -66,7 +70,8 @@ function Navbar() {
         >
           <ul className="nav justify-content-center">
             <li className="nav-item">
-              <a className="nav-link" href="/" style={{ color: "#5C4033" }}>
+              <a className="nav-link" href="/" style={{ color: "#fafafaff" }}>
+                {" "}
                 Home
               </a>
             </li>
@@ -74,7 +79,7 @@ function Navbar() {
               <a
                 className="nav-link"
                 href="/turnosagendadosusuario"
-                style={{ color: "#5C4033" }}
+                style={{ color: "#fafafaff" }}
               >
                 Tus Turnos
               </a>
@@ -83,7 +88,7 @@ function Navbar() {
               <a
                 className="nav-link"
                 href="/dashboard"
-                style={{ color: "#5C4033" }}
+                style={{ color: "#fafafaff" }}
               >
                 Mi Perfil
               </a>
@@ -97,22 +102,22 @@ function Navbar() {
               placeholder="Buscar"
               aria-label="Search"
               style={{
-                backgroundColor: "#F6EEE3",
-                border: "1px solid #D4C3B5",
-                color: "#5C4033",
+                backgroundColor: "#fafafaff",
+                border: "1px solid #fafafaff",
+                color: "#fafafaff",
               }}
             />
             <button
               className="btn"
               type="submit"
               style={{
-                backgroundColor: "#D1BFA7",
-                color: "#fff",
+                backgroundColor: "#fafbfd",
+                color: "#b2b2b2",
                 border: "none",
                 transition: "0.3s",
               }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#C0A98B")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#D1BFA7")}
+              onMouseOver={(e) => (e.target.style.backgroundColor = "#b2b2b2")}
+              onMouseOut={(e) => (e.target.style.backgroundColor = "#fafbfd")}
             >
               Buscar
             </button>
@@ -125,8 +130,8 @@ function Navbar() {
                 className="btn"
                 onClick={desplegarButton}
                 style={{
-                  backgroundColor: "#D1BFA7",
-                  color: "#fff",
+                  backgroundColor: "#fafbfd",
+                  color: "#b2b2b2",
                   border: "none",
                   borderRadius: "8px",
                   padding: "6px 12px",
@@ -138,13 +143,15 @@ function Navbar() {
             <div>
               <ul className="nav justify-content-center">
                 <li className="nav-item">
-                  <a href="/login" style={{ color: "#5C4033" }}>
+                  <a href="/login" style={{ color: "#308adfff" }}>
+                    {" "}
                     <FontAwesomeIcon
                       icon={faRightToBracket}
                       style={{ marginRight: "10px" }}
                     />
                   </a>
-                  <a href="/registrarse" style={{ color: "#5C4033" }}>
+                  <a href="/registrarse" style={{ color: "#308adfff" }}>
+                    {" "}
                     <FontAwesomeIcon icon={faRegistered} />
                   </a>
                 </li>
@@ -156,8 +163,8 @@ function Navbar() {
                 position: "absolute",
                 top: "100%",
                 left: 0,
-                background: "#F6EEE3",
-                border: "1px solid #D4C3B5",
+                background: "#e8f5ff",
+                border: "1px solid #9acef8",
                 padding: "10px",
                 borderRadius: "8px",
                 display: "flex",
@@ -171,17 +178,17 @@ function Navbar() {
                 zIndex: 1000,
               }}
             >
-              <a href="/" style={{ textDecoration: "none", color: "#5C4033" }}>
+              <a href="/" style={{ textDecoration: "none", color: "#2196f3" }}>
                 Home
               </a>
               <a
                 href="/"
-                style={{ textDecoration: "none", color: "#5C4033" }}
+                style={{ textDecoration: "none", color: "#2196f3" }}
                 onClick={handleLogout}
               >
                 Logout
               </a>
-              <a href="#" style={{ textDecoration: "none", color: "#5C4033" }}>
+              <a href="#" style={{ textDecoration: "none", color: "#2196f3" }}>
                 Configuración
               </a>
             </div>

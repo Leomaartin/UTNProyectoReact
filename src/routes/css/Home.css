@@ -1,0 +1,304 @@
+/* Paleta base:
+    Fondo general: #e8f5ff
+    Azul suave: #c3e3fd
+    Azul medio: #9acef8
+    Azul principal: #6eb8f5
+    Texto oscuro: #2196f3
+    Gris para texto secundario: #4a4a4a
+    Gris para texto claro: #7c7c7c
+*/
+
+/* Contenedor principal */
+.home-container {
+  padding-top: 0;
+  margin-top: 0;
+  background-color: #e8f5ff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  color: #4a4a4a;
+}
+
+/* Grid principal */
+.home-grid {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Tarjetas */
+.home-card {
+  border-radius: 1rem;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  color: #4a4a4a;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 500;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+/* Hover */
+.home-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Títulos de tarjetas generales */
+.home-card h2 {
+  margin-bottom: 1.5rem;
+  color: #2196f3;
+}
+
+/* Título de "Agregar Turnos" (más específico) */
+.agregar-turnos-titulo {
+  color: #2196f3;
+}
+
+/* Título de "Buscar en Categorías" (más específico) */
+.buscar-categoria {
+  color: #2196f3;
+}
+
+/* Contenedor de lista de turnos (para "Agregar Turnos +") */
+.turnos-lista {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 14rem;
+  overflow-y: auto;
+  gap: 0.6rem;
+  padding-right: 0.5rem;
+  align-items: center;
+}
+
+/* Cada turno en la lista "Agregar Turnos +" */
+.turno-box {
+  background-color: #e8f5ff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.6rem;
+  padding: 0.8rem 1.2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 90%;
+}
+
+.turno-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Información del turno */
+.turno-info {
+  text-align: left;
+}
+
+.turno-fecha {
+  font-weight: 600;
+  color: #4a4a4a;
+  margin: 0;
+}
+
+.turno-hora {
+  color: #7c7c7c;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Botón eliminar */
+.btn-eliminar-turno {
+  background-color: transparent;
+  border: none;
+  color: #b2b2b2;
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.btn-eliminar-turno:hover {
+  color: #fe1f06;
+}
+
+/* Texto cuando no hay turnos */
+.sin-turnos {
+  color: #7c7c7c;
+  font-style: italic;
+  opacity: 0.8;
+  margin-top: 1rem;
+}
+
+/* Título del enlace (en "Agregar Turnos +") */
+.turno-titulo {
+  color: #2196f3;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.turno-titulo:hover {
+  text-decoration: underline;
+}
+
+/* GRID de botones de categorías */
+.categorias-botones {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Botones estilizados como tarjetas */
+.categoria-btn {
+  background-color: #e8f5ff;
+  color: #7c7c7c;
+  border: none;
+  padding: 1rem 1.2rem;
+  border-radius: 0.8rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
+
+/* Hover */
+.categoria-btn:hover {
+  background-color: #c3e3fd;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Sección inferior */
+.bottom-section {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Estilos específicos para la sección MIS TURNOS (ACTUALIZADOS) */
+
+.turnos-agendados-lista {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+  max-height: 25rem;
+  overflow-y: auto;
+  gap: 0.8rem;
+  padding: 0 0.5rem 0.5rem 0;
+  margin-top: 1.5rem;
+}
+
+/* Cada turno agendado (ACTUALIZADO) */
+.turno-agendado-item {
+  background-color: #f0ffff;
+  border-radius: 0.8rem;
+  padding: 1rem 1.2rem;
+  color: #4a4a4a;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.turno-agendado-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+  background-color: #9acef8;
+  color: #2196f3;
+}
+
+.info-principal {
+  border-bottom: 1px solid rgba(33, 150, 243, 0.2);
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.proveedor-nombre {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #7c7c7c;
+}
+
+.usuario-nombre {
+  font-size: 0.9rem;
+  color: #7c7c7c;
+}
+
+.info-detalle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.detalle-fecha,
+.detalle-hora {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* El texto dentro de strong (la fecha/hora) tendrá el color principal */
+.info-detalle strong {
+  color: #7c7c7c;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  /* Cambiado de 768px a 900px para más flexibilidad */
+  .home-grid {
+    flex-direction: column;
+    align-items: center; /* Centrar las tarjetas en columna */
+  }
+
+  .home-card {
+    width: 90% !important; /* Más ancho en móviles */
+    height: auto !important;
+    padding: 1rem; /* Menos padding en móvil */
+  }
+
+  .categorias-botones {
+    grid-template-columns: 1fr; /* Una columna para categorías en móvil */
+  }
+
+  .info-principal {
+    flex-direction: column; /* Apilar proveedor y usuario en móvil */
+    align-items: flex-start;
+  }
+}
+
+/* Scrollbar personalizado para navegadores basados en Webkit (Chrome, Safari) */
+.turnos-agendados-lista::-webkit-scrollbar,
+.turnos-lista::-webkit-scrollbar {
+  width: 8px;
+}
+
+.turnos-agendados-lista::-webkit-scrollbar-track,
+.turnos-lista::-webkit-scrollbar-track {
+  background: #e8f5ff; /* Fondo del track del scrollbar */
+  border-radius: 10px;
+}
+
+.turnos-agendados-lista::-webkit-scrollbar-thumb,
+.turnos-lista::-webkit-scrollbar-thumb {
+  background: #9acef8; /* Color del thumb del scrollbar */
+  border-radius: 10px;
+}
+
+.turnos-agendados-lista::-webkit-scrollbar-thumb:hover,
+.turnos-lista::-webkit-scrollbar-thumb:hover {
+  background: #6eb8f5; /* Color del thumb en hover */
+}

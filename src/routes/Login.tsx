@@ -4,6 +4,8 @@ import { useAuth } from "../auth/authProvider";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 function Login() {
   const [gmail, setGmail] = useState("");
@@ -38,13 +40,33 @@ function Login() {
       }
     } catch (error) {
       console.error(error);
-      alert("Hubo un problema con el servidor. Intenta más tarde.");
+      toast.error("Hubo un problema con el servidor. Intenta más tarde.");
     }
   };
 
   return (
     <main>
       <header>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              fontSize: "1.1rem",
+              padding: "14px 18px",
+              borderRadius: "10px",
+            },
+            error: {
+              style: {
+                background: "#ff4d4d",
+                color: "#fff",
+              },
+              iconTheme: {
+                primary: "#fff",
+                secondary: "#ff4d4d",
+              },
+            },
+          }}
+        />
         <Navbar />
       </header>
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light">

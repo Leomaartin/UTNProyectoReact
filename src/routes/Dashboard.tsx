@@ -4,6 +4,11 @@ import { useState } from "react";
 import useLocalStorage from "../auth/useLocalStorage.js";
 import Navbar from "../Components/Navbar.js";
 import axios from "axios";
+import "./css/Dashboard.css";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import personita from "../img/personita2.png";
+import tienda from "../img/tienda.png";
 
 function Dashboard() {
   const auth = useAuth();
@@ -23,9 +28,49 @@ function Dashboard() {
 
   const tipoDeCuenta = () => {
     if (user?.tipoCuenta === 1) {
-      return <h3>Tu cuenta es proveedor.</h3>;
+      return (
+        <>
+          <div className="profile-container">
+            <img
+              src={user?.fotoPerfil || tienda}
+              alt="Icono de tienda"
+              className="icono-tienda"
+            />
+            <div className="overlay">Cambiar foto de perfil</div>
+          </div>
+          {categoria()}
+          <div>
+            <label htmlFor="opciones">Elegí una nueva categoría:</label>
+            <select id="opciones" value={opcion} onChange={manejarCambio}>
+              <option value="">--Seleccioná--</option>
+              <option value="0">Educación</option>
+              <option value="1">Tecnología</option>
+              <option value="2">Administrativo</option>
+              <option value="3">Mascotas</option>
+              <option value="4">Salud</option>
+              <option value="5">Belleza y Cuidado</option>
+            </select>
+
+            <button onClick={handleSubmit}>Cambiar categoría</button>
+          </div>
+          <h3>Tu cuenta es proveedor.</h3>
+        </>
+      );
     } else {
-      return <h3>Tu cuenta es usuario.</h3>;
+      return (
+        <>
+          {" "}
+          <div className="profile-container">
+            <img
+              src={user?.fotoPerfil || personita}
+              alt="Icono de tienda"
+              className="icono-tienda"
+            />
+            <div className="overlay">Cambiar foto de perfil</div>
+          </div>
+          <h3>Tu cuenta es Usuario.</h3>
+        </>
+      );
     }
   };
 
@@ -64,52 +109,55 @@ function Dashboard() {
       );
 
       if (res.data.success) {
-        alert("Categoría actualizada correctamente.");
+        toast.success("Categoría actualizada correctamente.");
         setUser({ ...user, categoria: parseInt(opcion) });
       } else {
-        alert(res.data.message || "No se pudo actualizar la categoría.");
+        toast.error(res.data.message || "No se pudo actualizar la categoría.");
       }
     } catch (error) {
       console.error("Error al actualizar categoría:", error);
-      alert("Error en el servidor.");
+      toast.error("Error en el servidor.");
     }
   };
 
   return (
-    <main>
+    <main className="main-dashboard">
       <header>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              fontSize: "1.1rem",
+              padding: "14px 18px",
+              borderRadius: "10px",
+            },
+            error: {
+              style: {
+                background: "#ff4d4d",
+                color: "#fff",
+              },
+              iconTheme: {
+                primary: "#fff",
+                secondary: "#ff4d4d",
+              },
+            },
+          }}
+        />
         <Navbar />
       </header>
+      <div className="dashboard-card">
+        <h1>Bienvenido/a {user?.nombre}!</h1>
+        <p>Este es tu Perfil</p>
+        {tipoDeCuenta()}
 
-      <h1>Bienvenido {user?.nombre}!</h1>
-      {categoria()}
-      {tipoDeCuenta()}
-
-      <div>
-        <label htmlFor="opciones">Elegí una nueva categoría:</label>
-        <select id="opciones" value={opcion} onChange={manejarCambio}>
-          <option value="">--Seleccioná--</option>
-          <option value="0">Educación</option>
-          <option value="1">Tecnología</option>
-          <option value="2">Administrativo</option>
-          <option value="3">Mascotas</option>
-          <option value="4">Salud</option>
-          <option value="5">Belleza y Cuidado</option>
-        </select>
-
-        <button onClick={handleSubmit}>Cambiar categoría</button>
-
-        <p>Elegiste: {opcion}</p>
+        <button
+          type="button"
+          className="btn btn-outline-danger"
+          onClick={handleLogout}
+        >
+          Salir
+        </button>
       </div>
-
-      <p>Este es tu dashboard.</p>
-      <button
-        type="button"
-        className="btn btn-outline-danger"
-        onClick={handleLogout}
-      >
-        Salir
-      </button>
     </main>
   );
 }

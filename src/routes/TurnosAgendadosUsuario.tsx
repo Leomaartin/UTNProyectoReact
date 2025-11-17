@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../Components/Navbar";
 import useLocalStorage from "../auth/useLocalStorage";
-import "./TurnosAgendados.css";
+import "./css/TurnosAgendados.css";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 function TurnosAgendadosUsuario() {
   const [user] = useLocalStorage("user", null);
@@ -24,17 +26,17 @@ function TurnosAgendadosUsuario() {
       });
 
       if (res.data.success) {
-        alert("Turno cancelado correctamente.");
+        toast.success("Turno cancelado correctamente.");
 
         setTurnosAgendados((prevTurnos) =>
           prevTurnos.filter((turno) => turno.id !== id)
         );
       } else {
-        alert(res.data.message || "No se pudo cancelar el turno.");
+        toast.error(res.data.message || "No se pudo cancelar el turno.");
       }
     } catch (error) {
       console.error("Error al cancelar turno:", error);
-      alert("Error en el servidor.");
+      toast.error("Error en el servidor.");
     }
   };
 
@@ -69,6 +71,26 @@ function TurnosAgendadosUsuario() {
   return (
     <main>
       <header>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              fontSize: "1.1rem",
+              padding: "14px 18px",
+              borderRadius: "10px",
+            },
+            error: {
+              style: {
+                background: "#ff4d4d",
+                color: "#fff",
+              },
+              iconTheme: {
+                primary: "#fff",
+                secondary: "#ff4d4d",
+              },
+            },
+          }}
+        />
         <Navbar />
       </header>
 
