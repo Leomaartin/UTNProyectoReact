@@ -80,6 +80,7 @@ Notificaciones automáticas por correo.
 
 ## Estructura del Repositorio
 TurnoSmart/
+
  ├── src/
  │   ├── Components/
  │   ├── routes/
@@ -94,15 +95,17 @@ TurnoSmart/
  ├── package.json
  └── README.md
 
-##Pagina hosteada y paso a paso:
+## Pagina hosteada y paso a paso:
 La pagina no esta terminada pero se hosteo con Render por ahora solo el front.
 Se organizo el proyecto en back y front, y se cambio todos los archivos a typescript es decir tsx.
 Se intentara conectar la base de datos proximamente con usuarios ya creados.
 Link:https://utnproyectoreact-6.onrender.com
 
+
  ##  Documentación del Proyecto
 
 Toda la documentación técnica y formal del proyecto se encuentra disponible en la carpeta [`/docs`](docs/).
+
 
 ### 📄 Archivos principales:
 
