@@ -4,10 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/authProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faRightToBracket,
-  faRegistered,
-} from "@fortawesome/free-solid-svg-icons";
+  faRightToBracket, // Iniciar sesión
+  faRegistered, // Registrarse
+  faUser, // Perfil/Bienvenido
+  faCalendarCheck, // Tus Turnos
+  faHome, // Home
+  faSignOutAlt, // Cerrar sesión (Logout)
+  faSearch, // Búsqueda
+} from "@fortawesome/free-solid-svg-icons"; // Agregué más íconos útiles
 import logo from "../img/logo.png";
+import "../routes/css/Navbar.css"; // -> Vamos a definir los estilos aquí
 
 function Navbar() {
   const [user, setUser] = useLocalStorage("user", null);
@@ -25,32 +31,26 @@ function Navbar() {
     setUserButton(!userButton);
   }
 
+  // Define los enlaces en un array para mayor limpieza
+  const navLinks = [
+    { path: "/", label: "Home", icon: faHome },
+    {
+      path: "/turnosagendadosusuario",
+      label: "Tus Turnos",
+      icon: faCalendarCheck,
+    },
+    { path: "/dashboard", label: "Mi Perfil", icon: faUser },
+  ];
+
   return (
-    <nav
-      className="navbar navbar-expand-lg"
-      style={{
-        backgroundColor: "#6eb8f5",
-        borderBottom: "1px solid #9acef8",
-      }}
-      data-bs-theme="light"
-    >
-      <a className="navbar-brand" href="/">
-        <img
-          src={logo}
-          alt="TurnosSmart Logo"
-          style={{
-            marginLeft: "0%",
-            color: "#fafafaff",
-            position: "absolute",
-            width: "70px",
-            height: "70px",
-            borderRadius: "15px",
-            top: "5px",
-            left: "2%",
-          }}
-        />
-      </a>
+    <nav className="navbar navbar-expand-lg custom-navbar">
       <div className="container-fluid">
+        {/* Logo and Brand */}
+        <a className="navbar-brand logo-container" href="/">
+          <img src={logo} alt="TurnosSmart Logo" className="navbar-logo" />
+        </a>
+
+        {/* Toggler Button (Mobile) */}
         <button
           className="navbar-toggler"
           type="button"
@@ -63,134 +63,84 @@ function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div
-          className="collapse navbar-collapse"
-          id="navbarSupportedContent"
-          style={{ justifyContent: "center" }}
-        >
-          <ul className="nav justify-content-center">
-            <li className="nav-item">
-              <a className="nav-link" href="/" style={{ color: "#fafafaff" }}>
-                {" "}
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className="nav-link"
-                href="/turnosagendadosusuario"
-                style={{ color: "#fafafaff" }}
-              >
-                Tus Turnos
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className="nav-link"
-                href="/dashboard"
-                style={{ color: "#fafafaff" }}
-              >
-                Mi Perfil
-              </a>
-            </li>
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          {/* Central Navigation Links */}
+          <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
+            {navLinks.map((link) => (
+              <li className="nav-item" key={link.path}>
+                <a className="nav-link nav-link-custom" href={link.path}>
+                  <FontAwesomeIcon icon={link.icon} className="me-2" />
+                  {link.label}
+                </a>
+              </li>
+            ))}
           </ul>
 
-          <form className="d-flex" role="search" style={{ marginLeft: "20%" }}>
+          {/* Search Form */}
+          <form className="d-flex me-4 search-form" role="search">
             <input
-              className="form-control me-2"
+              className="form-control me-2 search-input"
               type="search"
-              placeholder="Buscar"
+              placeholder="Buscar..."
               aria-label="Search"
-              style={{
-                backgroundColor: "#fafafaff",
-                border: "1px solid #fafafaff",
-                color: "#fafafaff",
-              }}
             />
-            <button
-              className="btn"
-              type="submit"
-              style={{
-                backgroundColor: "#fafbfd",
-                color: "#b2b2b2",
-                border: "none",
-                transition: "0.3s",
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#b2b2b2")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#fafbfd")}
-            >
-              Buscar
+            <button className="btn search-button" type="submit">
+              <FontAwesomeIcon icon={faSearch} />
             </button>
           </form>
 
-          <div style={{ position: "relative", marginLeft: "12%" }}>
-            {user?.nombre && (
+          {/* User Dropdown */}
+          <div className="dropdown-container">
+            {user?.nombre ? (
+              // Usuario Logueado
               <button
                 type="button"
-                className="btn"
+                className="btn user-button logged-in"
                 onClick={desplegarButton}
-                style={{
-                  backgroundColor: "#fafbfd",
-                  color: "#b2b2b2",
-                  border: "none",
-                  borderRadius: "8px",
-                  padding: "6px 12px",
-                }}
               >
-                Bienvenido {user.nombre}
+                <FontAwesomeIcon icon={faUser} className="me-2" />
+                Bienvenido **{user.nombre}**
+              </button>
+            ) : (
+              // Usuario No Logueado (Muestra Loguearse/Registrarse directamente o un botón genérico)
+              <button
+                type="button"
+                className="btn user-button logged-out"
+                onClick={desplegarButton}
+              >
+                <FontAwesomeIcon icon={faUser} className="me-2" />
+                Mi Cuenta
               </button>
             )}
-            <div>
-              <ul className="nav justify-content-center">
-                <li className="nav-item">
-                  <a href="/login" style={{ color: "#308adfff" }}>
-                    {" "}
-                    <FontAwesomeIcon
-                      icon={faRightToBracket}
-                      style={{ marginRight: "10px" }}
-                    />
-                  </a>
-                  <a href="/registrarse" style={{ color: "#308adfff" }}>
-                    {" "}
-                    <FontAwesomeIcon icon={faRegistered} />
-                  </a>
-                </li>
-              </ul>
-            </div>
 
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: 0,
-                background: "#e8f5ff",
-                border: "1px solid #9acef8",
-                padding: "10px",
-                borderRadius: "8px",
-                display: "flex",
-                flexDirection: "column",
-                minWidth: "150px",
-                boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-                transition: "all 0.2s ease",
-                opacity: userButton ? 1 : 0,
-                transform: userButton ? "translateY(0)" : "translateY(-10px)",
-                pointerEvents: userButton ? "auto" : "none",
-                zIndex: 1000,
-              }}
-            >
-              <a href="/" style={{ textDecoration: "none", color: "#2196f3" }}>
-                Home
-              </a>
-              <a
-                href="/"
-                style={{ textDecoration: "none", color: "#2196f3" }}
-                onClick={handleLogout}
-              >
-                Logout
-              </a>
-              <a href="#" style={{ textDecoration: "none", color: "#2196f3" }}>
-                Configuración
-              </a>
+            <div className={`dropdown-menu-custom ${userButton ? "show" : ""}`}>
+              {user?.nombre ? (
+                // Menu cuando está logueado
+                <>
+                  {/* Se puede añadir un enlace al perfil aquí también si es necesario */}
+                  <div className="dropdown-header">Hola, **{user.nombre}**</div>
+                  <a
+                    href="/"
+                    className="dropdown-item-custom logout"
+                    onClick={handleLogout}
+                  >
+                    <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                    Cerrar Sesión
+                  </a>
+                </>
+              ) : (
+                // Menu cuando NO está logueado
+                <>
+                  <a href="/login" className="dropdown-item-custom">
+                    <FontAwesomeIcon icon={faRightToBracket} className="me-2" />
+                    Iniciar Sesión
+                  </a>
+                  <a href="/registrarse" className="dropdown-item-custom">
+                    <FontAwesomeIcon icon={faRegistered} className="me-2" />
+                    Registrarse
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>

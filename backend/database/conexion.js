@@ -1,6 +1,7 @@
 // backend/database/conexion.js
 import mysql from "mysql2";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 // =========================
@@ -609,85 +610,83 @@ export default function registrarEndpoints(app) {
       res.json({ success: true, message: "Turno borrado correctamente" });
     });
   });
+
   app.post("/api/horasBloqueadas", (req, res) => {
-    const turnos = req.body.turno; // ⬅️ el array completo
+    const turnos = req.body.turnos;
 
     if (!Array.isArray(turnos)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Se esperaba un array" });
+      return res.status(400).json({
+        success: false,
+        message: "Se esperaba un array",
+      });
     }
 
-    // como todos tienen el mismo id, agarro el primero
-    const id_turno = turnos[0].id;
+    const SQL_SELECT = `
+    SELECT turnos_bloqueados 
+    FROM turnos 
+    WHERE id = ?
+  `;
 
-    // lo convierto a JSON
-    const jsonTurnos = JSON.stringify(turnos);
-
-    const SQL_QUERY = `
-    UPDATE turnos
+    const SQL_UPDATE = `
+    UPDATE turnos 
     SET turnos_bloqueados = ?
     WHERE id = ?
   `;
 
-    conexion.query(SQL_QUERY, [jsonTurnos, id_turno], (err, result) => {
-      if (err) {
-        console.error("ERROR SQL:", err);
-        return res.status(500).json({ success: false, error: err });
-      }
+    const promises = turnos.map((t) => {
+      return new Promise((resolve, reject) => {
+        // 1️⃣ Leer bloqueos actuales
+        conexion.query(SQL_SELECT, [t.id], (err, result) => {
+          if (err) return reject(err);
 
-      res.json({
-        success: true,
-        message: "Turnos bloqueados actualizados",
-        updated: result.affectedRows,
+          let bloqueosActuales = [];
+
+          if (result[0]?.turnos_bloqueados) {
+            try {
+              bloqueosActuales = JSON.parse(result[0].turnos_bloqueados);
+            } catch (e) {
+              console.error("JSON inválido:", e);
+            }
+          }
+
+          // 2️⃣ Buscar si ya existe un registro para esa fecha
+          let registro = bloqueosActuales.find((b) => b.fecha === t.fecha);
+
+          if (registro) {
+            // Merge: NO reemplaza, añade horas sin duplicar
+            registro.horas = Array.from(
+              new Set([...registro.horas, ...t.horas])
+            );
+          } else {
+            // Crear registro nuevo
+            bloqueosActuales.push({
+              fecha: t.fecha,
+              horas: t.horas,
+            });
+          }
+
+          const nuevoJSON = JSON.stringify(bloqueosActuales);
+
+          // 3️⃣ Guardar todo actualizado
+          conexion.query(SQL_UPDATE, [nuevoJSON, t.id], (err2, resultado) => {
+            if (err2) return reject(err2);
+            resolve(resultado.affectedRows);
+          });
+        });
       });
     });
-  });
-  app.post("/api/horasBloqueadas2", (req, res) => {
-    const { proveedorid } = req.body;
 
-    if (!proveedorid) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Falta proveedorid" });
-    }
-
-    const SQL = `
-    SELECT 
-      id,
-      CASE 
-        WHEN turnos_bloqueados IS NULL OR turnos_bloqueados = '' 
-        THEN '[]'
-        ELSE turnos_bloqueados
-      END AS turnos_bloqueados
-    FROM turnos
-    WHERE id_proveedor = ?
-  `;
-
-    conexion.query(SQL, [proveedorid], (err, rows) => {
-      if (err) {
-        console.error("ERROR SQL:", err);
-        return res.status(500).json({ success: false, error: err });
-      }
-
-      try {
-        // Convertimos cada fila a JSON real
-        const resultado = rows.map((row) => ({
-          id: row.id,
-          turnos_bloqueados: JSON.parse(row.turnos_bloqueados),
-        }));
-
-        return res.json({
+    Promise.all(promises)
+      .then((respuestas) =>
+        res.json({
           success: true,
-          result: resultado,
-        });
-      } catch (e) {
-        console.error("Error al parsear JSON:", e);
-        return res.status(500).json({
-          success: false,
-          message: "Error al procesar turnos_bloqueados",
-        });
-      }
-    });
+          message: "Horas bloqueadas actualizadas correctamente",
+          updated: respuestas.reduce((a, b) => a + b, 0),
+        })
+      )
+      .catch((err) => {
+        console.error("ERROR:", err);
+        res.status(500).json({ success: false, error: err });
+      });
   });
 }

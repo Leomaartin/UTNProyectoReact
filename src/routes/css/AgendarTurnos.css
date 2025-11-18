@@ -1,0 +1,141 @@
+:root {
+  --primary-blue: #007bff;
+
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --dark-text: #333;
+  --lightest-bg: #fafafa;
+  /* Colores para las horas */
+  --hour-available: #fff;
+  --hour-selected: #28a745; /* VERDE para seleccionado */
+  --hour-blocked: #28a745;
+}
+
+/* --- Estilos de Contenedor y Lista (Basado en tu estructura) --- */
+
+.turnos-proveedor-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--shadow-light);
+}
+
+.turnos-proveedor-content h3 {
+  color: var(--primary-blue);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--light-blue-bg);
+  padding-bottom: 10px;
+}
+
+.turnos-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.turno-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 15px 25px;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.turno-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.turno-header strong {
+  font-size: 1.1rem;
+  color: var(--dark-text);
+}
+
+/* Estilo del contenedor de horas */
+.horas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+/* --- Estilos de los Botones de Hora (SPAN) --- */
+
+/* Estilo base */
+.hora-span {
+  /* Forma y tamaño */
+  padding: 10px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  user-select: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* 🔵 Estado: Disponible (Borde azul) 🔵 */
+.hora-available {
+  background-color: #ffffff;
+  color: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+.hora-available:hover {
+  background-color: var(--light-blue-bg);
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+}
+
+/* ✅ Estado: Seleccionada (Fondo y borde VERDE) ✅ */
+.hora-selected {
+  background-color: var(--hour-selected);
+  color: #fff;
+  border-color: var(--hour-selected);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+}
+
+/* 👻 Estado: Bloqueada (Desaparece, Mantiene Espacio) 👻 */
+.hora-blocked {
+  /* Oculta visualmente */
+  opacity: 0;
+  /* Mantiene las dimensiones del espacio */
+
+  /* Impide el clic */
+  pointer-events: none;
+  cursor: not-allowed;
+
+  /* Asegura la transparencia total */
+  background-color: transparent;
+  border-color: transparent;
+  color: transparent;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+/* --- Otros estilos (SIN CAMBIOS) --- */
+
+/* Botón de acción final */
+.btn-action-submit {
+  display: block;
+  margin: 40px auto 20px;
+  padding: 12px 30px;
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-action-submit:hover {
+  background-color: #2980b9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

@@ -29,6 +29,7 @@ function Home() {
   const [turnosAgendados, setTurnosAgendados] = useState([]);
   const [loading, setLoading] = useState(false);
   const [turnos, setTurnos] = useState([]);
+  const [hover, setHover] = useState(false);
   const navigate = useNavigate();
 
   // Función para navegar a la página de categorías
@@ -139,89 +140,123 @@ function Home() {
 
       <section>
         <div className="home-grid">
-          {user?.tipoCuenta == 0 ? (
-            <a className="turno-titulo">Nose</a>
-          ) : (
-            <StyleCards
-              className="home-card small-card"
-              width="49.5%"
-              heigth="20rem"
-              background="#ffffffff"
-            >
-              <h2 className="agregar-turnos-titulo">
-                <a href="/turnosdisponibles" className="turno-titulo">
-                  Agregar Turnos +
-                </a>
-              </h2>
-              <div className="turnos-lista">
-                {turnos.length > 0 ? (
-                  turnos.map((t) => (
-                    <div key={t.id} className="turno-box">
-                      <div className="turno-info">
-                        <p className="turno-fecha">
-                          {new Date(t.fecha).toLocaleDateString("es-AR")}
-                        </p>
-                        <p className="turno-hora">
-                          {t.hora_inicio} a {t.hora_fin}
-                        </p>
-                      </div>
-                      <button
-                        className="btn-eliminar-turno"
-                        onClick={() => handleSubmit(t.id)}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <p className="sin-turnos">No hay turnos disponibles</p>
-                )}
+          {user?.tipoCuenta === 0 ? (
+            // CARD DE BUSCAR EN CATEGORÍAS
+            <div className="divcategorias">
+              <h2 className="category-title">Categorias:</h2>
+              <div className="category-grid-buttons">
+                {[
+                  "Educación",
+                  "Tecnología",
+                  "Administrativos / Profesionales",
+                  "Mascotas",
+                  "Salud y Bienestar",
+                  "Belleza y Cuidado Personal",
+                ].map((cat, index) => (
+                  <button
+                    key={index}
+                    className="category-action-button"
+                    onClick={() => irACategoria(index)}
+                  >
+                    {cat}
+                  </button>
+                ))}
               </div>
-            </StyleCards>
-          )}
-
-          {/* CARD DE BUSCAR EN CATEGORÍAS */}
-          <StyleCards
-            className="home-card large-card"
-            width="49.5%"
-            heigth="20rem"
-            background="#ffffffff" // Color de fondo de la tarjeta
-          >
-            <h2 className="buscar-categoria">Buscar en categorías:</h2>
-
-            <div className="categorias-botones">
-              <button className="categoria-btn" onClick={() => irACategoria(0)}>
-                Educación
-              </button>
-              <button className="categoria-btn" onClick={() => irACategoria(1)}>
-                Tecnología
-              </button>
-              <button className="categoria-btn" onClick={() => irACategoria(2)}>
-                Administrativos / Profesionales
-              </button>
-              <button className="categoria-btn" onClick={() => irACategoria(3)}>
-                Mascotas
-              </button>
-              <button className="categoria-btn" onClick={() => irACategoria(4)}>
-                Salud y Bienestar
-              </button>
-              <button className="categoria-btn" onClick={() => irACategoria(5)}>
-                Belleza y Cuidado Personal
-              </button>
             </div>
-          </StyleCards>
+          ) : (
+            <>
+              {/* CARD DE TURNOS DEL PROVEEDOR */}
+              <StyleCards
+                className="home-card small-card"
+                width="49.5%"
+                height="20rem"
+                background="#fff"
+              >
+                <h2 className="agregar-turnos-titulo">
+                  <a href="/turnosdisponibles" className="turno-titulo">
+                    Agregar Turnos +
+                  </a>
+                  <i
+                    className="fa-solid fa-eye"
+                    style={{
+                      marginLeft: "60%",
+                      cursor: "pointer",
+                      fontSize: hover ? "22px" : "18px",
+                      color: hover ? "#007bff" : "#000",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={() => setHover(true)}
+                    onMouseLeave={() => setHover(false)}
+                    onClick={() => navigate(`/verturnosproveedor/${user?.id}`)}
+                  />
+                </h2>
+
+                <div className="turnos-lista">
+                  {turnos.length > 0 ? (
+                    turnos.map((t) => (
+                      <div key={t.id} className="turno-box">
+                        <div className="turno-info">
+                          <p className="turno-fecha">
+                            {new Date(t.fecha).toLocaleDateString("es-AR")}
+                          </p>
+                          <p className="turno-hora">
+                            {t.hora_inicio} a {t.hora_fin}
+                          </p>
+                        </div>
+                        <button
+                          className="btn-eliminar-turno"
+                          onClick={() => handleSubmit(t.id)}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="sin-turnos">No hay turnos disponibles</p>
+                  )}
+                </div>
+              </StyleCards>
+
+              {/* CARD DE BUSCAR EN CATEGORÍAS */}
+              <StyleCards
+                className="home-card large-card"
+                width="49.5%"
+                height="20rem"
+                background="#fff"
+              >
+                <h2 className="buscar-categoria">Buscar en categorías:</h2>
+                <div className="categorias-botones">
+                  {[
+                    "Educación",
+                    "Tecnología",
+                    "Administrativos / Profesionales",
+                    "Mascotas",
+                    "Salud y Bienestar",
+                    "Belleza y Cuidado Personal",
+                  ].map((cat, index) => (
+                    <button
+                      key={index}
+                      className="categoria-btn"
+                      onClick={() => irACategoria(index)}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </StyleCards>
+            </>
+          )}
         </div>
 
-        {/* Sección inferior - MIS TURNOS (ACTUALIZADO CON NUEVOS ESTILOS) */}
+        {/* Sección inferior - MIS TURNOS */}
         <div className="bottom-section">
           <StyleCards
             className="home-card full-card"
             width="100%"
-            heigth="100%"
+            height="100%"
             background="#f4f4f4"
           >
-            <h2 style={{ color: "#2196f3" }}>Mis Turnos</h2>{" "}
-            {/* Título blanco */}
+            <h2 style={{ color: "#2196f3" }}>Mis Turnos</h2>
             {loading && (
               <p style={{ color: "#2196f3" }}>Cargando turnos agendados...</p>
             )}
@@ -230,16 +265,14 @@ function Home() {
             )}
             {!loading && turnosAgendados.length > 0 && (
               <div className="turnos-agendados-lista">
-                {" "}
                 {turnosAgendados.map((turno, index) => (
                   <div key={index} className="turno-agendado-item">
-                    {" "}
                     <div className="info-principal">
                       <span className="proveedor-nombre">
-                        Agendado por: {turno.nombre}{" "}
+                        Agendado por: {turno.nombre}
                       </span>
                       <span className="usuario-nombre">
-                        {turno.proveedorNombre}{" "}
+                        {turno.proveedorNombre}
                       </span>
                     </div>
                     <div className="info-detalle">

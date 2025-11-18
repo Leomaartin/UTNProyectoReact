@@ -25,7 +25,7 @@
   margin-bottom: 2rem;
   margin-top: 2rem;
   flex-wrap: wrap;
-  justify-content: center;
+  margin-left: 5%;
 }
 
 /* Tarjetas */
@@ -301,4 +301,43 @@
 .turnos-agendados-lista::-webkit-scrollbar-thumb:hover,
 .turnos-lista::-webkit-scrollbar-thumb:hover {
   background: #6eb8f5; /* Color del thumb en hover */
+}
+
+.category-grid-buttons {
+  display: flex;
+  gap: 15px;
+  width: 170%;
+  margin-top: 20px;
+}
+
+.category-action-button {
+  background-color: var(--lightest-bg); /* Fondo blanco puro */
+  color: var(--primary-blue);
+  border: 1px solid #c3e3fd; /* Borde sutil */
+  padding: 15px 10px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Sombra para el efecto flotante */
+  width: 100%;
+}
+
+.category-action-button:hover {
+  background-color: var(--primary-blue);
+  color: white;
+  transform: translateY(-5px); /* Efecto 3D de levantamiento */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Sombra más fuerte al levantar */
+}
+
+/* Cada tarjeta de turno agendado (AHORA ES UN RECTÁNGULO LIMPIO) */
+
+.appointment-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  background-color: #e0f0ff;
+}
+.divcategorias h2 {
+  margin-left: 80%;
 }

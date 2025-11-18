@@ -36,6 +36,7 @@ function Dashboard() {
               alt="Icono de tienda"
               className="icono-tienda"
             />
+            <input type="file" />
             <div className="overlay">Cambiar foto de perfil</div>
           </div>
           {categoria()}
@@ -66,6 +67,7 @@ function Dashboard() {
               alt="Icono de tienda"
               className="icono-tienda"
             />
+            <input type="file" />
             <div className="overlay">Cambiar foto de perfil</div>
           </div>
           <h3>Tu cuenta es Usuario.</h3>

@@ -1,0 +1,163 @@
+/* Paleta de colores */
+:root {
+  --primary-blue: #3498db;
+  --dark-text: #34495e;
+  --hour-available: #e6f7ff; /* Fondo para horas disponibles */
+  --hour-selected: rgb(
+    42,
+    230,
+    42
+  ); /* Fondo para horas seleccionadas (agendar) */
+  --hour-blocked: red; /* Fondo para horas ya agendadas/bloqueadas */
+  --danger-red: #e74c3c;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de la página principal */
+.turnos-proveedor-container {
+  background-color: #f7f9fc; /* Fondo claro para la página */
+  min-height: 100vh;
+  padding: 30px 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.turnos-proveedor-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px var(--shadow-light);
+}
+
+.turnos-proveedor-content h3 {
+  color: var(--primary-blue);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--light-blue-bg);
+  padding-bottom: 10px;
+}
+
+/* Estilo de la lista de turnos (reemplaza .list-group) */
+.turnos-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Separación entre filas de fecha */
+}
+
+/* Estilo de cada item de turno por fecha (reemplaza .list-group-item) */
+.turno-item {
+  background-color: var(--lightest-bg);
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 15px 25px;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.turno-item:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.turno-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.turno-header strong {
+  font-size: 1.1rem;
+  color: var(--dark-text);
+}
+
+/* Estilo del contenedor de horas */
+.horas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+/* Estilo base del span de hora */
+.hora-span {
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  user-select: none; /* Previene selección de texto */
+}
+
+/* Estado: Hora disponible */
+.hora-available {
+  background-color: var(--hour-available);
+  color: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+.hora-available:hover {
+  background-color: #c3e3fd;
+}
+
+/* Estado: Hora seleccionada (para agendar/cancelar) */
+.hora-selected {
+  background-color: var(--hour-selected); /* Rojo para indicar una acción */
+  color: #fff;
+  border-color: var(--hour-selected);
+}
+.hora-selected:hover {
+  background-color: #42d149;
+}
+
+/* Estado: Hora bloqueada (ya agendada por otro) */
+.hora-blocked {
+  background-color: var(--hour-blocked);
+  color: #fff;
+  cursor: not-allowed;
+  opacity: 0.7;
+  text-decoration: line-through;
+  border-color: var(--hour-blocked);
+}
+
+/* Botón de eliminar fila (X) */
+.btn-delete-row {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--danger-red);
+  font-weight: bold;
+  font-size: 1.4rem;
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-delete-row:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Botón de acción final */
+.btn-action-submit {
+  display: block;
+  margin: 40px auto 20px;
+  padding: 12px 30px;
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-action-submit:hover {
+  background-color: #2980b9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

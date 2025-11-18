@@ -1,78 +1,145 @@
 /* Contenedor general */
 .turnos-container {
-  padding: 20px;
-  background-color: #f0f2f5;
-  min-height: 100vh;
-  font-family: "Arial", sans-serif;
+  padding: 30px 20px;
+  min-height: calc(100vh - 60px);
+  font-family: "Poppins", "Arial", sans-serif;
+  max-width: 1200px; /* Limitamos el ancho del contenedor principal */
+  margin: 0 auto; /* Centrar el contenedor principal */
+}
+
+.turnos-container h2 {
+  color: #2196f3;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  text-align: center;
+  margin-top: 2%;
 }
 
 /* Lista de turnos */
 .turnos-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  /* Hacemos las columnas más pequeñas: min 250px, máx 350px */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 350px));
+  gap: 25px;
+  /* Centrar la cuadrícula de tarjetas si el espacio es mayor a las tarjetas */
+  justify-content: center;
 }
 
 /* Tarjeta de cada turno */
 .turno-card {
-  border-radius: 12px;
-  background: linear-gradient(145deg, #ffffff, #e6e6e6);
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 15px;
+  background: #ffffff;
+  padding: 20px; /* Reducimos el padding interno */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #007bff;
+  display: flex;
+  flex-direction: column;
+  text-align: center; /* Centramos el texto dentro de la tarjeta */
 }
 
 .turno-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px); /* Reducimos la elevación al pasar el mouse */
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
-/* Nombre del usuario */
+/* Encabezados de la tarjeta (ya centrado por 'text-align: center' en .turno-card) */
 .turno-card h3 {
-  margin: 0;
-  font-size: 1.3rem;
-  color: #333;
+  margin: 0 0 5px 0;
+  font-size: 1.4rem; /* Ligeramente más pequeño */
+  color: #2196f3;
+  font-weight: 700;
 }
 
-/* Fecha del turno */
-.turno-card p {
-  margin: 5px 0;
+.turno-card .profesional-nombre {
+  margin: 0 0 10px 0; /* Reducimos el margen */
+  font-size: 1rem;
   color: #555;
-  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+/* Información del turno */
+.turno-card .info-row {
+  margin-bottom: 8px; /* Reducimos el margen */
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem; /* Ligeramente más pequeño */
+  color: #444;
+  /* Importante: Mantenemos centrado el contenido de esta fila */
+  justify-content: center;
+}
+
+.turno-card .info-row strong {
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
 }
 
 /* Lista de horas */
+.turno-card .horas-wrapper {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  padding-top: 8px;
+  border-top: 1px dashed #ddd;
+}
+
 .turno-card .horas-list {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
-  margin-top: 5px;
-  margin-bottom: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  /* Centrar horizontalmente la lista de horas */
+  justify-content: center;
 }
 
 .turno-card .hora-item {
-  background-color: #4caf50;
+  background-color: #28a745;
   color: white;
-  padding: 5px 10px;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  padding: 5px 10px; /* Más compacto */
+  border-radius: 15px;
+  font-size: 0.8rem; /* Más pequeño */
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 /* Botón cancelar */
 .cancelar-turno {
-  display: inline-block;
-  margin-top: 10px;
-  background-color: #e53935;
+  margin-top: 15px; /* Ajustamos el margen superior */
+  /* Centramos el botón en la tarjeta */
+  align-self: center;
+  background-color: #dc3545;
   color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 8px 16px; /* Hacemos el botón más pequeño */
+  border: none;
+  border-radius: 6px; /* Ligeramente menos redondeado */
   cursor: pointer;
   font-weight: bold;
-  text-align: center;
-  width: fit-content;
-  transition: background-color 0.2s ease;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .cancelar-turno:hover {
-  background-color: #c62828;
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Estilos para mensaje de no turnos/cargando */
+.turnos-container .empty-message,
+.turnos-container .loading-message {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #6c757d;
+  padding: 30px 0;
+  background-color: #fff;
+  border-radius: 8px;
+  margin-top: 15px;
+  max-width: 500px; /* Limitamos el ancho del mensaje */
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }

@@ -5,9 +5,9 @@ import useLocalStorage from "../auth/useLocalStorage";
 import { useParams } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import toast, { Toaster } from "react-hot-toast";
-import "./css/AgendarTurnos.css";
+import "./css/VerTurnosProveedor.css";
 
-// --- FUNCIONES DE UTILIDAD (SIN CAMBIOS) ---
+// ================= UTILIDADES =================
 
 function calcularHora(time: number): string {
   const pad = (n: number) => n.toString().padStart(2, "0");
@@ -20,7 +20,7 @@ function calcularHora(time: number): string {
 function calcularNumero(hora: string): number {
   if (!hora) return 0;
   const partes = hora.split(":").map(Number);
-  if (partes.length < 3) return 0;
+  if (partes.length < 2) return 0;
   const [hr, min] = partes;
   return hr * 3600 + min * 60;
 }
@@ -37,7 +37,7 @@ function formatFecha(fecha: string): string {
     : d.toLocaleDateString("es-AR", { timeZone: "UTC" });
 }
 
-// --- COMPONENTE HORA (AJUSTADO PARA CLASES CSS) ---
+// ================= COMPONENTE HORA =================
 
 interface HoraProps {
   hora: string;
@@ -65,23 +65,20 @@ function Hora({
     onToggle(hora, nuevoEstado);
   };
 
-  // Lógica para aplicar las clases CSS:
   const getClassState = () => {
     if (bloqueada) return "hora-blocked";
-    if (agendar) return "hora-selected"; // 👈 Si está seleccionada (agendar=true)
-    return "hora-available"; // Por defecto, si no está bloqueada ni seleccionada, está disponible
+    if (agendar) return "hora-selected"; // verde al seleccionar
+    return "hora-available";
   };
 
-  const classNames = `hora-span ${getClassState()}`;
-
   return (
-    <span onClick={toggleHora} className={classNames}>
+    <span onClick={toggleHora} className={`hora-span ${getClassState()}`}>
       {hora}
     </span>
   );
 }
 
-// --- COMPONENTE ARRAY DE HORAS (SIN CAMBIOS) ---
+// ================= COMPONENTE ARRAY HORAS =================
 
 interface ArrayHorasProps {
   horaInicio: string;
@@ -119,9 +116,7 @@ function ArrayHoras({
   );
 }
 
-// ========================================
-// COMPONENTE PRINCIPAL: AGENDAR TURNO (SIN CAMBIOS)
-// ========================================
+// ================= COMPONENTE PRINCIPAL =================
 
 interface TurnoData {
   id: string;
@@ -135,7 +130,7 @@ interface AgendarTurnoState {
   [id: string]: { fecha: string; horas: string[] };
 }
 
-function AgendarTurno() {
+function VerTurnosProveedor() {
   const [turnos, setTurnos] = useState<TurnoData[]>([]);
   const [proveedorNombre, setProveedorNombre] = useState("Cargando...");
   const [agendarTurnos, setAgendarTurnos] = useState<AgendarTurnoState>({});
@@ -143,7 +138,7 @@ function AgendarTurno() {
   const { proveedorid } = useParams<{ proveedorid: string }>();
   const [user] = useLocalStorage("user", null);
 
-  // --- EFECTO: TRAER TURNOS DISPONIBLES ---
+  // --- Traer turnos ---
   useEffect(() => {
     if (!proveedorid) return;
     const fetchTurnos = async () => {
@@ -153,15 +148,14 @@ function AgendarTurno() {
         );
         setTurnos(res.data || []);
       } catch (err) {
-        console.error("Error al traer turnos:", err);
-        toast.error("Error al cargar la disponibilidad.");
-        setTurnos([]);
+        console.error(err);
+        toast.error("Error al cargar los turnos.");
       }
     };
     fetchTurnos();
   }, [proveedorid]);
 
-  // --- EFECTO: TRAER NOMBRE DEL PROVEEDOR ---
+  // --- Traer nombre proveedor ---
   useEffect(() => {
     if (!proveedorid) return;
     const fetchProveedor = async () => {
@@ -171,14 +165,14 @@ function AgendarTurno() {
         );
         setProveedorNombre(res.data.nombre || "Proveedor desconocido");
       } catch (err) {
-        console.error("Error al traer proveedor:", err);
+        console.error(err);
         setProveedorNombre("Error al cargar nombre");
       }
     };
     fetchProveedor();
   }, [proveedorid]);
 
-  // --- LÓGICA: TOGGLE HORA (Selección/Deselección) ---
+  // --- Toggle hora ---
   const handleToggleHora = (
     id: string,
     fecha: string,
@@ -209,23 +203,32 @@ function AgendarTurno() {
     });
   };
 
-  // --- LÓGICA: SUBMIT (Agendar) ---
+  // --- Submit ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!user) return toast.error("Debes iniciar sesión para agendar turnos.");
 
     const turnosSeleccionados = Object.values(agendarTurnos).flatMap(
       (t) => t.horas
     ).length;
-    if (turnosSeleccionados === 0) {
-      toast("Selecciona al menos un turno para agendar.", { icon: "⚠️" });
-      return;
-    }
-
-    if (!user) return toast.error("Debes iniciar sesión para agendar turnos.");
+    if (turnosSeleccionados === 0)
+      return toast("Selecciona al menos un turno.", { icon: "⚠️" });
 
     try {
-      const turnosParaEnviar = Object.entries(agendarTurnos).map(
-        ([id, data]) => ({
+      // Bloquear turnos
+      await axios.post("http://localhost:3333/api/horasBloqueadas", {
+        turnos: Object.entries(agendarTurnos).map(([id, data]) => ({
+          id,
+          fecha: data.fecha,
+          horas: data.horas,
+        })),
+      });
+
+      // Agendar turnos
+      await axios.post("http://localhost:3333/api/turnoAgendado", {
+        proveedorid,
+        turnos: Object.entries(agendarTurnos).map(([id, data]) => ({
           id_turno: generarIdTurno(),
           nombre: user.nombre,
           userid: user.id,
@@ -233,38 +236,12 @@ function AgendarTurno() {
           proveedorid,
           fecha: data.fecha,
           horas: data.horas,
-        })
-      );
-
-      const turnosParaBloquear = Object.entries(agendarTurnos).map(
-        ([id, data]) => ({
-          id,
-          fecha: data.fecha,
-          horas: data.horas,
-        })
-      );
-
-      await axios.post("http://localhost:3333/api/horasBloqueadas", {
-        turnos: turnosParaBloquear,
+        })),
       });
 
-      await axios.post("http://localhost:3333/api/turnoAgendado", {
-        proveedorid,
-        turnos: turnosParaEnviar,
-      });
-
-      await axios.post("http://localhost:3333/api/turnoGuardado", {
-        usuarioid: user.id,
-        turnos: turnosParaEnviar,
-      });
-
-      toast.success(
-        `${turnosSeleccionados} turno(s) agendado(s) correctamente.`
-      );
-
+      toast.success(`${turnosSeleccionados} turno(s) agendado(s).`);
       setAgendarTurnos({});
-
-      // 🔄 NUEVO: recargar los turnos desde el servidor
+      // Recargar turnos
       const res = await axios.get(
         `http://localhost:3333/api/tusTurnos/${proveedorid}`
       );
@@ -275,35 +252,30 @@ function AgendarTurno() {
     }
   };
 
-  // --- RENDERIZADO ---
   return (
-    <main>
+    <main className="turnos-proveedor-container">
       <header>
         <Toaster position="top-right" />
         <Navbar />
       </header>
 
       <div className="turnos-proveedor-content">
-        <h3>📅 Turnos disponibles con {proveedorNombre}</h3>
+        <h3>📅 Turnos disponibles - {proveedorNombre}</h3>
 
         <ul className="turnos-list">
           {turnos.length === 0 ? (
-            <p className="text-center text-muted">
-              No hay turnos disponibles para este proveedor.
-            </p>
+            <p className="text-center text-muted">No hay turnos disponibles.</p>
           ) : (
             turnos.map((t) => {
               let turnosBloqueados: { fecha: string; horas: string[] }[] = [];
 
-              if (
-                typeof t.turnos_bloqueados === "string" &&
-                t.turnos_bloqueados
-              ) {
+              if (t.turnos_bloqueados) {
                 try {
-                  turnosBloqueados = JSON.parse(t.turnos_bloqueados);
-                } catch (e) {
-                  console.error("Error al parsear turnos bloqueados:", e);
-                }
+                  turnosBloqueados =
+                    typeof t.turnos_bloqueados === "string"
+                      ? JSON.parse(t.turnos_bloqueados)
+                      : t.turnos_bloqueados;
+                } catch {}
               }
 
               const horasBloqueadas = turnosBloqueados
@@ -317,7 +289,6 @@ function AgendarTurno() {
                   <div className="turno-header">
                     <strong>{formatFecha(t.fecha)}</strong>
                   </div>
-                  <p className="text-muted">ID de disponibilidad: {t.id}</p>
 
                   <ArrayHoras
                     horaInicio={t.hora_inicio}
@@ -328,7 +299,6 @@ function AgendarTurno() {
                       handleToggleHora(t.id, t.fecha, hora, selected)
                     }
                   />
-                  {/* Se puede añadir un botón de eliminar fila aquí si es necesario */}
                 </li>
               );
             })
@@ -342,7 +312,7 @@ function AgendarTurno() {
             disabled={Object.keys(agendarTurnos).length === 0}
           >
             Agendar{" "}
-            {Object.values(agendarTurnos).flatMap((t) => t.horas).length || ""}{" "}
+            {Object.values(agendarTurnos).flatMap((t) => t.horas).length}{" "}
             Turno(s)
           </button>
         )}
@@ -351,4 +321,4 @@ function AgendarTurno() {
   );
 }
 
-export default AgendarTurno;
+export default VerTurnosProveedor;
