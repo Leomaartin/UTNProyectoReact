@@ -1,83 +1,94 @@
-/* Contenedor general */
-.turnos-container {
-  padding: 30px 20px;
-  min-height: calc(100vh - 60px);
-  font-family: "Poppins", "Arial", sans-serif;
-  max-width: 1200px; /* Limitamos el ancho del contenedor principal */
-  margin: 0 auto; /* Centrar el contenedor principal */
-}
-
+/* ================================
+   TÍTULO
+================================ */
 .turnos-container h2 {
   color: #2196f3;
   font-size: 2.5rem;
   font-weight: 600;
-  margin-bottom: 30px;
-  padding-bottom: 10px;
-  text-align: center;
-  margin-top: 2%;
+  margin-left: 5%;
+  margin-top: 5%;
+  margin-bottom: 5%;
 }
 
-/* Lista de turnos */
+/* ================================
+   CONTENEDOR GENERAL
+================================ */
+.turnos-container {
+  margin-left: 37%;
+}
+
+/* ================================
+   LISTA DE TURNOS (FLEX)
+================================ */
 .turnos-list {
-  display: grid;
-  /* Hacemos las columnas más pequeñas: min 250px, máx 350px */
-  grid-template-columns: repeat(auto-fit, minmax(250px, 350px));
-  gap: 25px;
-  /* Centrar la cuadrícula de tarjetas si el espacio es mayor a las tarjetas */
+  display: flex;
+  flex-wrap: wrap; /* Permite que bajen cuando no hay espacio */
+  gap: 20px; /* Espaciado entre cada card */
   justify-content: center;
+  padding: 10px;
 }
 
-/* Tarjeta de cada turno */
+/* ================================
+   TARJETAS DE TURNOS
+================================ */
 .turno-card {
+  width: 37%; /* Entran dos por fila */
   border-radius: 15px;
   background: #ffffff;
-  padding: 20px; /* Reducimos el padding interno */
+  padding: 20px;
+  border: 1px solid #007bff;
+  text-align: center;
+
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #007bff;
+
   display: flex;
   flex-direction: column;
-  text-align: center; /* Centramos el texto dentro de la tarjeta */
 }
 
 .turno-card:hover {
-  transform: translateY(-3px); /* Reducimos la elevación al pasar el mouse */
+  transform: translateY(-3px);
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
-/* Encabezados de la tarjeta (ya centrado por 'text-align: center' en .turno-card) */
+/* ================================
+   TEXTOS
+================================ */
 .turno-card h3 {
   margin: 0 0 5px 0;
-  font-size: 1.4rem; /* Ligeramente más pequeño */
+  font-size: 1.4rem;
   color: #2196f3;
   font-weight: 700;
 }
 
 .turno-card .profesional-nombre {
-  margin: 0 0 10px 0; /* Reducimos el margen */
+  margin: 0 0 10px 0;
   font-size: 1rem;
   color: #555;
   font-weight: 400;
 }
 
-/* Información del turno */
+/* ================================
+   FILA DE INFORMACIÓN
+================================ */
 .turno-card .info-row {
-  margin-bottom: 8px; /* Reducimos el margen */
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
-  font-size: 0.95rem; /* Ligeramente más pequeño */
-  color: #444;
-  /* Importante: Mantenemos centrado el contenido de esta fila */
   justify-content: center;
+  font-size: 0.95rem;
+  color: #444;
 }
 
 .turno-card .info-row strong {
+  margin-right: 8px;
   font-weight: 600;
   color: #333;
-  margin-right: 8px;
 }
 
-/* Lista de horas */
+/* ================================
+   HORAS DISPONIBLES
+================================ */
 .turno-card .horas-wrapper {
   margin-top: 10px;
   margin-bottom: 15px;
@@ -87,38 +98,43 @@
 
 .turno-card .horas-list {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+
   list-style: none;
   padding: 0;
   margin: 0;
-  /* Centrar horizontalmente la lista de horas */
-  justify-content: center;
 }
 
 .turno-card .hora-item {
   background-color: #28a745;
   color: white;
-  padding: 5px 10px; /* Más compacto */
+  padding: 5px 10px;
+  font-size: 0.8rem;
   border-radius: 15px;
-  font-size: 0.8rem; /* Más pequeño */
   font-weight: 500;
   white-space: nowrap;
 }
 
-/* Botón cancelar */
+/* ================================
+   BOTÓN CANCELAR
+================================ */
 .cancelar-turno {
-  margin-top: 15px; /* Ajustamos el margen superior */
-  /* Centramos el botón en la tarjeta */
+  margin-top: 15px;
   align-self: center;
+
   background-color: #dc3545;
   color: white;
-  padding: 8px 16px; /* Hacemos el botón más pequeño */
-  border: none;
-  border-radius: 6px; /* Ligeramente menos redondeado */
-  cursor: pointer;
-  font-weight: bold;
+
+  padding: 8px 16px;
   font-size: 0.95rem;
+  font-weight: bold;
+
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
   transition: background-color 0.2s ease, transform 0.1s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -128,17 +144,22 @@
   transform: translateY(-1px);
 }
 
-/* Estilos para mensaje de no turnos/cargando */
+/* ================================
+   MENSAJES VACÍO / CARGANDO
+================================ */
 .turnos-container .empty-message,
 .turnos-container .loading-message {
   text-align: center;
   font-size: 1.1rem;
   color: #6c757d;
+
   padding: 30px 0;
   background-color: #fff;
+
   border-radius: 8px;
   margin-top: 15px;
-  max-width: 500px; /* Limitamos el ancho del mensaje */
+  max-width: 500px;
+
   margin-left: auto;
   margin-right: auto;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);

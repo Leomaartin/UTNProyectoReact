@@ -5,8 +5,7 @@ import useLocalStorage from "../auth/useLocalStorage.js";
 import Navbar from "../Components/Navbar.js";
 import axios from "axios";
 import "./css/Dashboard.css";
-import toast from "react-hot-toast";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import personita from "../img/personita2.png";
 import tienda from "../img/tienda.png";
 
@@ -26,54 +25,84 @@ function Dashboard() {
     navegar("/");
   };
 
-  const tipoDeCuenta = () => {
-    if (user?.tipoCuenta === 1) {
-      return (
-        <>
-          <div className="profile-container">
-            <img
-              src={user?.fotoPerfil || tienda}
-              alt="Icono de tienda"
-              className="icono-tienda"
-            />
-            <input type="file" />
-            <div className="overlay">Cambiar foto de perfil</div>
-          </div>
-          {categoria()}
-          <div>
-            <label htmlFor="opciones">Elegí una nueva categoría:</label>
-            <select id="opciones" value={opcion} onChange={manejarCambio}>
-              <option value="">--Seleccioná--</option>
-              <option value="0">Educación</option>
-              <option value="1">Tecnología</option>
-              <option value="2">Administrativo</option>
-              <option value="3">Mascotas</option>
-              <option value="4">Salud</option>
-              <option value="5">Belleza y Cuidado</option>
-            </select>
+  // ======= SUBIR FOTO =======
+  const manejarFoto = async (event) => {
+    const archivo = event.target.files[0];
+    if (!archivo) return;
 
-            <button onClick={handleSubmit}>Cambiar categoría</button>
-          </div>
-          <h3>Tu cuenta es proveedor.</h3>
-        </>
+    const formData = new FormData();
+    formData.append("foto", archivo);
+    formData.append("userId", user.id);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3333/api/upload",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
-    } else {
-      return (
-        <>
-          {" "}
-          <div className="profile-container">
-            <img
-              src={user?.fotoPerfil || personita}
-              alt="Icono de tienda"
-              className="icono-tienda"
-            />
-            <input type="file" />
-            <div className="overlay">Cambiar foto de perfil</div>
-          </div>
-          <h3>Tu cuenta es Usuario.</h3>
-        </>
-      );
+
+      if (res.data.success) {
+        toast.success("Foto actualizada!");
+        setUser({ ...user, fotoPerfil: res.data.url });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al subir imagen.");
     }
+  };
+
+  const tipoDeCuenta = () => {
+    const foto =
+      user?.fotoPerfil || (user?.tipoCuenta === 1 ? tienda : personita);
+
+    return (
+      <>
+        <div
+          className="profile-container"
+          onClick={() => document.getElementById("input-foto").click()}
+        >
+          <img src={foto} alt="Perfil" className="icono-tienda" />
+
+          {/* Input oculto */}
+          <input
+            type="file"
+            id="input-foto"
+            onChange={manejarFoto}
+            style={{ display: "none" }}
+            accept="image/*"
+          />
+
+          <div className="overlay">Cambiar foto de perfil</div>
+        </div>
+
+        {user?.tipoCuenta === 1 ? (
+          <>
+            {categoria()}
+
+            <div>
+              <label htmlFor="opciones">Elegí una nueva categoría:</label>
+              <select id="opciones" value={opcion} onChange={manejarCambio}>
+                <option value="">--Seleccioná--</option>
+                <option value="0">Educación</option>
+                <option value="1">Tecnología</option>
+                <option value="2">Administrativo</option>
+                <option value="3">Mascotas</option>
+                <option value="4">Salud</option>
+                <option value="5">Belleza y Cuidado</option>
+              </select>
+
+              <button onClick={handleSubmit}>Cambiar categoría</button>
+            </div>
+
+            <h3>Tu cuenta es proveedor.</h3>
+          </>
+        ) : (
+          <h3>Tu cuenta es Usuario.</h3>
+        )}
+      </>
+    );
   };
 
   const categoria = () => {
@@ -96,60 +125,34 @@ function Dashboard() {
   };
 
   const handleSubmit = async () => {
-    if (!opcion) {
-      alert("Por favor seleccioná una categoría.");
-      return;
-    }
+    if (!opcion) return alert("Seleccioná una categoría.");
 
     try {
       const res = await axios.post(
         "http://localhost:3333/api/actualizarCategoria",
-        {
-          categoria: opcion,
-          id: user?.id,
-        }
+        { categoria: opcion, id: user?.id }
       );
 
       if (res.data.success) {
-        toast.success("Categoría actualizada correctamente.");
+        toast.success("Categoría actualizada.");
         setUser({ ...user, categoria: parseInt(opcion) });
-      } else {
-        toast.error(res.data.message || "No se pudo actualizar la categoría.");
       }
     } catch (error) {
-      console.error("Error al actualizar categoría:", error);
-      toast.error("Error en el servidor.");
+      toast.error("Error actualizando categoría.");
     }
   };
 
   return (
     <main className="main-dashboard">
       <header>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              fontSize: "1.1rem",
-              padding: "14px 18px",
-              borderRadius: "10px",
-            },
-            error: {
-              style: {
-                background: "#ff4d4d",
-                color: "#fff",
-              },
-              iconTheme: {
-                primary: "#fff",
-                secondary: "#ff4d4d",
-              },
-            },
-          }}
-        />
+        <Toaster position="top-right" />
         <Navbar />
       </header>
+
       <div className="dashboard-card">
         <h1>Bienvenido/a {user?.nombre}!</h1>
         <p>Este es tu Perfil</p>
+
         {tipoDeCuenta()}
 
         <button

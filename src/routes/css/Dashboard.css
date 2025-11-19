@@ -181,3 +181,6 @@ p {
     font-size: 1.6rem;
   }
 }
+.inputimg {
+  position: relative;
+}

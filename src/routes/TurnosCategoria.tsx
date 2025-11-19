@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Navbar from "../Components/Navbar";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import Navbar from "../Components/Navbar";
 import "./css/ProveedoresPorCategoria.css";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import { Toaster } from "react-hot-toast";
-
+import tienda from "../img/tienda.png";
 function ProveedoresPorCategoria() {
   const { categoriaId } = useParams();
+  const navigate = useNavigate();
+
   const [proveedores, setProveedores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+
+  const catIndex = Number(categoriaId);
+
   const nombresCategorias = [
     "Educación",
     "Tecnología",
@@ -21,26 +23,40 @@ function ProveedoresPorCategoria() {
     "Salud y Bienestar",
     "Belleza y Cuidado Personal",
   ];
-  const irACategoria = (categoriaId) => {
-    navigate(`/proveedores/${categoriaId}`);
+
+  const irACategoria = (id) => {
+    navigate(`/proveedores/${id}`);
   };
-  const handleCardClick = (id: number) => {
+
+  const handleCardClick = (id) => {
     navigate(`/asignarturnos/${id}`);
   };
 
   useEffect(() => {
     const fetchProveedores = async () => {
+      if (
+        isNaN(catIndex) ||
+        catIndex < 0 ||
+        catIndex >= nombresCategorias.length
+      ) {
+        setError("ID de categoría no válido.");
+        setLoading(false);
+        return;
+      }
+
       try {
         const res = await axios.get(
           `http://localhost:3333/api/buscarCategoria/${categoriaId}`
         );
+
         if (res.data.success) {
           setProveedores(res.data.proveedores);
         } else {
           toast.error("No se encontraron proveedores.");
+          setProveedores([]);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching providers:", err);
         toast.error("Hubo un error al buscar proveedores.");
       } finally {
         setLoading(false);
@@ -48,58 +64,38 @@ function ProveedoresPorCategoria() {
     };
 
     fetchProveedores();
-  }, [categoriaId]);
+  }, [categoriaId, catIndex]);
 
-  if (loading) return <p>Cargando proveedores...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading)
+    return <p className="loading-message">Cargando proveedores...</p>;
+  if (error) return <p className="error-message">{error}</p>;
 
   return (
     <main className="proveedores-categoria-main">
+      <Toaster position="top-right" />
+
       <header>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            style: {
-              fontSize: "1.1rem",
-              padding: "14px 18px",
-              borderRadius: "10px",
-            },
-            error: {
-              style: {
-                background: "#ff4d4d",
-                color: "#fff",
-              },
-              iconTheme: {
-                primary: "#fff",
-                secondary: "#ff4d4d",
-              },
-            },
-          }}
-        />
         <Navbar />
       </header>
-      <h1>Proveedores de {nombresCategorias[categoriaId]}</h1>
+
+      <h1>Proveedores de {nombresCategorias[catIndex]}</h1>
+
+      {/* BOTONES DE CATEGORÍA */}
       <div className="categorias-botones-2">
-        <button className="categoria-btn-2" onClick={() => irACategoria(0)}>
-          Educación
-        </button>
-        <button className="categoria-btn-2" onClick={() => irACategoria(1)}>
-          Tecnología
-        </button>
-        <button className="categoria-btn-2" onClick={() => irACategoria(2)}>
-          Administrativos / Profesionales
-        </button>
-        <button className="categoria-btn-2" onClick={() => irACategoria(3)}>
-          Mascotas
-        </button>
-        <button className="categoria-btn-2" onClick={() => irACategoria(4)}>
-          Salud y Bienestar
-        </button>
-        <button className="categoria-btn-2" onClick={() => irACategoria(5)}>
-          Belleza y Cuidado Personal
-        </button>
+        {nombresCategorias.map((nombre, index) => (
+          <button
+            key={index}
+            className={`categoria-btn-2 ${
+              index === catIndex ? "active-btn" : ""
+            }`}
+            onClick={() => irACategoria(index)}
+          >
+            {nombre}
+          </button>
+        ))}
       </div>
 
+      {/* LISTA DE PROVEEDORES */}
       {proveedores.length > 0 ? (
         <div className="contenedor-proveedores">
           {proveedores.map((prov) => (
@@ -108,12 +104,25 @@ function ProveedoresPorCategoria() {
               key={prov.id}
               onClick={() => handleCardClick(prov.id)}
             >
-              <h5>{prov.nombre}</h5>
+              <div className="proveedor-header">
+                <div className="proveedor-info-principal">
+                  <h5>{prov.nombre}</h5>
+                </div>
+
+                {/* FOTO DEL PROVEEDOR */}
+                <img
+                  src={prov.fotoPerfil || tienda}
+                  alt="foto proveedor"
+                  className="proveedor-foto"
+                />
+              </div>
+
               <p className="contact-info">
-                <span className="contact-icon">📧</span> Contacto: {prov.gmail}
+                <span className="contact-icon">📧</span> {prov.gmail}
               </p>
+
               <div className="hover-action">
-                <span>📅Ver Turnos</span>
+                <span>📅 Ver Turnos</span>
               </div>
             </div>
           ))}

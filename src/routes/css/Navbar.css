@@ -1,33 +1,39 @@
-/* Colores y Tipografía */
+/* =========================
+   Variables de Colores y Tipografía
+   ========================= */
 :root {
-  --primary-blue: #007bff; /* Azul fuerte para acentos */
-  --light-blue-bg: #6eb8f5; /* Azul del fondo del navbar (original) */
-  --link-color: #ffffff; /* Color de los enlaces en el navbar */
-  --hover-color: #0056b3; /* Azul más oscuro para hover */
-  --bg-light: #fafafaff; /* Blanco/Gris claro para elementos (Búsqueda y Botón) */
-  --text-faint: #b2b2b2; /* Color de texto suave (Original) */
-  --dropdown-bg: #e8f5ff; /* Fondo del menú desplegable (Original) */
-  --dropdown-border: #9acef8; /* Borde del menú desplegable (Original) */
+  --primary-blue: #007bff;
+  --light-blue-bg: #6eb8f5;
+  --link-color: #ffffff;
+  --hover-color: #e0e0e0;
+  --bg-light: #fafafaff;
+  --text-faint: #b2b2b2;
+  --dropdown-bg: #e8f5ff;
+  --dropdown-border: #9acef8;
 }
 
-/* 1. Estilo General del Navbar */
+/* =========================
+   Navbar General
+   ========================= */
 .custom-navbar {
-  /* Revertimos al azul sólido del fondo, manteniendo la transición suave del borde */
   background-color: var(--light-blue-bg);
-  /* Hacemos la línea de abajo más delgada y sutil */
   border-bottom: 1px solid var(--dropdown-border);
-  padding: 10px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Sombra más ligera */
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .container-fluid {
   max-width: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Alineamos contenido más a la izquierda */
+  gap: 30px; /* Espacio entre logo y navegación */
 }
 
-/* 2. Logo */
+/* =========================
+   Logo
+   ========================= */
 .logo-container {
-  padding-left: 15px;
-  margin-right: 30px;
   display: flex;
   align-items: center;
 }
@@ -37,25 +43,45 @@
   height: 60px;
   border-radius: 12px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s;
+  transition: transform 0.3s ease;
 }
 
 .navbar-logo:hover {
   transform: scale(1.05);
 }
 
-/* 3. Enlaces de Navegación */
+/* =========================
+   Enlaces de Navegación
+   ========================= */
 .navbar-nav {
-  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 25px; /* Más separación entre los links */
+  padding-left: 20px; /* Separación extra desde la izquierda */
 }
 
 .nav-link-custom {
-  color: var(--link-color) !important;
+  color: var(--link-color) !important; /* Texto en blanco */
   font-weight: 500;
   font-size: 1rem;
   padding: 10px 15px !important;
   border-radius: 8px;
   transition: background-color 0.3s, color 0.3s;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.nav-link-custom svg {
+  margin-bottom: 2px;
+  font-size: 1.5rem;
+}
+
+.nav-link-custom span {
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .nav-link-custom:hover {
@@ -63,56 +89,20 @@
   color: var(--link-color) !important;
 }
 
-/* 4. Formulario de Búsqueda (Estilo anterior solicitado) */
-.search-form {
-  display: flex;
-  align-items: center;
-  max-width: 300px;
-  /* Ajuste de margen para igualar al original */
-  margin-left: 20%;
-}
-
-.search-input {
-  /* Fondo y borde del estilo original */
-  background-color: var(--bg-light);
-  border: 1px solid var(--bg-light);
-  color: #333; /* Color de texto oscuro para que se lea en fondo claro */
-  padding: 6px 12px; /* Más compacto */
-  box-shadow: none;
-  border-radius: 4px; /* Bootstrap default */
-}
-
-.search-button {
-  /* Estilo original de los botones de búsqueda */
-  background-color: var(--bg-light);
-  color: var(--text-faint); /* Gris suave para el texto/ícono */
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.search-button:hover {
-  /* Mantener el hover del botón de búsqueda, ahora con el ícono */
-  background-color: var(--text-faint);
-  color: var(--link-color);
-}
-
-/* 5. Menú Desplegable de Usuario (Botón de bienvenida con estilo anterior) */
-.dropdown-container {
-  position: relative;
-  margin-left: 12%; /* Margen del estilo original */
-}
-
+/* =========================
+   Dropdown Usuario
+   ========================= */
 .user-button {
-  /* ESTILO ANTERIOR SOLICITADO */
   background-color: var(--bg-light);
   color: var(--text-faint);
   font-weight: 600;
   border-radius: 8px;
   padding: 6px 12px;
   border: none;
-  box-shadow: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   transition: background-color 0.3s;
 }
 
@@ -120,59 +110,59 @@
   background-color: #e0e0e0;
 }
 
-/* Contenedor del Dropdown (Estilo original solicitado) */
 .dropdown-menu-custom {
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--dropdown-bg); /* Fondo original */
-  border: 1px solid var(--dropdown-border); /* Borde original */
-  padding: 10px; /* Padding original */
+  background-color: var(--dropdown-bg);
+  border: 1px solid var(--dropdown-border);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   min-width: 150px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra original */
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: 0;
-  transform: translateY(10px);
-  pointer-events: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
   z-index: 1000;
-}
-
-.dropdown-menu-custom.show {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.dropdown-header {
-  display: none; /* Ocultamos el header extra si volvemos a la estructura original */
 }
 
 .dropdown-item-custom {
   text-decoration: none;
-  color: #2196f3 !important; /* Color azul de los enlaces originales */
-  padding: 5px 0; /* Padding más ajustado */
-  transition: background-color 0.2s, color 0.2s;
-  display: block;
+  color: var(--primary-blue) !important;
+  padding: 5px 0;
   font-size: 0.95rem;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .dropdown-item-custom:hover {
-  background-color: transparent;
   color: var(--primary-blue) !important;
+  background-color: rgba(0, 123, 255, 0.1);
 }
 
-/* Ajuste para Logout */
+.dropdown-item-custom.logout ::picker-icon {
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  color: red;
+}
+
+/* Logout en rojo */
 .dropdown-item-custom.logout {
-  border-top: none;
-  margin-top: 0;
-  font-weight: normal;
-  color: #2196f3 !important;
+  border: none;
+  background: none;
+  color: #e53935; /* rojo brillante */
+  font-weight: 600;
 }
 
 .dropdown-item-custom.logout:hover {
-  background-color: transparent;
-  color: var(--primary-blue) !important;
+  background-color: rgba(229, 57, 53, 0.1); /* rojo suave al pasar el mouse */
+}
+/* =========================
+   Ajuste Desktop
+   ========================= */
+@media (min-width: 992px) {
+  .navbar-collapse {
+    flex-grow: 1;
+    justify-content: flex-start; /* Mantener alineación a la izquierda */
+  }
 }

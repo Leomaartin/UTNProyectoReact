@@ -1,13 +1,11 @@
-// backend/database/conexion.js
+import { upload } from "./middleware/upload.js";
+import path from "path";
 import mysql from "mysql2";
 import dotenv from "dotenv";
-
 dotenv.config();
 
-// =========================
-//   CONEXIÓN A MYSQL
-// =========================
-export const conexion = mysql.createConnection({
+// 🔥 Creamos el pool (maneja conexiones automáticamente)
+export const conexion = mysql.createPool({
   host: process.env.MYSQLHOST,
   port: process.env.MYSQLPORT,
   database: process.env.MYSQLDATABASE,
@@ -15,12 +13,17 @@ export const conexion = mysql.createConnection({
   password: process.env.MYSQLPASSWORD,
 });
 
-conexion.connect((err) => {
+// 🔥 Versión con Promesas (para usar async/await)
+export const db = conexion.promise();
+
+// 🟢 Verificación de conexión
+conexion.getConnection((err, connection) => {
   if (err) {
     console.error("❌ Error al conectar a MySQL:", err);
-    return;
+  } else {
+    console.log("🟢 Conectado a MySQL");
+    connection.release();
   }
-  console.log("🟢 Conectado a MySQL");
 });
 
 // ========================================
@@ -688,5 +691,95 @@ export default function registrarEndpoints(app) {
         console.error("ERROR:", err);
         res.status(500).json({ success: false, error: err });
       });
+  });
+  app.post("/api/upload", upload.single("foto"), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "No se subió ninguna imagen",
+        });
+      }
+
+      console.log("Archivo recibido:", req.file);
+      console.log("Body recibido:", req.body);
+
+      const userId = req.body.userId;
+      if (!userId) {
+        return res.status(400).json({
+          success: false,
+          message: "Falta el userId",
+        });
+      }
+
+      const url = `${req.protocol}://${req.get("host")}/uploads/${
+        req.file.filename
+      }`;
+
+      // Buscar tipo de cuenta del usuario
+      const [rows] = await conexion
+        .promise()
+        .query("SELECT tipoCuenta FROM usuarios WHERE id = ?", [userId]);
+
+      console.log("Resultado SELECT tipoCuenta:", rows);
+
+      if (rows.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Usuario no encontrado",
+        });
+      }
+
+      const tipo = rows[0].tipoCuenta;
+
+      try {
+        let result;
+        if (tipo === 0) {
+          // PROVEEDOR
+          [result] = await conexion
+            .promise()
+            .query("UPDATE proveedores SET fotoPerfil = ? WHERE id = ?", [
+              url,
+              userId,
+            ]);
+          console.log("UPDATE proveedores:", result);
+        } else {
+          // USUARIO NORMAL
+          [result] = await conexion
+            .promise()
+            .query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
+              url,
+              userId,
+            ]);
+          console.log("UPDATE usuarios:", result);
+        }
+
+        if (result.affectedRows === 1) {
+          console.warn(
+            "⚠️ Ninguna fila actualizada, chequeá el userId y la tabla"
+          );
+        }
+      } catch (err) {
+        console.error("Error ejecutando UPDATE:", err);
+        return res.status(500).json({
+          success: false,
+          message: "Error al actualizar la base de datos",
+          error: err,
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Imagen subida y guardada correctamente",
+        url,
+      });
+    } catch (error) {
+      console.error("Error al subir imagen:", error);
+      res.status(500).json({
+        success: false,
+        message: "Error interno al subir imagen",
+        error,
+      });
+    }
   });
 }

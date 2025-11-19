@@ -260,7 +260,7 @@ function VerTurnosProveedor() {
       </header>
 
       <div className="turnos-proveedor-content">
-        <h3>📅 Turnos disponibles - {proveedorNombre}</h3>
+        <h3>Turnos disponibles - {proveedorNombre}</h3>
 
         <ul className="turnos-list">
           {turnos.length === 0 ? (
@@ -311,8 +311,7 @@ function VerTurnosProveedor() {
             className="btn-action-submit"
             disabled={Object.keys(agendarTurnos).length === 0}
           >
-            Agendar{" "}
-            {Object.values(agendarTurnos).flatMap((t) => t.horas).length}{" "}
+            Borrar {Object.values(agendarTurnos).flatMap((t) => t.horas).length}{" "}
             Turno(s)
           </button>
         )}

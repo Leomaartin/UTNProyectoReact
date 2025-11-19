@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../Components/Navbar";
 import useLocalStorage from "../auth/useLocalStorage";
-import "./css/TurnosAgendados.css"; // Asegúrate de que la ruta sea correcta
-import toast, { Toaster } from "react-hot-toast"; // Cambié importación a un solo toast
-
+import "./css/TurnosAgendados.css";
+import toast, { Toaster } from "react-hot-toast";
 function TurnosAgendadosUsuario() {
   const [user] = useLocalStorage("user", null);
   const [turnosAgendados, setTurnosAgendados] = useState([]);
@@ -28,8 +27,8 @@ function TurnosAgendadosUsuario() {
       if (res.data.success) {
         toast.success("Turno cancelado correctamente.");
 
-        setTurnosAgendados(
-          (prevTurnos) => prevTurnos.filter((turno) => turno.id_turno !== id) // Corregí la filtración para usar id_turno
+        setTurnosAgendados((prevTurnos) =>
+          prevTurnos.filter((turno) => turno.id_turno !== id)
         );
       } else {
         toast.error(res.data.message || "No se pudo cancelar el turno.");
@@ -70,7 +69,7 @@ function TurnosAgendadosUsuario() {
   // ... (Fin de handleSubmit y useEffect) ...
 
   return (
-    <main>
+    <main className="mainTusturnos">
       <header>
         <Toaster
           position="top-right"

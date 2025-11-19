@@ -13,7 +13,6 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Título de la Categoría */
 .proveedores-categoria-main h1 {
   margin-top: 2%;
   text-align: center;
@@ -23,28 +22,30 @@
   font-weight: 600;
 }
 
-/* Contenedor (Vertical Stack, One Above the Other) */
+/* Contenedor Principal de Proveedores */
 .contenedor-proveedores {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
   gap: 1.5rem;
   padding: 0 1rem;
-  max-width: 100%;
-  margin-left: 15%;
+  max-width: 90%;
+  margin-left: 5%;
+  margin-right: auto;
 }
 
-/* Estilo de la Tarjeta Individual del Proveedor (Más Larga) */
+/* Tarjeta Individual del Proveedor */
 .card-proveedor {
   background-color: #ffffff;
   padding: 1.5rem 2rem;
   border-radius: 1rem;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  width: 40%;
+  width: 45%;
   border-left: 5px solid #6eb8f5;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-align: left;
   cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   position: relative;
 }
 
@@ -54,24 +55,34 @@
   border-left-color: #2196f3;
 }
 
-/* EFECTO DE HOVER: Mostrar "Ver Turnos" */
 .card-proveedor:hover .hover-action {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Nombre del Proveedor */
-.card-proveedor h5 {
-  color: #2196f3;
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-top: 0;
-  margin-bottom: 0.75rem;
+/* Header de la Tarjeta: Foto + Nombre */
+.proveedor-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 10px;
+}
+
+/* Info del proveedor (nombre + línea inferior) */
+.proveedor-info-principal {
+  flex-grow: 1;
   border-bottom: 1px solid #c3e3fd;
   padding-bottom: 0.75rem;
 }
 
-/* Información de Contacto y Icono */
+.card-proveedor h5 {
+  color: #2196f3;
+  font-size: 1.85rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Información de contacto */
 .contact-info {
   color: #4a4a4a;
   font-size: 1.1rem;
@@ -86,7 +97,18 @@
   margin-right: 0.6rem;
   color: #6eb8f5;
 }
-/* Estilos del elemento oculto */
+
+/* Foto del proveedor: circular y alineada a la izquierda */
+.proveedor-foto {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 5px solid #2196f3;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Hover "Ver Turnos" */
 .hover-action {
   position: absolute;
   bottom: 0;
@@ -102,7 +124,7 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Manejo de estados (Loading, Error, No Proveedores) */
+/* Mensajes de estado */
 .proveedores-categoria-main > p {
   text-align: center;
   font-size: 1.2rem;
@@ -110,6 +132,7 @@
   margin-top: 5rem;
 }
 
+/* Botones de categoría */
 .categorias-botones-2 {
   display: flex;
   flex-wrap: wrap;
@@ -134,39 +157,42 @@
   white-space: nowrap;
 }
 
-.categoria-btn-2:hover {
+.categoria-btn-2:hover,
+.categoria-btn-2.active-btn {
   background-color: #2196f3;
   color: white;
   border-color: #2196f3;
   box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
 }
 
-/* Ajustes de responsive (solo espaciado y tamaño de fuente) */
+/* Responsive */
 @media (max-width: 900px) {
   .proveedores-categoria-main h1 {
     font-size: 2rem;
   }
-  .hover-action {
-    /* Se mantiene visible en móvil o se muestra completamente */
-    opacity: 1;
-    transform: translateY(0);
-    position: static;
-    text-align: right;
-    background: none;
-    color: #2196f3;
-    padding-top: 0.5rem;
-    border-top: 1px dashed #c3e3fd;
-    border-radius: 0;
-  }
+
   .contenedor-proveedores {
-    display: flex;
     flex-direction: column;
-    justify-content: center;
     width: 100%;
-    margin-left: 0%;
+    margin-left: 0;
   }
+
   .card-proveedor {
-    width: 100%;
-    margin-left: 0%;
+    width: 90%;
+    padding: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .proveedor-header {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .proveedor-foto {
+    width: 80px;
+    height: 80px;
+    border: 4px solid #2196f3;
   }
 }
