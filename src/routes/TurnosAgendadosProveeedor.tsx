@@ -1,4 +1,4 @@
-// src/routes/TurnosAgendadosUsuario.jsx
+// src/routes/TurnosAgendadosProveedor.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../Components/Navbar";
@@ -7,86 +7,82 @@ import "./css/TurnosAgendados.css";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-function TurnosAgendadosUsuario() {
-  const [user] = useLocalStorage("user", null);
+function TurnosAgendadosProveedor() {
+  const [user] = useLocalStorage("user", null); // proveedor
   const [turnosAgendados, setTurnosAgendados] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Cancelar turno
-  const handleSubmit = async (
-    proveedorid,
+  // Cancelar turno desde el proveedor
+  const handleCancelarTurno = async (
     id_turno,
-    proveedorGmail,
-    proveedorNombre,
+    usuarioid,
+    usergmail,
+    usuarioNombre,
     horas,
     fecha
   ) => {
     if (!user?.id) return;
 
     try {
+      // Cancelamos turno en la base
       const res = await axios.post("http://localhost:3333/api/cancelarTurno", {
-        proveedorid,
-        usuarioid: user.id,
+        proveedorid: user.id,
+        usuarioid,
         id_turno,
-        proveedorGmail,
-        proveedorNombre,
       });
 
-      if (res.data.success) {
-        toast.success("Turno cancelado correctamente.");
-        setTurnosAgendados((prev) =>
-          prev.filter((turno) => turno.id_turno !== id_turno)
-        );
-
-        const horasTurno = Array.isArray(horas) ? horas : [horas];
-        const fechaFormateada = new Date(fecha).toLocaleDateString();
-
-        // Correo al proveedor
-        console.log(proveedorGmail);
-        await axios.post("http://localhost:3333/api/enviar-mail", {
-          email: proveedorGmail,
-          asunto: "Turno cancelado",
-          mensaje: `
-          Hola ${proveedorNombre},<br><br>
-          El usuario <b>${user.nombre}</b> ha CANCELADO un turno contigo.<br>
-          <b>Fecha:</b> ${fechaFormateada}<br>
-          <b>Horas:</b> ${horasTurno.join(", ")}<br><br>
-          Saludos,<br>
-          Tu sistema de turnos.
-        `,
-        });
-
-        // Correo al usuario
-        await axios.post("http://localhost:3333/api/enviar-mail", {
-          email: user.gmail,
-          asunto: "Turno cancelado",
-          mensaje: `
-          Hola ${user.nombre},<br><br>
-          Has CANCELADO un turno con: <b>${proveedorNombre}</b>.<br>
-          <b>Fecha:</b> ${fechaFormateada}<br>
-          <b>Horas:</b> ${horasTurno.join(", ")}<br><br>
-          Saludos,<br>
-          Tu sistema de turnos.
-        `,
-        });
-      } else {
+      if (!res.data.success) {
         toast.error(res.data.message || "No se pudo cancelar el turno.");
+        return;
       }
+
+      // Actualizamos la lista local
+      setTurnosAgendados((prev) =>
+        prev.filter((turno) => turno.id_turno !== id_turno)
+      );
+
+      toast.success("Turno cancelado correctamente.");
+
+      const horasTurno = Array.isArray(horas) ? horas : [horas];
+      const fechaFormateada = new Date(fecha).toLocaleDateString();
+
+      // Correo al usuario
+      await axios.post("http://localhost:3333/api/enviar-mail", {
+        email: usergmail,
+        asunto: "Turno cancelado",
+        mensaje: `
+          Hola ${usuarioNombre},<br><br>
+          El proveedor <b>${user.nombre}</b> ha CANCELADO tu turno.<br>
+          <b>Fecha:</b> ${fechaFormateada}<br>
+          <b>Horas:</b> ${horasTurno.join(", ")}<br><br>
+          Saludos,<br>
+          Tu sistema de turnos.
+        `,
+      });
+
+      // Correo al proveedor
+      await axios.post("http://localhost:3333/api/enviar-mail", {
+        email: user.gmail,
+        asunto: "Turno cancelado",
+        mensaje: `
+          Hola ${user.nombre},<br><br>
+          Has CANCELADO el turno con el usuario <b>${usuarioNombre}</b>.<br>
+          <b>Fecha:</b> ${fechaFormateada}<br>
+          <b>Horas:</b> ${horasTurno.join(", ")}<br><br>
+          Saludos,<br>
+          Tu sistema de turnos.
+        `,
+      });
     } catch (error) {
       console.error("Error al cancelar turno:", error);
       toast.error("Error en el servidor.");
     }
   };
 
-  const VerPerfil = (id) => {
-    navigate(`/verperfilproveedor/${id}`);
-  };
-  const VerPerfilUsuario = (id) => {
-    navigate(`/verperfilusuario/${id}`);
-  };
+  const VerPerfilUsuario = (id) => navigate(`/verperfilusuario/${id}`);
 
-  // Cargar turnos agendados
+  // Cargar turnos del proveedor
   useEffect(() => {
     if (!user?.id) return;
 
@@ -95,7 +91,7 @@ function TurnosAgendadosUsuario() {
       try {
         const res = await axios.get(
           `http://localhost:3333/api/turnosDelUsuario/${user.id}`,
-          { params: { tipoCuenta: user.tipoCuenta } }
+          { params: { tipoCuenta: user.tipoCuenta } } // 1 para proveedor
         );
 
         setTurnosAgendados(res.data?.turnosAgendados || []);
@@ -143,19 +139,15 @@ function TurnosAgendadosUsuario() {
             {turnosAgendados.map((turno) => (
               <div key={turno.id_turno} className="turno-card">
                 <div className="turno-header">
-                  <h3>{turno.proveedorNombre || "Proveedor Desconocido"}</h3>
+                  <h3>{turno.nombre || "Usuario Desconocido"}</h3>
 
                   <button
-                    onClick={() => VerPerfil(turno.proveedorid)}
+                    onClick={() => VerPerfilUsuario(turno.userid)}
                     className="ir-perfil-btn"
                   >
                     Ver perfil
                   </button>
                 </div>
-
-                <p className="profesional-nombre">
-                  Usuario: <strong>{turno.nombre || "N/A"}</strong>
-                </p>
 
                 <div className="info-row">
                   <strong>Fecha:</strong>
@@ -181,11 +173,11 @@ function TurnosAgendadosUsuario() {
 
                 <button
                   onClick={() =>
-                    handleSubmit(
-                      turno.proveedorid,
+                    handleCancelarTurno(
                       turno.id_turno,
-                      turno.proveedorGmail,
-                      turno.proveedorNombre,
+                      turno.userid,
+                      turno.usergmail,
+                      turno.nombre,
                       turno.horas,
                       turno.fecha
                     )
@@ -203,4 +195,4 @@ function TurnosAgendadosUsuario() {
   );
 }
 
-export default TurnosAgendadosUsuario;
+export default TurnosAgendadosProveedor;

@@ -9,6 +9,7 @@ function Singup() {
   const [gmail, setGmail] = useState("");
   const [password, setPassword] = useState("");
   const [tipoCuenta, setTipoCuenta] = useState("");
+  const [telefono, setTelefono] = useState("");
 
   const navegar = useNavigate();
 
@@ -21,6 +22,7 @@ function Singup() {
         gmail: gmail,
         password: password,
         tipoCuenta: Number(tipoCuenta),
+        telefono: Number(telefono),
       });
 
       if (res.data.success) {
@@ -104,6 +106,20 @@ function Singup() {
                 placeholder="********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="phone" className="form-label">
+                Telefono
+              </label>
+              <input
+                type="text"
+                id="name"
+                className="form-control"
+                placeholder="Tu telefono"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
                 required
               />
             </div>

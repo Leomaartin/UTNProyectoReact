@@ -1,166 +1,205 @@
-/* ================================
-   TÍTULO
-================================ */
-.turnos-container h2 {
-  color: #2196f3;
-  font-size: 2.5rem;
-  font-weight: 600;
-  margin-left: 5%;
-  margin-top: 5%;
-  margin-bottom: 5%;
+/* Estilos generales para el componente */
+.mainTusturnos {
+  min-height: 100vh;
+  background-color: #f4f7f6; /* Fondo suave */
+  padding-bottom: 50px;
 }
 
-/* ================================
-   CONTENEDOR GENERAL
-================================ */
+/* Contenedor principal de la sección de turnos */
 .turnos-container {
-  margin-left: 37%;
-}
-
-/* ================================
-   LISTA DE TURNOS (FLEX)
-================================ */
-.turnos-list {
-  display: flex;
-  flex-wrap: wrap; /* Permite que bajen cuando no hay espacio */
-  gap: 20px; /* Espaciado entre cada card */
-  justify-content: center;
-  padding: 10px;
-}
-
-/* ================================
-   TARJETAS DE TURNOS
-================================ */
-.turno-card {
-  width: 37%; /* Entran dos por fila */
-  border-radius: 15px;
-  background: #ffffff;
+  max-width: 80%;
+  margin: 0 auto;
   padding: 20px;
-  border: 1px solid #007bff;
   text-align: center;
+}
 
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.turnos-container h2 {
+  margin-top: 2%;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
 
+/* Contenedor para las tarjetas de turnos (CLAVE: Display Grid) */
+.turnos-list {
+  display: grid;
+  /* Coloca tantas tarjetas de 300px (mínimo) como quepan en la fila */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px; /* Espacio entre las tarjetas */
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+
+/* Estilo para cada tarjeta de turno */
+.turno-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 25px;
+  text-align: left;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   display: flex;
   flex-direction: column;
 }
 
 .turno-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* ================================
-   TEXTOS
-================================ */
 .turno-card h3 {
-  margin: 0 0 5px 0;
-  font-size: 1.4rem;
-  color: #2196f3;
-  font-weight: 700;
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #007bff33;
+  padding-bottom: 10px;
 }
 
-.turno-card .profesional-nombre {
-  margin: 0 0 10px 0;
-  font-size: 1rem;
-  color: #555;
-  font-weight: 400;
-}
-
-/* ================================
-   FILA DE INFORMACIÓN
-================================ */
-.turno-card .info-row {
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.95rem;
-  color: #444;
-}
-
-.turno-card .info-row strong {
-  margin-right: 8px;
-  font-weight: 600;
-  color: #333;
-}
-
-/* ================================
-   HORAS DISPONIBLES
-================================ */
-.turno-card .horas-wrapper {
-  margin-top: 10px;
+.profesional-nombre {
+  font-style: italic;
+  color: #5a6268;
   margin-bottom: 15px;
-  padding-top: 8px;
-  border-top: 1px dashed #ddd;
 }
 
-.turno-card .horas-list {
+/* Fila de información (Fecha, etc.) */
+.info-row {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #495057;
+}
 
+.info-row strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Estilos para la lista de horas */
+.horas-wrapper {
+  margin-top: 15px;
+  border-top: 1px dashed #ced4da;
+  padding-top: 15px;
+  flex-grow: 1; /* Esto ayuda a empujar el botón "Cancelar" al fondo */
+}
+
+.horas-label {
+  margin-bottom: 5px;
+}
+
+.horas-list {
+  display: flex;
+  flex-wrap: wrap; /* Las horas se envuelven a la siguiente línea */
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 5px 0 15px 0;
+  gap: 8px;
 }
 
-.turno-card .hora-item {
-  background-color: #28a745;
-  color: white;
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  border-radius: 15px;
+.hora-item {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
   font-weight: 500;
-  white-space: nowrap;
 }
 
-/* ================================
-   BOTÓN CANCELAR
-================================ */
+/* Estilo para el botón de cancelar */
 .cancelar-turno {
-  margin-top: 15px;
-  align-self: center;
-
-  background-color: #dc3545;
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #dc3545; /* Rojo */
   color: white;
-
-  padding: 8px 16px;
-  font-size: 0.95rem;
-  font-weight: bold;
-
   border: none;
   border-radius: 6px;
   cursor: pointer;
-
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  width: 100%;
 }
 
 .cancelar-turno:hover {
   background-color: #c82333;
-  transform: translateY(-1px);
+}
+.turnos-container .turnos-list {
+  display: grid;
+  /* La clave para que se vean uno al lado del otro y sean responsivos */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+/* ====================================
+      ESTILOS PARA LA CABECERA DEL TURNO
+   ==================================== */
+
+/* Contenedor que alinea el título (h3) y el botón lado a lado */
+.turno-header {
+  display: flex;
+  justify-content: space-between; /* Espacia el título y el botón */
+  align-items: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
 }
 
-/* ================================
-   MENSAJES VACÍO / CARGANDO
-================================ */
-.turnos-container .empty-message,
-.turnos-container .loading-message {
-  text-align: center;
-  font-size: 1.1rem;
-  color: #6c757d;
+/* Título (Nombre del Usuario/Proveedor) */
+.turno-card h3 {
+  /* Ajusta el margen para que no empuje otros elementos */
+  margin: 0;
+  color: #333; /* Texto oscuro */
+  font-size: 1.3rem;
+  font-weight: 600;
+}
 
-  padding: 30px 0;
-  background-color: #fff;
+/* 🚀 ESTILO PARA EL BOTÓN "IR A PERFIL" */
+.ir-perfil-btn {
+  /* Color de fondo: Azul suave (#c3e3fd) o Azul principal (#6eb8f5) */
+  background-color: #c3e3fd;
+  color: #2196f3; /* Texto azul más oscuro */
+  border: 1px solid #9acef8;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  flex-shrink: 0; /* Evita que el botón se comprima en pantallas pequeñas */
+}
 
-  border-radius: 8px;
-  margin-top: 15px;
-  max-width: 500px;
+/* Efecto al pasar el ratón */
+.ir-perfil-btn:hover {
+  background-color: #6eb8f5; /* Azul principal */
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
 
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+/* ====================================
+      AJUSTES ADICIONALES
+   ==================================== */
+
+/* Asegúrate de que los estilos anteriores de la tarjeta sean coherentes */
+.turno-card {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Si tienes un botón de "Cancelar turno" también en la tarjeta,
+   asegúrate de que tenga un margen superior para separarlo. */
+.cancelar-turno {
+  margin-top: auto; /* Empuja el botón al final de la tarjeta */
+  /* ... (resto de estilos del botón cancelar) ... */
 }

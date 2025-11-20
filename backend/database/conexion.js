@@ -2,6 +2,7 @@ import { upload } from "./middleware/upload.js";
 import path from "path";
 import mysql from "mysql2";
 import dotenv from "dotenv";
+import { enviarCorreo } from "./middleware/gmail.js";
 dotenv.config();
 
 // 🔥 Creamos el pool (maneja conexiones automáticamente)
@@ -30,6 +31,24 @@ conexion.getConnection((err, connection) => {
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
 export default function registrarEndpoints(app) {
+  app.post("/api/enviar-mail", async (req, res) => {
+    const { email, asunto, mensaje } = req.body;
+    console.log("BODY:", req.body);
+    try {
+      const enviado = await enviarCorreo(email, asunto, `<p>${mensaje}</p>`);
+      if (!enviado)
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al enviar el correo" });
+      res.json({ success: true, message: "Correo enviado correctamente" });
+    } catch (error) {
+      console.error("Error en enviar-mail:", error); // <--- esto te va a decir qué falla
+      res
+        .status(500)
+        .json({ success: false, message: "Error interno del servidor", error });
+    }
+  });
+
   app.get("/api/tusTurnos/:proveedorid", (req, res) => {
     const { proveedorid } = req.params;
     const SQL_QUERY = "SELECT * FROM turnos WHERE id_proveedor = ?";
@@ -41,31 +60,37 @@ export default function registrarEndpoints(app) {
 
   app.get("/api/proveedor/:id", (req, res) => {
     const { id } = req.params;
+    const SQL_QUERY = "SELECT * FROM proveedores WHERE id = ?";
 
-    const SQL_QUERY = "SELECT nombre FROM proveedores WHERE id = ?";
     conexion.query(SQL_QUERY, [id], (err, result) => {
-      if (err) {
-        console.error("Error al obtener proveedor:", err);
+      if (err)
         return res
           .status(500)
           .json({ success: false, message: "Error en el servidor" });
-      }
 
-      if (result.length === 0) {
+      if (result.length === 0)
         return res
           .status(404)
           .json({ success: false, message: "Proveedor no encontrado" });
-      }
 
-      res.json({ success: true, nombre: result[0].nombre });
+      res.json({ success: true, proveedor: result[0] });
     });
   });
 
   app.get("/api/turnosDisponibles/:proveedorid", (req, res) => {
+    console.log("📌 ID proveedor:", req.params.proveedorid);
+
     const SQL =
       "SELECT * FROM turnos WHERE id_proveedor = ? AND estado = 'disponible'";
+
     conexion.query(SQL, [req.params.proveedorid], (err, result) => {
-      if (err) return res.status(500).json({ error: "Error en el servidor" });
+      console.log("📌 Turnos obtenidos:", result);
+
+      if (err) {
+        console.error("❌ Error en la query:", err);
+        return res.status(500).json({ error: "Error en el servidor" });
+      }
+
       res.json(result);
     });
   });
@@ -108,6 +133,46 @@ export default function registrarEndpoints(app) {
     conexion.query(SQL_QUERY, (err, result) => {
       if (err) throw err;
       res.json(result);
+    });
+  });
+  app.get("/api/perfilproveedor/:id", (req, res) => {
+    const { id } = req.params;
+
+    const SQL_PROVEEDOR = "SELECT * FROM proveedores WHERE id = ?";
+    conexion.query(SQL_PROVEEDOR, [id], (err, proveedores) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ success: false, message: "Error en el servidor" });
+      if (proveedores.length > 0)
+        return res.json({
+          success: true,
+          perfil: proveedores[0],
+          tipo: "proveedor",
+        });
+      return res
+        .status(404)
+        .json({ success: false, message: "Proveedor no encontrado" });
+    });
+  });
+  app.get("/api/perfilusuario/:id", (req, res) => {
+    const { id } = req.params;
+
+    const SQL_USUARIO = "SELECT * FROM usuarios WHERE id = ?";
+    conexion.query(SQL_USUARIO, [id], (err, usuarios) => {
+      if (err)
+        return res
+          .status(500)
+          .json({ success: false, message: "Error en el servidor" });
+      if (usuarios.length > 0)
+        return res.json({
+          success: true,
+          perfil: usuarios[0],
+          tipo: "usuario",
+        });
+      return res
+        .status(404)
+        .json({ success: false, message: "Usuario no encontrado" });
     });
   });
 
@@ -170,21 +235,21 @@ export default function registrarEndpoints(app) {
   });
 
   app.post("/api/register", (req, res) => {
-    const { nombre, gmail, password, tipoCuenta } = req.body;
+    const { nombre, gmail, password, tipoCuenta, telefono } = req.body;
     console.log(req.body);
     let SQL_QUERY;
 
     if (Number(tipoCuenta) === 0) {
       SQL_QUERY =
-        "INSERT INTO usuarios (nombre, gmail, password, tipoCuenta) VALUES (?, ?, ?, ?)";
+        "INSERT INTO usuarios (nombre, gmail, password, tipoCuenta,telefono) VALUES (?, ?, ?, ?,?)";
     } else {
       SQL_QUERY =
-        "INSERT INTO proveedores (nombre, gmail, password, tipoCuenta) VALUES (?, ?, ?, ?)";
+        "INSERT INTO proveedores (nombre, gmail, password, tipoCuenta,telefono) VALUES (?, ?, ?, ?,?)";
     }
 
     conexion.query(
       SQL_QUERY,
-      [nombre, gmail, password, tipoCuenta],
+      [nombre, gmail, password, tipoCuenta, telefono],
       (err, result) => {
         if (err) {
           console.error("❌ Error MySQL:", err);
@@ -214,16 +279,23 @@ export default function registrarEndpoints(app) {
           .json({ success: false, message: "No se enviaron turnos" });
       }
 
-      // Mapeo de valores, agregando turnos_bloqueados como array vacío '[]'
+      // Mapeo de valores, incluyendo el título
       const values = turnosDispo.map((t) => {
         if (!t.fecha || !t.hora_inicio || !t.hora_fin || !t.id_proveedor) {
           throw new Error("Falta algún campo obligatorio en un turno");
         }
-        return [t.fecha, t.hora_inicio, t.hora_fin, t.id_proveedor, "[]"];
+        return [
+          t.fecha,
+          t.hora_inicio,
+          t.hora_fin,
+          t.id_proveedor,
+          "[]",
+          t.titulo || null, // si no viene título, insertamos null
+        ];
       });
 
       const SQL_QUERY =
-        "INSERT INTO turnos (fecha, hora_inicio, hora_fin, id_proveedor, turnos_bloqueados) VALUES ?";
+        "INSERT INTO turnos (fecha, hora_inicio, hora_fin, id_proveedor, turnos_bloqueados, titulo) VALUES ?";
 
       conexion.query(SQL_QUERY, [values], (err, result) => {
         if (err) {
@@ -704,7 +776,8 @@ export default function registrarEndpoints(app) {
       console.log("Archivo recibido:", req.file);
       console.log("Body recibido:", req.body);
 
-      const userId = req.body.userId;
+      // Asegurarse de que userId sea número
+      const userId = Number(req.body.userId);
       if (!userId) {
         return res.status(400).json({
           success: false,
@@ -716,26 +789,32 @@ export default function registrarEndpoints(app) {
         req.file.filename
       }`;
 
-      // Buscar tipo de cuenta del usuario
-      const [rows] = await conexion
+      let tipo;
+      let result;
+
+      // Primero buscar en usuarios
+      const [userRows] = await conexion
         .promise()
         .query("SELECT tipoCuenta FROM usuarios WHERE id = ?", [userId]);
 
-      console.log("Resultado SELECT tipoCuenta:", rows);
+      if (userRows.length > 0) {
+        tipo = userRows[0].tipoCuenta;
+        // Actualizar tabla usuarios
+        [result] = await conexion
+          .promise()
+          .query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
+            url,
+            userId,
+          ]);
+        console.log("UPDATE usuarios:", result);
+      } else {
+        // Si no está en usuarios, buscar en proveedores
+        const [provRows] = await conexion
+          .promise()
+          .query("SELECT id FROM proveedores WHERE id = ?", [userId]);
 
-      if (rows.length === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Usuario no encontrado",
-        });
-      }
-
-      const tipo = rows[0].tipoCuenta;
-
-      try {
-        let result;
-        if (tipo === 0) {
-          // PROVEEDOR
+        if (provRows.length > 0) {
+          tipo = 0; // proveedor
           [result] = await conexion
             .promise()
             .query("UPDATE proveedores SET fotoPerfil = ? WHERE id = ?", [
@@ -744,28 +823,17 @@ export default function registrarEndpoints(app) {
             ]);
           console.log("UPDATE proveedores:", result);
         } else {
-          // USUARIO NORMAL
-          [result] = await conexion
-            .promise()
-            .query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
-              url,
-              userId,
-            ]);
-          console.log("UPDATE usuarios:", result);
+          return res.status(404).json({
+            success: false,
+            message: "Usuario/Proveedor no encontrado",
+          });
         }
+      }
 
-        if (result.affectedRows === 1) {
-          console.warn(
-            "⚠️ Ninguna fila actualizada, chequeá el userId y la tabla"
-          );
-        }
-      } catch (err) {
-        console.error("Error ejecutando UPDATE:", err);
-        return res.status(500).json({
-          success: false,
-          message: "Error al actualizar la base de datos",
-          error: err,
-        });
+      if (result.affectedRows === 0) {
+        console.warn(
+          "⚠️ Ninguna fila actualizada, chequeá el userId y la tabla"
+        );
       }
 
       res.json({

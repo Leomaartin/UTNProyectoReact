@@ -6,16 +6,19 @@ import { Productos, DetalleProducto, Carrito } from "./Components/Home";
 import Login from "./routes/Login";
 import Singup from "./routes/Singup";
 import Dashboard from "./routes/Dashboard";
+import VerPerfil from "./routes/VerPerfil";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AuthProvider from "./auth/authProvider";
 import TurnosDisponible from "./routes/TurnosDisponible";
 import TurnosPublicados from "./routes/TurnosPublicados";
 import TusTurnos from "./routes/TusTurnos";
 import AgendarTurno from "./routes/AgendarTurno";
-import TurnosAgendados from "./routes/TurnosAgendados";
+import TurnosAgendadoProveedor from "./routes/TurnosAgendadosProveeedor";
 import TurnosAgendadosUsuario from "./routes/TurnosAgendadosUsuario";
 import ProveedoresPorCategoria from "./routes/TurnosCategoria";
 import VerTurnosProveedor from "./routes/VerTurnosProveedor";
+import VerPerfilUsuario from "./routes/verPerfilUsuario";
+import TurnosAgendadosProveedor from "./routes/TurnosAgendadosProveeedor";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <AuthProvider>
@@ -25,9 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/productos" element={<Productos />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registrarse" element={<Singup />} />
-        <Route path="/dashboard" element={<ProtectedRoute />}>
-          <Route index element={<Dashboard />} />
-        </Route>
+
         <Route path="/turnos" element={<TurnosPublicados />} />
         <Route path="/asignarturnos/:proveedorid" element={<AgendarTurno />} />
         <Route path="/agendarturno" element={<AgendarTurno />} />
@@ -37,11 +38,24 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           path="/verturnosproveedor/:proveedorid"
           element={<VerTurnosProveedor />}
         />
-        <Route path="/turnosagendados" element={<TurnosAgendados />} />
+        <Route
+          path="/turnosagendadosproveedor"
+          element={<TurnosAgendadosProveedor />}
+        />
         <Route
           path="/turnosagendadosusuario"
           element={<TurnosAgendadosUsuario />}
         />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/verperfilproveedor/:proveedorid"
+          element={<VerPerfil />}
+        />
+        <Route
+          path="/verperfilusuario/:usuarioid"
+          element={<VerPerfilUsuario />}
+        />
+
         <Route
           path="/proveedores/:categoriaId"
           element={<ProveedoresPorCategoria />}
@@ -51,7 +65,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Route path="/carrito" element={<Carrito />} />
         <Route path="/app" element={<App />} />
 
-        <Route path="/turnosagendadosjson" element={<TurnosAgendados />} />
+        <Route
+          path="/turnosagendadosjson"
+          element={<TurnosAgendadosProveedor />}
+        />
       </Routes>
     </Router>
   </AuthProvider>

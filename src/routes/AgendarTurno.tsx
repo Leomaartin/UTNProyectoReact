@@ -68,8 +68,8 @@ function Hora({
   // Lógica para aplicar las clases CSS:
   const getClassState = () => {
     if (bloqueada) return "hora-blocked";
-    if (agendar) return "hora-selected"; // 👈 Si está seleccionada (agendar=true)
-    return "hora-available"; // Por defecto, si no está bloqueada ni seleccionada, está disponible
+    if (agendar) return "hora-selected";
+    return "hora-available";
   };
 
   const classNames = `hora-span ${getClassState()}`;
@@ -138,6 +138,7 @@ interface AgendarTurnoState {
 function AgendarTurno() {
   const [turnos, setTurnos] = useState<TurnoData[]>([]);
   const [proveedorNombre, setProveedorNombre] = useState("Cargando...");
+  const [proveedorGmail, setProveedorGmail] = useState("Cargando...");
   const [agendarTurnos, setAgendarTurnos] = useState<AgendarTurnoState>({});
 
   const { proveedorid } = useParams<{ proveedorid: string }>();
@@ -152,6 +153,7 @@ function AgendarTurno() {
           `http://localhost:3333/api/tusTurnos/${proveedorid}`
         );
         setTurnos(res.data || []);
+        console.log(res.data);
       } catch (err) {
         console.error("Error al traer turnos:", err);
         toast.error("Error al cargar la disponibilidad.");
@@ -169,7 +171,12 @@ function AgendarTurno() {
         const res = await axios.get(
           `http://localhost:3333/api/proveedor/${proveedorid}`
         );
-        setProveedorNombre(res.data.nombre || "Proveedor desconocido");
+
+        setProveedorNombre(
+          res.data.proveedor?.nombre || "Proveedor desconocido"
+        );
+        setProveedorGmail(res.data.proveedor?.gmail);
+        console.log("Proveedor:", res.data.proveedor);
       } catch (err) {
         console.error("Error al traer proveedor:", err);
         setProveedorNombre("Error al cargar nombre");
@@ -216,6 +223,7 @@ function AgendarTurno() {
     const turnosSeleccionados = Object.values(agendarTurnos).flatMap(
       (t) => t.horas
     ).length;
+
     if (turnosSeleccionados === 0) {
       toast("Selecciona al menos un turno para agendar.", { icon: "⚠️" });
       return;
@@ -229,8 +237,10 @@ function AgendarTurno() {
           id_turno: generarIdTurno(),
           nombre: user.nombre,
           userid: user.id,
+          usergmail: user.gmail,
           proveedorNombre,
           proveedorid,
+          proveedorGmail,
           fecha: data.fecha,
           horas: data.horas,
         })
@@ -244,18 +254,58 @@ function AgendarTurno() {
         })
       );
 
+      // 1️⃣ Bloquear horas
       await axios.post("http://localhost:3333/api/horasBloqueadas", {
         turnos: turnosParaBloquear,
       });
 
+      // 2️⃣ Guardar turno al proveedor
       await axios.post("http://localhost:3333/api/turnoAgendado", {
         proveedorid,
         turnos: turnosParaEnviar,
       });
 
+      // 3️⃣ Guardar turno al usuario
       await axios.post("http://localhost:3333/api/turnoGuardado", {
         usuarioid: user.id,
         turnos: turnosParaEnviar,
+      });
+
+      // Formatear fecha igual que en la card
+      const fechaFormateada = new Date(
+        turnosParaEnviar[0].fecha
+      ).toLocaleDateString();
+
+      // 4️⃣ ENVIAR CORREO AL PROVEEDOR
+      await axios.post("http://localhost:3333/api/enviar-mail", {
+        email: proveedorGmail,
+        asunto: "Nuevo turno agendado",
+        mensaje: `
+        Hola ${proveedorNombre},<br><br>
+        El usuario <b>${user.nombre}</b> ha agendado un turno contigo.<br>
+        <b>Fecha:</b> ${fechaFormateada}<br>
+        <b>Horas:</b> ${turnosParaEnviar
+          .flatMap((t) => t.horas)
+          .join(", ")}<br><br>
+        Saludos,<br>
+        Tu sistema de turnos.
+      `,
+      });
+
+      // 5️⃣ ENVIAR CORREO AL USUARIO
+      await axios.post("http://localhost:3333/api/enviar-mail", {
+        email: user.gmail,
+        asunto: "Nuevo turno agendado",
+        mensaje: `
+        Hola ${user.nombre},<br><br>
+        Has agendado un turno con: <b>${proveedorNombre}</b>.<br>
+        <b>Fecha:</b> ${fechaFormateada}<br>
+        <b>Horas:</b> ${turnosParaEnviar
+          .flatMap((t) => t.horas)
+          .join(", ")}<br><br>
+        Saludos,<br>
+        Tu sistema de turnos.
+      `,
       });
 
       toast.success(
@@ -264,7 +314,7 @@ function AgendarTurno() {
 
       setAgendarTurnos({});
 
-      // 🔄 NUEVO: recargar los turnos desde el servidor
+      // 🔄 Recargar turnos actualizados
       const res = await axios.get(
         `http://localhost:3333/api/tusTurnos/${proveedorid}`
       );
@@ -284,7 +334,9 @@ function AgendarTurno() {
       </header>
 
       <div className="turnos-proveedor-content">
-        <h3>📅 Turnos disponibles con {proveedorNombre}</h3>
+        <h3 className="titulo-turnos">
+          📅 Turnos disponibles con {proveedorNombre}
+        </h3>
 
         <ul className="turnos-list">
           {turnos.length === 0 ? (
@@ -316,6 +368,7 @@ function AgendarTurno() {
                 <li key={t.id} className="turno-item">
                   <div className="turno-header">
                     <strong>{formatFecha(t.fecha)}</strong>
+                    <p className="titulo-turnos">{t.titulo}</p>
                   </div>
                   <p className="text-muted">ID de disponibilidad: {t.id}</p>
 

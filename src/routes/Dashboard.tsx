@@ -81,7 +81,8 @@ function Dashboard() {
           <>
             {categoria()}
 
-            <div>
+            {/* INICIO: Contenedor con clase para estilos de formulario */}
+            <div className="category-form">
               <label htmlFor="opciones">Elegí una nueva categoría:</label>
               <select id="opciones" value={opcion} onChange={manejarCambio}>
                 <option value="">--Seleccioná--</option>
@@ -92,14 +93,19 @@ function Dashboard() {
                 <option value="4">Salud</option>
                 <option value="5">Belleza y Cuidado</option>
               </select>
-
-              <button onClick={handleSubmit}>Cambiar categoría</button>
+              <button onClick={handleSubmit} className="btn-primary-action">
+                Cambiar categoría
+              </button>
             </div>
+            <h4>Telefono:{user?.telefono}</h4>
+            {/* NOTA: También he añadido la clase btn-primary-action al botón */}
+            {/* FIN: Contenedor con clase para estilos de formulario */}
 
-            <h3>Tu cuenta es proveedor.</h3>
+            <p>Tu cuenta es proveedor.</p>
           </>
         ) : (
-          <h3>Tu cuenta es Usuario.</h3>
+          // ...: (
+          <p>Tu cuenta es usuario.</p>
         )}
       </>
     );
@@ -151,7 +157,6 @@ function Dashboard() {
 
       <div className="dashboard-card">
         <h1>Bienvenido/a {user?.nombre}!</h1>
-        <p>Este es tu Perfil</p>
 
         {tipoDeCuenta()}
 

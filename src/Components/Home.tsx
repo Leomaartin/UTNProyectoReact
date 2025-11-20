@@ -168,7 +168,7 @@ function Home() {
               {/* CARD DE TURNOS DEL PROVEEDOR */}
               <StyleCards
                 className="home-card small-card"
-                width="49.5%"
+                width="49%"
                 height="20rem"
                 background="#fff"
               >
@@ -176,8 +176,9 @@ function Home() {
                   <a href="/turnosdisponibles" className="turno-titulo">
                     Agregar Turnos +
                   </a>
+
                   <i
-                    className="fa-solid fa-eye"
+                    className="fa-solid fa-pen-to-square"
                     style={{
                       marginLeft: "60%",
                       cursor: "pointer",
@@ -257,6 +258,33 @@ function Home() {
             background="#f4f4f4"
           >
             <h2 style={{ color: "#2196f3" }}>Mis Turnos</h2>
+
+            {user?.tipoCuenta === 1 ? (
+              <i
+                className="fa-regular fa-eye"
+                style={{
+                  marginLeft: "90%",
+                  cursor: "pointer",
+                  fontSize: hover ? "22px" : "18px",
+                  color: hover ? "#007bff" : "#000",
+                  transition: "all 0.2s ease",
+                }}
+                onClick={() => navigate(`/turnosagendadosproveedor`)}
+              />
+            ) : (
+              <i
+                className="fa-regular fa-eye"
+                style={{
+                  marginLeft: "90%",
+                  cursor: "pointer",
+                  fontSize: hover ? "22px" : "18px",
+                  color: hover ? "#007bff" : "#000",
+                  transition: "all 0.2s ease",
+                }}
+                onClick={() => navigate(`/turnosagendadosusuario`)}
+              />
+            )}
+
             {loading && (
               <p style={{ color: "#2196f3" }}>Cargando turnos agendados...</p>
             )}

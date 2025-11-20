@@ -26,7 +26,9 @@ function Navbar() {
     setUser(null);
     navigate("/");
   };
-
+  const irAPerfil = (Id) => {
+    navigate(`/dashboard/${Id}`);
+  };
   return (
     <nav className="navbar navbar-expand-lg custom-navbar">
       <div className="container-fluid">
@@ -82,7 +84,7 @@ function Navbar() {
                       <a className="dropdown-item-custom" href="/login">
                         <FontAwesomeIcon icon={faRightToBracket} /> Login
                       </a>
-                      <a className="dropdown-item-custom" href="/register">
+                      <a className="dropdown-item-custom" href="/registrarse">
                         <FontAwesomeIcon icon={faRegistered} /> Registrarse
                       </a>
                     </>

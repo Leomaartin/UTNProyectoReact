@@ -284,10 +284,36 @@ function VerTurnosProveedor() {
 
               const horasSeleccionadas = agendarTurnos[t.id]?.horas || [];
 
+              // --- Función de borrado de turno ---
+              const borrarTurno = async () => {
+                try {
+                  await axios.delete(
+                    `http://localhost:3333/api/borrarTurno/${t.id}`
+                  );
+                  setTurnos(turnos.filter((turno) => turno.id !== t.id));
+                  toast.success("Turno borrado correctamente");
+                } catch (err) {
+                  console.error(err);
+                  toast.error("No se pudo borrar el turno");
+                }
+              };
+
               return (
                 <li key={t.id} className="turno-item">
-                  <div className="turno-header">
+                  <div
+                    className="turno-header"
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
                     <strong>{formatFecha(t.fecha)}</strong>
+                    <i
+                      className="fa-regular fa-trash-can"
+                      style={{ cursor: "pointer", color: "#dc3545" }}
+                      onClick={borrarTurno}
+                    ></i>
                   </div>
 
                   <ArrayHoras

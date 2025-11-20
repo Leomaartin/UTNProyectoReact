@@ -258,111 +258,39 @@ p {
   }
 }
 /* ============================
-        PALETA DE COLORES
-   ============================ */
-/* Fondo general: #e8f5ff
-Azul suave: #c3e3fd
-Azul medio: #9acef8
-Azul principal: #6eb8f5
-Texto oscuro: #2196f3
-Gris texto secundario: #4a4a4a
-Gris texto claro: #7c7c7c
-*/
-
-/* ... (Mantén ESTILO GENERAL y CONTENEDOR PRINCIPAL sin cambios) ... */
-
-/* ============================
-        FORMULARIO DE CATEGORÍA
+        ESTILOS DE WHATSAPP
    ============================ */
 
-/* Contenedor para alinear y enmarcar la acción de cambio de categoría */
-.category-form {
-  margin: 25px 0;
-  padding: 15px;
-  border: 1px solid #9acef8;
+/* Colores de WhatsApp */
+/* Verde Oscuro (para hover): #075E54 */
+/* Verde Claro (para base): #25D366 */
+
+.whatsapp-contact-btn {
+  /* Estilos base */
+  display: inline-block;
+  background-color: #25d366; /* Verde claro de WhatsApp */
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none; /* Quita el subrayado */
+  padding: 12px 25px;
   border-radius: 8px;
-  background: #f8fcff; /* Fondo muy claro para destacar */
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-/* Estilo para el Label */
-.category-form label {
-  font-weight: 600;
-  color: #4a4a4a; /* Mejor contraste */
-  font-size: 1.05rem;
-  margin: 0;
+/* Efecto Hover (El fondo verde oscuro que querías) */
+.whatsapp-contact-btn:hover {
+  background-color: #075e54; /* Verde oscuro de WhatsApp */
+  transform: translateY(-2px); /* Pequeño levantamiento */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
 }
 
-/* 🌟 ESTILO MEJORADO PARA EL SELECT (INPUT) 🌟 */
-.category-form select {
-  padding: 10px 15px;
-  border: 2px solid #6eb8f5; /* Borde más definido */
-  border-radius: 8px;
-  background: white; /* Fondo blanco para limpieza */
-  font-size: 1rem;
+/* Opcional: Estilo para la información de contacto */
+.dashboard-card h5 {
   color: #4a4a4a;
-  appearance: none; /* Oculta la flecha nativa */
-  /* Flecha SVG personalizada con color Azul principal */
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236eb8f5%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 12px;
-  padding-right: 35px;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-}
-
-.category-form select:hover {
-  border-color: #2196f3; /* Texto oscuro */
-}
-
-.category-form select:focus {
-  border-color: #2196f3;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2); /* Foco con sombra azul */
-}
-
-/* ============================
-          BOTONES
-   ============================ */
-
-/* Estilo para el botón de acción principal */
-.btn-primary-action {
-  background: #2196f3; /* Azul fuerte para la acción */
-  border: none;
-  padding: 10px 18px;
-  font-weight: 600;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.btn-primary-action:hover {
-  background: #0d84f0;
-}
-
-/* Botón salir (se usa tu estilo anterior) */
-.btn-logout {
   margin-top: 25px;
-  border: 2px solid #f44336;
-  color: #f44336;
-  background: transparent;
-  padding: 10px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s ease;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
 }
-
-.btn-logout:hover {
-  background: #f44336;
-  color: white;
-}
-
-/* ... (Mantén FOTO DE PERFIL, TEXTO y RESPONSIVE sin cambios) ... */
