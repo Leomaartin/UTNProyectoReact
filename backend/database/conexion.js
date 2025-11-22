@@ -3,6 +3,8 @@ import path from "path";
 import mysql from "mysql2";
 import dotenv from "dotenv";
 import { enviarCorreo } from "./middleware/gmail.js";
+import { createOrder } from "./payment.js";
+
 dotenv.config();
 
 // 🔥 Creamos el pool (maneja conexiones automáticamente)
@@ -31,6 +33,10 @@ conexion.getConnection((err, connection) => {
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
 export default function registrarEndpoints(app) {
+  app.get("/api/create-order", createOrder);
+  app.get("/api/success", (req, res) => res.send("success"));
+  app.get("/api/webhook", (req, res) => res.send("webhook"));
+
   app.post("/api/enviar-mail", async (req, res) => {
     const { email, asunto, mensaje } = req.body;
     console.log("BODY:", req.body);
@@ -281,21 +287,20 @@ export default function registrarEndpoints(app) {
 
       // Mapeo de valores, incluyendo el título
       const values = turnosDispo.map((t) => {
-        if (!t.fecha || !t.hora_inicio || !t.hora_fin || !t.id_proveedor) {
-          throw new Error("Falta algún campo obligatorio en un turno");
-        }
         return [
           t.fecha,
           t.hora_inicio,
           t.hora_fin,
           t.id_proveedor,
           "[]",
-          t.titulo || null, // si no viene título, insertamos null
+          t.titulo || null,
+          t.sena ? 1 : 0,
+          t.valorsena || null,
         ];
       });
 
       const SQL_QUERY =
-        "INSERT INTO turnos (fecha, hora_inicio, hora_fin, id_proveedor, turnos_bloqueados, titulo) VALUES ?";
+        "INSERT INTO turnos (fecha, hora_inicio, hora_fin, id_proveedor, turnos_bloqueados, titulo, sena, valorsena) VALUES ? ";
 
       conexion.query(SQL_QUERY, [values], (err, result) => {
         if (err) {
@@ -587,27 +592,33 @@ export default function registrarEndpoints(app) {
   });
 
   app.post("/api/actualizarCategoria", (req, res) => {
-    const { categoria, id } = req.body;
+    const { categoria, descripcion, servicio, id } = req.body;
 
-    const SQL_UPDATE = "UPDATE proveedores SET categoria = ? WHERE id = ?";
-    conexion.query(SQL_UPDATE, [categoria, id], (err, result) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ success: false, message: "Error en el servidor" });
+    const SQL_UPDATE =
+      "UPDATE proveedores SET categoria = ?, descripcion = ?, servicio = ? WHERE id = ?";
+
+    conexion.query(
+      SQL_UPDATE,
+      [categoria, descripcion, servicio, id],
+      (err, result) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ success: false, message: "Error en el servidor" });
+        }
+
+        if (result.affectedRows === 0) {
+          return res
+            .status(404)
+            .json({ success: false, message: "Usuario no encontrado" });
+        }
+
+        return res.json({
+          success: true,
+          message: "Categoría actualizada correctamente",
+        });
       }
-
-      if (result.affectedRows === 0) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Usuario no encontrado" });
-      }
-
-      return res.json({
-        success: true,
-        message: "Categoría actualizada correctamente",
-      });
-    });
+    );
   });
 
   app.get("/api/buscarCategoria/:categoria", (req, res) => {
@@ -848,6 +859,82 @@ export default function registrarEndpoints(app) {
         message: "Error interno al subir imagen",
         error,
       });
+    }
+  });
+  app.post("/api/agragarservicio", upload.single("imagen"), (req, res) => {
+    const { nombreservicio, precio, id_proveedor, descripcion } = req.body;
+    const imagen = req.file
+      ? `http://localhost:3333/uploads/${req.file.filename}`
+      : null;
+
+    const SQL_QUERY =
+      "INSERT INTO servicios (nombre, precio, id_proveedor, descripcion, imagen) VALUES (?, ?, ?, ?, ?)";
+    conexion.query(
+      SQL_QUERY,
+      [nombreservicio, precio, id_proveedor, descripcion, imagen],
+      (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({
+            success: false,
+            message: "Error al agregar servicio",
+            error: err.message,
+          });
+        }
+        res.json({
+          success: true,
+          message: "Servicio agregado correctamente",
+          imagen,
+        });
+      }
+    );
+  });
+  // backend
+  app.get("/api/buscarservicio/:id_proveedor", (req, res) => {
+    const { id_proveedor } = req.params;
+    const SQL_QUERY = "SELECT * FROM servicios WHERE id_proveedor=?";
+    conexion.query(SQL_QUERY, [id_proveedor], (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          success: false,
+          message: "Error al obtener servicios",
+          error: err.message,
+        });
+      }
+      res.json({ success: true, servicios: results });
+    });
+  });
+  app.post("/api/payment", async (req, res) => {
+    try {
+      const prod = req.body;
+
+      const preference = {
+        items: [
+          {
+            id: "turno",
+            title: prod.titulo,
+            quantity: 1,
+            currency_id: "ARS",
+            unit_price: Number(prod.valorsena),
+          },
+        ],
+        back_urls: {
+          success: "http://localhost:5173/pago-exitoso",
+          failure: "http://localhost:5173/pago-fallido",
+          pending: "http://localhost:5173/pago-pendiente",
+        },
+        auto_return: "approved",
+        binary_mode: true,
+        metadata: prod.metadata,
+      };
+
+      const response = await new Preference(mpClient).create({
+        body: preference,
+      });
+      res.status(200).send({ response: response });
+    } catch (error) {
+      res.status(400).send({ error: error.message });
     }
   });
 }

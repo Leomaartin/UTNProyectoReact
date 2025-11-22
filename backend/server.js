@@ -7,14 +7,13 @@ import { conexion } from "./database/conexion.js";
 import path from "path";
 
 dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 3333;
 
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.FRONT_URL,
     credentials: true,
   })
 );
@@ -22,7 +21,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 🔥 ESTA LÍNEA VA ACÁ — ANTES QUE LAS RUTAS
+// Archivos estáticos
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Registrar endpoints
