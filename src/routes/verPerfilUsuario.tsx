@@ -8,15 +8,16 @@ import toast, { Toaster } from "react-hot-toast";
 import personita from "../img/personita2.png";
 import tienda from "../img/tienda.png";
 import useLocalStorage from "../auth/useLocalStorage";
+import Footer from "../Components/Footer";
 
 function VerPerfilUsuario() {
   const { usuarioid } = useParams();
-  const navegar = useNavigate();
+  const navigate = useNavigate();
   const [perfil, setPerfil] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user] = useLocalStorage("user", null);
 
-  // Cargar perfil desde backend
+  // Cargar perfil desde backend (useEffect se mantiene igual)
   useEffect(() => {
     const fetchPerfil = async () => {
       try {
@@ -41,6 +42,8 @@ function VerPerfilUsuario() {
 
     fetchPerfil();
   }, [usuarioid]);
+
+  // formatoWhatsapp se mantiene igual
   const formatoWhatsapp = (numeroArgentino) => {
     if (!numeroArgentino) return "";
 
@@ -52,16 +55,19 @@ function VerPerfilUsuario() {
     return `+54${sinCero}`;
   };
 
+  // tipoDeCuenta se mantiene igual
   const tipoDeCuenta = () => {
     const foto = perfil?.fotoPerfil || personita;
 
     return (
       <div
-        className="profile-container"
+        style={{ marginLeft: "36%" }}
+        className="perfil-container"
         onClick={() => document.getElementById("input-foto").click()}
       >
-        <img src={foto} alt="Perfil" className="icono-tienda" />
-
+        <div className="perfil-containerusuario">
+          <img src={foto} alt="Perfil" className="profile-imgusuario" />
+        </div>
         <input
           type="file"
           id="input-foto"
@@ -76,33 +82,68 @@ function VerPerfilUsuario() {
   if (!perfil) return <p>Perfil no encontrado</p>;
 
   return (
-    <main className="main-dashboard">
+    // 1. Contenedor Principal: Clase para aplicar Flexbox Vertical y 100vh
+    <main className="main-app-container">
       <header>
         <Toaster position="top-right" />
         <Navbar />
       </header>
 
-      <div className="dashboard-card">
-        <h1>Bienvenido/a {perfil.nombre || "N/A"}!</h1>
-        <p>Este es el perfil de {perfil.tipo}</p>
-
-        {tipoDeCuenta()}
-        <p>Gmail:{perfil.gmail}</p>
-        <p>Teléfono: {formatoWhatsapp(perfil.telefono)}</p>
-
-        {/* Botón para abrir WhatsApp directamente */}
-        <a
-          href={`https://wa.me/${formatoWhatsapp(perfil.telefono).replace(
-            "+",
-            ""
-          )}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="whatsapp-contact-btn"
+      {/* 2. CONTENEDOR INTERMEDIO QUE CRECE: Aplica flex-grow: 1 en el CSS */}
+      <div className="content-wrapper">
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            gap: "8px",
+            zIndex: 1000,
+            left: "7%",
+            marginTop: "10px",
+          }}
         >
-          Contactar por WhatsApp
-        </a>
+          <i
+            className="fa-solid fa-backward"
+            onClick={() => navigate(-1)}
+            style={{ cursor: "pointer" }}
+          ></i>
+          <i
+            className="fa-solid fa-forward"
+            onClick={() => navigate(1)}
+            style={{ cursor: "pointer" }}
+          ></i>
+        </div>
+
+        <div className="dashboard-card">
+          <h1>Este es el perfil de {perfil.nombre}!</h1>
+
+          <div className="perfil-container">
+            <img src={perfil.fotoPerfil} alt="Perfil" className="profile-img" />
+          </div>
+          <a
+            className="gmail-contact-btn"
+            href={`mailto:${perfil.gmail}`}
+            style={{ marginTop: "5%" }}
+          >
+            Gmail: {perfil.gmail}
+          </a>
+          <a
+            href={`https://wa.me/${formatoWhatsapp(perfil.telefono).replace(
+              "+",
+              ""
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="whatsapp-contact-btn"
+            style={{ marginTop: "5%" }}
+          >
+            WhatsApp:{perfil.telefono}
+          </a>
+        </div>
       </div>
+      {/* FIN: content-wrapper */}
+
+      {/* 3. Footer: Este será empujado hacia el final de la ventana */}
+      <Footer />
     </main>
   );
 }

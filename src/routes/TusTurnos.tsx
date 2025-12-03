@@ -3,6 +3,8 @@ import axios from "axios";
 import Navbar from "../Components/Navbar";
 import useLocalStorage from "../auth/useLocalStorage";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useNavigate } from "react-router-dom";
+import Footer from "../Components/Footer";
 
 function calcularHora(time: number) {
   const hr = Math.floor(time / 3600);
@@ -20,6 +22,7 @@ function calcularNumero(hora: string) {
 
 function Hora({ hora }: { hora: string }) {
   const [borrada, setBorrada] = useState(false);
+  const navigate = useNavigate();
 
   const toggleBorradoHora = () => {
     setBorrada(!borrada);
@@ -114,6 +117,27 @@ function TusTurnos() {
       <header>
         <Navbar />
       </header>
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          gap: "8px",
+          zIndex: 1000,
+          left: "7%",
+          marginTop: "10px",
+        }}
+      >
+        <i
+          className="fa-solid fa-backward"
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+        <i
+          className="fa-solid fa-forward"
+          onClick={() => navigate(1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+      </div>
       <div className="container mt-4">
         <h3>Tus turnos</h3>
         {error && <p className="text-danger">{error}</p>}
@@ -151,6 +175,7 @@ function TusTurnos() {
           Publicar turnos
         </button>
       </div>
+      <Footer />
     </main>
   );
 }

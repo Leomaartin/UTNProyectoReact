@@ -8,6 +8,8 @@ import "./css/TurnosDisponible.css";
 import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import Footer from "../Components/Footer";
 
 function TurnosDisponible() {
   const [fechasSeleccionadas, setFechasSeleccionadas] = useState<Date[]>([]);
@@ -15,6 +17,9 @@ function TurnosDisponible() {
   const [horaFin, setHoraFin] = useState("10:00");
   const [titulo, setTitulo] = useState("");
   const [user] = useLocalStorage("user", null);
+  const [conSena, setConSena] = useState(false);
+  const [montoSena, setMontoSena] = useState("");
+  const navigate = useNavigate();
 
   const proveedorId = user?.id;
 
@@ -64,7 +69,10 @@ function TurnosDisponible() {
       hora_fin: horaFin,
       id_proveedor: proveedorId,
       titulo: titulo.trim(),
+      sena: conSena,
+      valorsena: conSena ? Number(montoSena) : null,
     }));
+    console.log(turnosDispo);
 
     try {
       const res = await axios.post(
@@ -105,6 +113,27 @@ function TurnosDisponible() {
         />
         <Navbar />
       </header>
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          gap: "8px",
+          zIndex: 1000,
+          left: "7%",
+          marginTop: "10px",
+        }}
+      >
+        <i
+          className="fa-solid fa-backward"
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+        <i
+          className="fa-solid fa-forward"
+          onClick={() => navigate(1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+      </div>
 
       <div className="container mt-4">
         <div className="text-center mb-4">
@@ -153,6 +182,29 @@ function TurnosDisponible() {
               />
             </div>
           </div>
+          <label className="fw-bold d-flex align-items-center gap-2 mt-3">
+            ¿Querés agregar seña?
+            <input
+              type="checkbox"
+              checked={conSena}
+              onChange={(e) => setConSena(e.target.checked)}
+              style={{ cursor: "pointer" }}
+            />
+          </label>
+
+          {conSena && (
+            <div className="mt-2">
+              <label className="fw-bold">Monto de la seña:</label>
+              <input
+                type="number"
+                className="form-control form-control-sm"
+                placeholder="Ej: 2000"
+                value={montoSena}
+                onChange={(e) => setMontoSena(e.target.value)}
+                min="0"
+              />
+            </div>
+          )}
 
           {/* Título */}
           <div className="mb-4">
@@ -189,6 +241,7 @@ function TurnosDisponible() {
           </button>
         </form>
       </div>
+      <Footer />
     </main>
   );
 }

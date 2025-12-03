@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 import "./css/ProveedoresPorCategoria.css";
 import tienda from "../img/tienda.png";
 function ProveedoresPorCategoria() {
@@ -14,6 +15,9 @@ function ProveedoresPorCategoria() {
   const [error, setError] = useState(null);
 
   const catIndex = Number(categoriaId);
+  const VerPerfil = (id) => {
+    navigate(`/verperfilproveedor/${id}`);
+  };
 
   const nombresCategorias = [
     "Educación",
@@ -48,7 +52,7 @@ function ProveedoresPorCategoria() {
         const res = await axios.get(
           `http://localhost:3333/api/buscarCategoria/${categoriaId}`
         );
-
+        console.log(res.data.proveedores);
         if (res.data.success) {
           setProveedores(res.data.proveedores);
         } else {
@@ -77,7 +81,27 @@ function ProveedoresPorCategoria() {
       <header>
         <Navbar />
       </header>
-
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          gap: "8px",
+          zIndex: 1000,
+          left: "7%",
+          marginTop: "10px",
+        }}
+      >
+        <i
+          className="fa-solid fa-backward"
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+        <i
+          className="fa-solid fa-forward"
+          onClick={() => navigate(1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+      </div>
       <h1>Proveedores de {nombresCategorias[catIndex]}</h1>
 
       {/* BOTONES DE CATEGORÍA */}
@@ -97,16 +121,13 @@ function ProveedoresPorCategoria() {
 
       {/* LISTA DE PROVEEDORES */}
       {proveedores.length > 0 ? (
-        <div className="contenedor-proveedores">
+        <div className="contenedor-proveedores" style={{ marginBottom: "2%" }}>
           {proveedores.map((prov) => (
-            <div
-              className="card-proveedor"
-              key={prov.id}
-              onClick={() => handleCardClick(prov.id)}
-            >
+            <div className="card-proveedor" key={prov.id}>
               <div className="proveedor-header">
                 <div className="proveedor-info-principal">
                   <h5>{prov.nombre}</h5>
+                  <h6 style={{ color: "#b1ababff" }}>{prov.servicio}</h6>
                 </div>
 
                 {/* FOTO DEL PROVEEDOR */}
@@ -118,11 +139,20 @@ function ProveedoresPorCategoria() {
               </div>
 
               <p className="contact-info">
-                <span className="contact-icon">📧</span> {prov.gmail}
+                <button
+                  onClick={() => VerPerfil(prov.id)}
+                  className="ir-perfil-btn"
+                  style={{ backgroundColor: "#2196f3" }}
+                >
+                  Ver perfil
+                </button>
+                <span className="contact-icon">📧</span> {prov.gmail}{" "}
               </p>
 
               <div className="hover-action">
-                <span>📅 Ver Turnos</span>
+                <span onClick={() => handleCardClick(prov.id)}>
+                  📅 Ver Turnos
+                </span>
               </div>
             </div>
           ))}
@@ -130,6 +160,7 @@ function ProveedoresPorCategoria() {
       ) : (
         <p>No hay proveedores en esta categoría.</p>
       )}
+      <Footer />
     </main>
   );
 }

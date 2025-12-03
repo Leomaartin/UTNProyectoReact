@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import toast, { Toaster } from "react-hot-toast";
 import "./css/VerTurnosProveedor.css";
+import { useNavigate } from "react-router-dom";
+import Footer from "../Components/Footer";
 
 // ================= UTILIDADES =================
 
@@ -134,7 +136,7 @@ function VerTurnosProveedor() {
   const [turnos, setTurnos] = useState<TurnoData[]>([]);
   const [proveedorNombre, setProveedorNombre] = useState("Cargando...");
   const [agendarTurnos, setAgendarTurnos] = useState<AgendarTurnoState>({});
-
+  const navigate = useNavigate();
   const { proveedorid } = useParams<{ proveedorid: string }>();
   const [user] = useLocalStorage("user", null);
 
@@ -164,6 +166,7 @@ function VerTurnosProveedor() {
           `http://localhost:3333/api/proveedor/${proveedorid}`
         );
         setProveedorNombre(res.data.nombre || "Proveedor desconocido");
+        console.log(res.data);
       } catch (err) {
         console.error(err);
         setProveedorNombre("Error al cargar nombre");
@@ -225,21 +228,7 @@ function VerTurnosProveedor() {
         })),
       });
 
-      // Agendar turnos
-      await axios.post("http://localhost:3333/api/turnoAgendado", {
-        proveedorid,
-        turnos: Object.entries(agendarTurnos).map(([id, data]) => ({
-          id_turno: generarIdTurno(),
-          nombre: user.nombre,
-          userid: user.id,
-          proveedorNombre,
-          proveedorid,
-          fecha: data.fecha,
-          horas: data.horas,
-        })),
-      });
-
-      toast.success(`${turnosSeleccionados} turno(s) agendado(s).`);
+      toast.success(`${turnosSeleccionados} hora(s) borrada(s).`);
       setAgendarTurnos({});
       // Recargar turnos
       const res = await axios.get(
@@ -258,6 +247,27 @@ function VerTurnosProveedor() {
         <Toaster position="top-right" />
         <Navbar />
       </header>
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          gap: "8px",
+          zIndex: 1000,
+          left: "7%",
+          marginTop: "10px",
+        }}
+      >
+        <i
+          className="fa-solid fa-backward"
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+        <i
+          className="fa-solid fa-forward"
+          onClick={() => navigate(1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+      </div>
 
       <div className="turnos-proveedor-content">
         <h3>Turnos disponibles - {proveedorNombre}</h3>
@@ -342,6 +352,7 @@ function VerTurnosProveedor() {
           </button>
         )}
       </div>
+      <Footer />
     </main>
   );
 }

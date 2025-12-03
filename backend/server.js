@@ -11,9 +11,13 @@ const app = express();
 const PORT = process.env.PORT || 3333;
 
 // Middleware
+// backend (Express)
 app.use(
   cors({
-    origin: process.env.FRONT_URL,
+    origin: [
+      "http://localhost:5173",
+      "https://interbranchial-momentously-helga.ngrok-free.dev",
+    ],
     credentials: true,
   })
 );

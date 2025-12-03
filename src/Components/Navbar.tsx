@@ -26,18 +26,16 @@ function Navbar() {
     setUser(null);
     navigate("/");
   };
-  const irAPerfil = (Id) => {
-    navigate(`/dashboard/${Id}`);
-  };
+
   return (
     <nav className="navbar navbar-expand-lg custom-navbar">
-      <div className="container-fluid">
-        {/* Logo */}
-        <a className="navbar-brand logo-container" href="/">
-          <img src={logo} alt="TurnosSmart Logo" className="navbar-logo" />
-        </a>
+      {/* LOGO CIRCULAR */}
+      <div className="navbar-logo-container">
+        <img src={logo} className="navbar-logo" alt="Logo" />
+      </div>
 
-        {/* Toggler (Mobile) */}
+      <div className="container-fluid">
+        {/* Mobile */}
         <button
           className="navbar-toggler"
           type="button"
@@ -52,7 +50,7 @@ function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-            {/* Home siempre */}
+            {/* Home */}
             <li className="nav-item">
               <a className="nav-link nav-link-custom" href="/">
                 <FontAwesomeIcon icon={faHome} />
@@ -60,7 +58,7 @@ function Navbar() {
               </a>
             </li>
 
-            {/* Mi Perfil solo si está logueado */}
+            {/* Mi Perfil */}
             {user && (
               <li className="nav-item">
                 <a className="nav-link nav-link-custom" href="/dashboard">
@@ -70,7 +68,7 @@ function Navbar() {
               </li>
             )}
 
-            {/* Dropdown de usuario */}
+            {/* User dropdown */}
             <li className="nav-item dropdown" style={{ position: "relative" }}>
               <button className="user-button" onClick={toggleDropdown}>
                 {user ? user.nombre : "Usuario"}

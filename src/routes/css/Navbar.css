@@ -1,4 +1,4 @@
-/* =========================
+/* =========================#7b2cbf, #6ec1e4, #2ab8b8, #ffffff
    Variables de Colores y Tipografía
    ========================= */
 :root {
@@ -16,52 +16,72 @@
    Navbar General
    ========================= */
 .custom-navbar {
-  background-color: var(--light-blue-bg);
+  background: linear-gradient(135deg, #7b2cbf, #6ec1e4, #2ab8b8, #ffffff);
+
+  background-size: 300% 300%; /* 🔥 Esto permite el movimiento tipo ola */
+  animation: gradientWave 12s ease infinite;
+
   border-bottom: 1px solid var(--dropdown-border);
   padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
+/* 🌊 Animación efecto OLA */
+@keyframes gradientWave {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Contenedor centrado totalmente */
 .container-fluid {
   max-width: 1400px;
   display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Alineamos contenido más a la izquierda */
-  gap: 30px; /* Espacio entre logo y navegación */
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 30px;
 }
-
-/* =========================
-   Logo
-   ========================= */
-.logo-container {
+/* Contenedor con ancho fijo que NO empuja el navbar */
+.navbar-logo-container {
+  width: 80px; /* espacio reservado */
+  height: 80px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* evita que se achique */
+  margin-left: 10px; /* separa del borde izquierdo sin mover nada */
 }
 
+/* Logo circular y más grande */
 .navbar-logo {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: white;
+  padding: 6px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15); /* queda más pro */
 }
-
-.navbar-logo:hover {
-  transform: scale(1.05);
-}
-
 /* =========================
    Enlaces de Navegación
    ========================= */
 .navbar-nav {
   display: flex;
+  flex-direction: row;
+  justify-content: center !important;
   align-items: center;
-  gap: 25px; /* Más separación entre los links */
-  padding-left: 20px; /* Separación extra desde la izquierda */
+  gap: 25px;
+  padding-left: 0 !important;
 }
 
 .nav-link-custom {
-  color: var(--link-color) !important; /* Texto en blanco */
+  color: var(--link-color) !important;
   font-weight: 500;
   font-size: 1rem;
   padding: 10px 15px !important;
@@ -86,7 +106,6 @@
 
 .nav-link-custom:hover {
   background-color: rgba(255, 255, 255, 0.2);
-  color: var(--link-color) !important;
 }
 
 /* =========================
@@ -130,39 +149,27 @@
   color: var(--primary-blue) !important;
   padding: 5px 0;
   font-size: 0.95rem;
-  transition: background-color 0.2s, color 0.2s;
 }
 
 .dropdown-item-custom:hover {
-  color: var(--primary-blue) !important;
   background-color: rgba(0, 123, 255, 0.1);
 }
 
-.dropdown-item-custom.logout ::picker-icon {
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  color: red;
-}
-
-/* Logout en rojo */
 .dropdown-item-custom.logout {
-  border: none;
-  background: none;
-  color: #e53935; /* rojo brillante */
+  color: #e53935 !important;
   font-weight: 600;
 }
 
 .dropdown-item-custom.logout:hover {
-  background-color: rgba(229, 57, 53, 0.1); /* rojo suave al pasar el mouse */
+  background-color: rgba(229, 57, 53, 0.1);
 }
+
 /* =========================
    Ajuste Desktop
    ========================= */
 @media (min-width: 992px) {
   .navbar-collapse {
-    flex-grow: 1;
-    justify-content: flex-start; /* Mantener alineación a la izquierda */
+    flex-grow: 0 !important;
+    justify-content: center !important;
   }
 }

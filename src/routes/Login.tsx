@@ -6,6 +6,7 @@ import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
+import "./css/Login.css";
 
 function Login() {
   const [gmail, setGmail] = useState("");
@@ -45,7 +46,9 @@ function Login() {
   };
 
   return (
-    <main>
+    <main className="login-main">
+      {" "}
+      {/* 👈 CLASE PRINCIPAL */}
       <header>
         <Toaster
           position="top-right"
@@ -69,14 +72,39 @@ function Login() {
         />
         <Navbar />
       </header>
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-        <div className="card p-4 shadow" style={{ width: "24rem" }}>
+      <div
+        style={{
+          position: "absolute",
+          display: "flex",
+          gap: "8px",
+          zIndex: 1000,
+          left: "7%",
+          marginTop: "10px",
+        }}
+      >
+        {/* Íconos de navegación (se estilizarán con .fa-solid en Login.css si lo deseas) */}
+        <i
+          className="fa-solid fa-backward"
+          onClick={() => navegar(-1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+        <i
+          className="fa-solid fa-forward"
+          onClick={() => navegar(1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+      </div>
+      {/* ⚠️ APLICAR CLASE CUSTOM: login-container */}
+      <div className="login-container">
+        {/* ⚠️ APLICAR CLASE CUSTOM: login-card */}
+        <div className="login-card">
           <h3 className="text-center mb-4">Iniciar Sesión</h3>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 Correo electrónico
               </label>
+              {/* Mantener form-control para el estilo base si no quieres redefinir TODO */}
               <input
                 type="email"
                 id="email"
@@ -101,19 +129,14 @@ function Login() {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100">
+            {/* ⚠️ APLICAR CLASE CUSTOM: btn-ingresar */}
+            <button type="submit" className="btn-ingresar">
               Ingresar
             </button>
-
-            <p className="text-center mt-3">
-              <a href="#">¿Olvidaste tu contraseña?</a>
-            </p>
           </form>
           {mensaje ? (
-            <div
-              className="alert alert-danger d-flex align-items-center"
-              role="alert"
-            >
+            /* ⚠️ APLICAR CLASE CUSTOM: alert-error */
+            <div className="alert-error" role="alert">
               <div>{mensaje}</div>
             </div>
           ) : null}

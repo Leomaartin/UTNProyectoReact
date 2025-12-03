@@ -4,6 +4,7 @@ import axios from "axios";
 import Navbar from "../Components/Navbar";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
+import "./css/Login.css";
 function Singup() {
   const [username, setUsername] = useState("");
   const [gmail, setGmail] = useState("");
@@ -38,7 +39,7 @@ function Singup() {
   };
 
   return (
-    <main>
+    <main className="login-main">
       <header>
         <Toaster
           position="top-right"
@@ -62,12 +63,34 @@ function Singup() {
         />
         <Navbar />
       </header>
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-        <div className="card p-4 shadow" style={{ width: "24rem" }}>
-          <h3 className="text-center mb-4">Registrarse</h3>
+
+      {/* Flechas de navegación (las dejo con estilos inline como pediste) */}
+      <div
+        style={{
+          marginTop: "1%",
+          marginLeft: "30%",
+        }}
+      >
+        <i
+          className="fa-solid fa-backward"
+          onClick={() => navegar(-1)}
+          style={{ cursor: "pointer", color: "gray" }}
+        ></i>
+        <i
+          className="fa-solid fa-forward"
+          onClick={() => navegar(1)}
+          style={{ cursor: "pointer", color: "gray" }}
+        ></i>
+      </div>
+
+      {/* Contenedor del formulario */}
+      <div className="login-container">
+        <div className="login-card">
+          <h3>Registrarse</h3>
+
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">
+              <label htmlFor="name" className="form-label">
                 Nombre Usuario
               </label>
               <input
@@ -80,6 +103,7 @@ function Singup() {
                 required
               />
             </div>
+
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
                 Correo electrónico
@@ -109,20 +133,23 @@ function Singup() {
                 required
               />
             </div>
+
             <div className="mb-3">
               <label htmlFor="phone" className="form-label">
-                Telefono
+                Teléfono
               </label>
               <input
                 type="text"
-                id="name"
+                id="phone"
                 className="form-control"
-                placeholder="Tu telefono"
+                placeholder="Tu teléfono"
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
                 required
               />
             </div>
+
+            {/* Radios */}
             <div className="form-check">
               <input
                 className="form-check-input"
@@ -133,7 +160,7 @@ function Singup() {
                 checked={tipoCuenta === "0"}
                 onChange={(e) => setTipoCuenta(e.target.value)}
               />
-              <label className="form-check-label" htmlFor="opcion1">
+              <label htmlFor="opcion1" className="form-check-label">
                 Cuenta usuario
               </label>
             </div>
@@ -148,12 +175,12 @@ function Singup() {
                 checked={tipoCuenta === "1"}
                 onChange={(e) => setTipoCuenta(e.target.value)}
               />
-              <label className="form-check-label" htmlFor="opcion2">
+              <label htmlFor="opcion2" className="form-check-label">
                 Cuenta proveedor
               </label>
             </div>
 
-            <button type="submit" className="btn btn-primary w-100">
+            <button type="submit" className="btn-ingresar">
               Registrarse
             </button>
           </form>

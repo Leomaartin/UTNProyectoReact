@@ -3,10 +3,13 @@ import path from "path";
 import mysql from "mysql2";
 import dotenv from "dotenv";
 import { enviarCorreo } from "./middleware/gmail.js";
-import { createOrder } from "./payment.js";
+import mercadopago from "mercadopago";
+import express from "express";
 
 dotenv.config();
-
+mercadopago.configure({
+  access_token: process.env.MP_ACCESS_TOKEN,
+});
 // 🔥 Creamos el pool (maneja conexiones automáticamente)
 export const conexion = mysql.createPool({
   host: process.env.MYSQLHOST,
@@ -33,7 +36,46 @@ conexion.getConnection((err, connection) => {
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
 export default function registrarEndpoints(app) {
-  app.get("/api/create-order", createOrder);
+  app.post("/api/create-order", async (req, res) => {
+    console.log("💡 Entró al endpoint /create-order");
+    try {
+      const { prod } = req.body; // recibiendo el objeto del frontend
+      console.log("Datos recibidos del frontend:", prod);
+
+      if (!prod || !prod.valorsena)
+        return res.status(400).json({ error: "Faltan datos" });
+
+      const preference = {
+        items: [
+          {
+            title: prod.titulo,
+            unit_price: prod.valorsena,
+            quantity: prod.cantidad || 1,
+            currency_id: "ARS",
+          },
+        ],
+        back_urls: {
+          success:
+            "https://interbranchial-momentously-helga.ngrok-free.dev/success",
+          failure:
+            "https://interbranchial-momentously-helga.ngrok-free.dev/failure",
+          pending:
+            "https://interbranchial-momentously-helga.ngrok-free.dev/pending",
+        },
+        auto_return: "approved",
+      };
+      console.log(preference);
+      const response = await mercadopago.preferences.create(preference);
+
+      res.json({
+        init_point: response.body.init_point,
+        sandbox_init_point: response.body.sandbox_init_point,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error creando la preferencia");
+    }
+  });
   app.get("/api/success", (req, res) => res.send("success"));
   app.get("/api/webhook", (req, res) => res.send("webhook"));
 
@@ -594,31 +636,35 @@ export default function registrarEndpoints(app) {
   app.post("/api/actualizarCategoria", (req, res) => {
     const { categoria, descripcion, servicio, id } = req.body;
 
-    const SQL_UPDATE =
-      "UPDATE proveedores SET categoria = ?, descripcion = ?, servicio = ? WHERE id = ?";
+    // Construir query dinámicamente
+    const fields = [];
+    const values = [];
 
-    conexion.query(
-      SQL_UPDATE,
-      [categoria, descripcion, servicio, id],
-      (err, result) => {
-        if (err) {
-          return res
-            .status(500)
-            .json({ success: false, message: "Error en el servidor" });
-        }
+    if (categoria !== undefined) {
+      fields.push("categoria = ?");
+      values.push(categoria);
+    }
+    if (descripcion !== undefined) {
+      fields.push("descripcion = ?");
+      values.push(descripcion);
+    }
+    if (servicio !== undefined) {
+      fields.push("servicio = ?");
+      values.push(servicio);
+    }
 
-        if (result.affectedRows === 0) {
-          return res
-            .status(404)
-            .json({ success: false, message: "Usuario no encontrado" });
-        }
+    if (fields.length === 0)
+      return res
+        .status(400)
+        .json({ success: false, message: "Nada para actualizar" });
 
-        return res.json({
-          success: true,
-          message: "Categoría actualizada correctamente",
-        });
-      }
-    );
+    const SQL = `UPDATE proveedores SET ${fields.join(", ")} WHERE id = ?`;
+    values.push(id);
+
+    conexion.query(SQL, values, (err, result) => {
+      if (err) return res.status(500).json({ success: false });
+      return res.json({ success: true });
+    });
   });
 
   app.get("/api/buscarCategoria/:categoria", (req, res) => {

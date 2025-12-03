@@ -1,22 +1,139 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card.js";
 import Navbar from "./Navbar.js";
+import Footer from "./Footer.js";
 import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage.js";
-import usePeticionBD from "./PeticionBD.js";
 import "../routes/css/Home.css";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
-function StyleCards({ background, width, heigth, className, children }) {
+// Datos del carrusel, más limpios aquí
+const CAROUSEL_ITEMS = [
+  {
+    src: "./backend/uploads/banner6.jpg",
+    title: "Agendá en segundos 🕒",
+    subtitle: "Turnos rápidos y sin complicaciones.",
+  },
+  {
+    src: "./backend/uploads/banner9.jpg",
+    title: "Conectate con profesionales 🤝",
+    subtitle: "Elegí entre cientos de proveedores.",
+  },
+  {
+    src: "./backend/uploads/banner5.jpg",
+    title: "Recordatorios automáticos 🔔",
+    subtitle: "Nunca más te olvides de un turno.",
+  },
+];
+
+/* ============================================================
+  CARRUSEL HECHO CON REACT/CSS (REEMPLAZO DE BOOTSTRAP)
+  ============================================================ */
+function SimpleCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const goToNext = () =>
+    setActiveIndex((prev) => (prev + 1) % CAROUSEL_ITEMS.length);
+  const goToPrev = () =>
+    setActiveIndex(
+      (prev) => (prev - 1 + CAROUSEL_ITEMS.length) % CAROUSEL_ITEMS.length
+    );
+  const goToSlide = (index) => setActiveIndex(index);
+
+  // Auto-play (opcional)
+  useEffect(() => {
+    const interval = setInterval(goToNext, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="carousel-container">
+      <div
+        className="carousel-content"
+        style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+      >
+        {CAROUSEL_ITEMS.map((item, index) => (
+          <div key={index} className="carousel-slide">
+            <img src={item.src} alt={`Slide ${index + 1}`} />
+            <div className="carousel-caption">
+              <h3>{item.title}</h3>
+              <p style={{ color: "#ffffffff" }}>{item.subtitle}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button className="carousel-btn left" onClick={goToPrev}>
+        {"<"}
+      </button>
+      <button className="carousel-btn right" onClick={goToNext}>
+        {">"}
+      </button>
+
+      <div className="carousel-indicators">
+        {CAROUSEL_ITEMS.map((_, index) => (
+          <div
+            key={index}
+            className={`indicator ${index === activeIndex ? "active" : ""}`}
+            onClick={() => goToSlide(index)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+  HOME – USUARIO INVITADO (NO LOGUEADO)
+  ============================================================ */
+function HomeInvitado({ navigate }) {
+  return (
+    <main className="invitado-container">
+      <Navbar />
+
+      <div className="invitado-content">
+        <h1 className="invitado-title">
+          Bienvenido a TurnoSmart <span className="hand">👋</span>
+        </h1>
+
+        <p className="invitado-subtitle" style={{ color: "white" }}>
+          Gestioná tus turnos de manera rápida, fácil y segura.
+        </p>
+
+        <div className="invitado-buttons">
+          <button
+            className="btn-invitado-primary"
+            onClick={() => navigate("/login")}
+          >
+            Iniciar Sesión
+          </button>
+
+          <button
+            className="btn-invitado-secondary"
+            onClick={() => navigate("/registrarse")}
+          >
+            Crear Cuenta
+          </button>
+        </div>
+
+        <SimpleCarousel />
+      </div>
+    </main>
+  );
+}
+
+/* ============================================================
+  COMPONENTE REUTILIZABLE PARA TARJETAS
+  ============================================================ */
+function StyleCards({ background, width, height, className, children }) {
   return (
     <Card
       className={className}
       style={{
         backgroundColor: background,
-        width: width,
-        height: heigth,
+        width,
+        height,
       }}
     >
       {children}
@@ -24,6 +141,9 @@ function StyleCards({ background, width, heigth, className, children }) {
   );
 }
 
+/* ============================================================
+  HOME – USUARIO LOGUEADO
+  ============================================================ */
 function Home() {
   const [user] = useLocalStorage("user", null);
   const [turnosAgendados, setTurnosAgendados] = useState([]);
@@ -32,12 +152,12 @@ function Home() {
   const [hover, setHover] = useState(false);
   const navigate = useNavigate();
 
-  // Función para navegar a la página de categorías
-  const irACategoria = (categoriaId) => {
-    navigate(`/proveedores/${categoriaId}`);
-  };
+  /* Si NO hay usuario → mostrar HOME INVITADO */
+  if (!user) return <HomeInvitado navigate={navigate} />;
 
-  // useEffect para cargar los turnos agendados del usuario
+  /* ============================================================
+    TRAER TURNOS AGENDADOS
+    ============================================================ */
   useEffect(() => {
     if (!user?.id) return;
 
@@ -46,19 +166,11 @@ function Home() {
       try {
         const res = await axios.get(
           `http://localhost:3333/api/turnosDelUsuario/${user.id}`,
-          {
-            params: { tipoCuenta: user.tipoCuenta },
-          }
+          { params: { tipoCuenta: user.tipoCuenta } }
         );
-
-        if (res.data?.turnosAgendados) {
-          setTurnosAgendados(res.data.turnosAgendados);
-        } else {
-          setTurnosAgendados([]);
-        }
+        setTurnosAgendados(res.data?.turnosAgendados || []);
       } catch (err) {
         console.error("Error al traer turnos agendados:", err);
-        setTurnosAgendados([]);
       } finally {
         setLoading(false);
       }
@@ -67,32 +179,31 @@ function Home() {
     fetchTurnosAgendados();
   }, [user?.id, user?.tipoCuenta]);
 
-  // useEffect para cargar los turnos disponibles (si el usuario es un proveedor)
+  /* ============================================================
+    TRAER TURNOS DISPONIBLES (SI ES PROVEEDOR)
+    ============================================================ */
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || user.tipoCuenta === 0) return;
 
     const fetchTurnosDisponibles = async () => {
       try {
         const res = await axios.post("http://localhost:3333/api/buscarTurnos", {
           id: user.id,
         });
-        console.log("Turnos Disponibles:", res.data.result);
         setTurnos(res.data.result || []);
-      } catch (err: any) {
-        console.error(
-          "Error al traer turnos disponibles:",
-          err.response?.data || err.message
-        );
+      } catch (err) {
+        console.error("Error al traer turnos disponibles:", err);
       }
     };
 
     fetchTurnosDisponibles();
-  }, [user?.id]);
+  }, [user?.id, user.tipoCuenta]);
 
-  // Función para manejar la eliminación de un turno disponible
-  const handleSubmit = async (id) => {
-    if (!user?.id) return;
-
+  /* ============================================================
+    ELIMINAR TURNO DISPONIBLE
+    ============================================================ */
+  const borrarTurno = async (id) => {
+    const notify = toast.loading("Eliminando turno...");
     try {
       const res = await axios.post(
         "http://localhost:3333/api/borrarTurnoDisponible",
@@ -100,21 +211,39 @@ function Home() {
       );
 
       if (res.data.success) {
-        setTurnos((prevTurnos) => prevTurnos.filter((t) => t.id !== id));
-        toast.success("Turno eliminado con éxito.");
+        setTurnos((prev) => prev.filter((t) => t.id !== id));
+        toast.success("Turno eliminado con éxito.", { id: notify });
       } else {
-        toast.error(res.data.message || "No se pudo eliminar el turno.");
+        toast.error(res.data.message || "No se pudo eliminar el turno.", {
+          id: notify,
+        });
       }
     } catch (error) {
       console.error("Error al cancelar turno:", error);
-      toast.error("Error en el servidor al intentar eliminar el turno.");
+      toast.error("Error en el servidor", { id: notify });
     }
   };
 
+  /* ============================================================
+    ANIMACIÓN RIPPLE + REDIRECCIÓN
+    ============================================================ */
+  const handleRedirectRipple = (e, index) => {
+    const btn = e.currentTarget;
+    btn.classList.add("ripple");
+
+    setTimeout(() => {
+      btn.classList.remove("ripple");
+      navigate(`/proveedores/${index}`);
+    }, 600);
+  };
+
+  /* ============================================================
+    RENDER PRINCIPAL USER LOGUEADO
+    ============================================================ */
   return (
+    // 1. Contenedor Principal: Usa 'home-container' para aplicar min-height: 100vh y flex-direction: column
     <main className="home-container">
       <header>
-        {/* Componente Navbar */}
         <Toaster
           position="top-right"
           toastOptions={{
@@ -123,49 +252,72 @@ function Home() {
               padding: "14px 18px",
               borderRadius: "10px",
             },
-            error: {
-              style: {
-                background: "#ff4d4d",
-                color: "#fff",
-              },
-              iconTheme: {
-                primary: "#fff",
-                secondary: "#ff4d4d",
-              },
-            },
           }}
         />
         <Navbar />
       </header>
 
-      <section>
-        <div className="home-grid">
-          {user?.tipoCuenta === 0 ? (
-            // CARD DE BUSCAR EN CATEGORÍAS
-            <div className="divcategorias">
-              <h2 className="category-title">Categorias:</h2>
-              <div className="category-grid-buttons">
+      {/* ========================================================================= */}
+      {/* 2. CONTENEDOR INTERMEDIO QUE CRECE: Aplica flex-grow: 1 en el CSS */}
+      <div className="content-wrapper">
+        {/* Tus flechas de navegación con position: absolute */}
+        <div
+          style={{
+            position: "absolute",
+            display: "flex",
+            gap: "8px",
+            zIndex: 1000,
+            left: "7%",
+            marginTop: "10px",
+          }}
+        >
+          <i
+            className="fa-solid fa-backward"
+            onClick={() => navigate(-1)}
+            style={{ cursor: "pointer" }}
+          ></i>
+          <i
+            className="fa-solid fa-forward"
+            onClick={() => navigate(1)}
+            style={{ cursor: "pointer" }}
+          ></i>
+        </div>
+
+        <section className="home-grid">
+          {user.tipoCuenta === 0 ? (
+            /* =========================== CATEGORÍAS – USUARIO NORMAL =========================== */
+            <StyleCards
+              className="home-card full-card"
+              width="100%"
+              height="auto"
+              background="#fff"
+            >
+              <h2 className="category-title" style={{ color: "#7b2cbf" }}>
+                Categorías:
+              </h2>
+
+              <div className="category-grid-buttons user-mode">
                 {[
-                  "Educación",
-                  "Tecnología",
-                  "Administrativos / Profesionales",
-                  "Mascotas",
-                  "Salud y Bienestar",
-                  "Belleza y Cuidado Personal",
+                  "Educación 📚",
+                  "Tecnología 💻",
+                  "Administrativos / Profesionales 💼",
+                  "Mascotas 🐾",
+                  "Salud y Bienestar 🧘",
+                  "Belleza y Cuidado Personal 💅",
                 ].map((cat, index) => (
                   <button
                     key={index}
                     className="category-action-button"
-                    onClick={() => irACategoria(index)}
+                    onClick={(e) => handleRedirectRipple(e, index)}
                   >
                     {cat}
                   </button>
                 ))}
               </div>
-            </div>
+            </StyleCards>
           ) : (
             <>
-              {/* CARD DE TURNOS DEL PROVEEDOR */}
+              {/* =========================== PROVEEDOR – TURNOS DISPONIBLES =========================== */}
               <StyleCards
                 className="home-card small-card"
                 width="49%"
@@ -173,22 +325,26 @@ function Home() {
                 background="#fff"
               >
                 <h2 className="agregar-turnos-titulo">
-                  <a href="/turnosdisponibles" className="turno-titulo">
-                    Agregar Turnos +
+                  <a
+                    href="/turnosdisponibles"
+                    className="turno-titulo"
+                    style={{ color: "#7b2cbf" }}
+                  >
+                    Turnos Disponibles +
                   </a>
 
                   <i
                     className="fa-solid fa-pen-to-square"
                     style={{
-                      marginLeft: "60%",
                       cursor: "pointer",
                       fontSize: hover ? "22px" : "18px",
-                      color: hover ? "#007bff" : "#000",
+
                       transition: "all 0.2s ease",
+                      marginLeft: "40%",
                     }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
-                    onClick={() => navigate(`/verturnosproveedor/${user?.id}`)}
+                    onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
                   />
                 </h2>
 
@@ -198,47 +354,53 @@ function Home() {
                       <div key={t.id} className="turno-box">
                         <div className="turno-info">
                           <p className="turno-fecha">
-                            {new Date(t.fecha).toLocaleDateString("es-AR")}
+                            📅 {new Date(t.fecha).toLocaleDateString("es-AR")}
                           </p>
                           <p className="turno-hora">
-                            {t.hora_inicio} a {t.hora_fin}
+                            ⏰ {t.hora_inicio} a {t.hora_fin}
                           </p>
                         </div>
+
                         <button
                           className="btn-eliminar-turno"
-                          onClick={() => handleSubmit(t.id)}
+                          onClick={() => borrarTurno(t.id)}
                         >
                           ✕
                         </button>
                       </div>
                     ))
                   ) : (
-                    <p className="sin-turnos">No hay turnos disponibles</p>
+                    <p className="sin-turnos">
+                      No hay turnos disponibles. **Agregá uno!**
+                    </p>
                   )}
                 </div>
               </StyleCards>
 
-              {/* CARD DE BUSCAR EN CATEGORÍAS */}
+              {/* =========================== PROVEEDOR – BUSCAR CATEGORÍAS (Para reservar) =========================== */}
               <StyleCards
                 className="home-card large-card"
-                width="49.5%"
+                width="49%"
                 height="20rem"
                 background="#fff"
               >
-                <h2 className="buscar-categoria">Buscar en categorías:</h2>
-                <div className="categorias-botones">
+                <h2 className="buscar-categoria" style={{ color: "#7b2cbf" }}>
+                  Buscar Profesionales:
+                </h2>
+
+                <div className="categorias-botones provider-mode">
                   {[
-                    "Educación",
-                    "Tecnología",
-                    "Administrativos / Profesionales",
-                    "Mascotas",
-                    "Salud y Bienestar",
-                    "Belleza y Cuidado Personal",
+                    "Educación 📚",
+                    "Tecnología 💻",
+                    "Administrativos 💼",
+                    "Mascotas 🐾",
+                    "Salud y Bienestar 🧘",
+                    "Belleza y Cuidado 💅",
                   ].map((cat, index) => (
                     <button
                       key={index}
                       className="categoria-btn"
-                      onClick={() => irACategoria(index)}
+                      onClick={() => navigate(`/proveedores/${index}`)}
                     >
                       {cat}
                     </button>
@@ -247,72 +409,74 @@ function Home() {
               </StyleCards>
             </>
           )}
-        </div>
+        </section>
 
-        {/* Sección inferior - MIS TURNOS */}
-        <div className="bottom-section">
+        {/* =========================== MIS TURNOS AGENDADOS / RESERVADOS =========================== */}
+        <section className="bottom-section">
           <StyleCards
             className="home-card full-card"
             width="100%"
-            height="100%"
-            background="#f4f4f4"
+            background="#fff"
           >
-            <h2 style={{ color: "#2196f3" }}>Mis Turnos</h2>
-
-            {user?.tipoCuenta === 1 ? (
+            <h2 style={{ color: "#7b2cbf" }}>
+              Mis Turnos Agendados
               <i
                 className="fa-regular fa-eye"
                 style={{
-                  marginLeft: "90%",
                   cursor: "pointer",
-                  fontSize: hover ? "22px" : "18px",
-                  color: hover ? "#007bff" : "#000",
                   transition: "all 0.2s ease",
+                  color: "var(--light-blue)",
+                  fontSize: "1.5rem",
+                  marginLeft: "70%",
                 }}
-                onClick={() => navigate(`/turnosagendadosproveedor`)}
+                onClick={() =>
+                  navigate(
+                    user.tipoCuenta === 1
+                      ? `/turnosagendadosproveedor`
+                      : `/turnosagendadosusuario`
+                  )
+                }
               />
-            ) : (
-              <i
-                className="fa-regular fa-eye"
-                style={{
-                  marginLeft: "90%",
-                  cursor: "pointer",
-                  fontSize: hover ? "22px" : "18px",
-                  color: hover ? "#007bff" : "#000",
-                  transition: "all 0.2s ease",
-                }}
-                onClick={() => navigate(`/turnosagendadosusuario`)}
-              />
-            )}
+            </h2>
 
-            {loading && (
-              <p style={{ color: "#2196f3" }}>Cargando turnos agendados...</p>
-            )}
+            {loading && <p className="loading-text">Cargando...</p>}
+
             {!loading && turnosAgendados.length === 0 && (
-              <p style={{ color: "#2196f3" }}>No hay turnos agendados.</p>
+              <p className="no-turnos-agendados">
+                **¡Genial!** No hay turnos agendados pendientes.
+              </p>
             )}
+
             {!loading && turnosAgendados.length > 0 && (
               <div className="turnos-agendados-lista">
-                {turnosAgendados.map((turno, index) => (
-                  <div key={index} className="turno-agendado-item">
+                {turnosAgendados.map((t, index) => (
+                  <div
+                    key={index}
+                    className="turno-agendado-item appointment-card"
+                  >
                     <div className="info-principal">
-                      <span className="proveedor-nombre">
-                        Agendado por: {turno.nombre}
-                      </span>
-                      <span className="usuario-nombre">
-                        {turno.proveedorNombre}
-                      </span>
+                      {user.tipoCuenta === 1 ? (
+                        <span className="proveedor-nombre">
+                          Cliente: {t.nombre || "Desconocido"}
+                        </span>
+                      ) : (
+                        <span className="proveedor-nombre">
+                          Proveedor: {t.proveedorNombre}
+                        </span>
+                      )}
                     </div>
+
                     <div className="info-detalle">
                       <p className="detalle-fecha">
                         Fecha:{" "}
                         <strong>
-                          {new Date(turno.fecha).toLocaleDateString("es-AR")}
+                          {new Date(t.fecha).toLocaleDateString("es-AR")}
                         </strong>
                       </p>
-                      {Array.isArray(turno.horas) && turno.horas.length > 0 ? (
+
+                      {Array.isArray(t.horas) ? (
                         <p className="detalle-hora">
-                          Horas: <strong>{turno.horas.join(", ")}</strong>
+                          Horas: <strong>{t.horas.join(", ")}</strong>
                         </p>
                       ) : (
                         <p className="detalle-hora">Sin horas asignadas</p>
@@ -323,159 +487,14 @@ function Home() {
               </div>
             )}
           </StyleCards>
-        </div>
-      </section>
-    </main>
-  );
-}
-
-function CrearTurnos() {
-  const turnos = usePeticionBD("proveedores");
-  return (
-    <header>
-      Header
-      <Navbar />
-    </header>
-  );
-}
-
-function Productos() {
-  return (
-    <main>
-      <header>
-        Header
-        <Navbar />
-      </header>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "1rem",
-          margin: "5%",
-        }}
-      >
-        <StyleCards width="20%" background="#E9EEED" heigth="20rem" />
-        <StyleCards width="20%" background="#E9EEED" heigth="20rem" />
-        <StyleCards width="20%" background="#E9EEED" heigth="20rem" />
-        <StyleCards width="20%" background="#E9EEED" heigth="20rem" />
+        </section>
       </div>
-    </main>
-  );
-}
+      {/* ========================================================================= */}
 
-function DetalleProducto() {
-  const turnos = usePeticionBD("proveedores");
-  return (
-    <main>
-      <header>
-        Header
-        <Navbar />
-      </header>
-      {turnos.map((turno, id) => (
-        <div
-          key={id}
-          className="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light"
-        >
-          <div className="row shadow rounded bg-white w-75 h-75 overflow-hidden">
-            <div className="col-md-6 p-0">
-              <img
-                src="https://picsum.photos/600/600"
-                alt="Producto"
-                className="img-fluid h-100 w-100 object-fit-cover"
-              />
-            </div>
-
-            <div className="col-md-6 p-4 d-flex flex-column justify-content-between">
-              <div>
-                <h2 className="fw-bold mb-3">{turno.nombre}</h2>
-                <h3 className="text-primary mb-3">{turno.turnos}</h3>
-                <p className="mb-4">{turno.direccion}</p>
-              </div>
-
-              <div className="d-flex flex-column gap-3">
-                <button className="btn btn-success btn-lg">
-                  Comprar ahora
-                </button>
-                <button className="btn btn-outline-secondary btn-lg">
-                  Añadir al carrito
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </main>
-  );
-}
-
-function Carrito() {
-  const products = [
-    {
-      id: 1,
-      name: "Producto 1",
-      price: 199.99,
-      quantity: 2,
-      image: "https://picsum.photos/80/80?1",
-    },
-    {
-      id: 2,
-      name: "Producto 2",
-      price: 349.99,
-      quantity: 1,
-      image: "https://picsum.photos/80/80?2",
-    },
-  ];
-
-  const total = products.reduce(
-    (sum, product) => sum + product.price * product.quantity,
-    0
-  );
-
-  return (
-    <main>
-      <header>
-        Header
-        <Navbar />
-      </header>
-      <div className="container mt-5">
-        <h2 className="mb-4">Tu Carrito</h2>
-        <div className="list-group mb-4">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="list-group-item d-flex align-items-center justify-content-between"
-            >
-              <div className="d-flex align-items-center gap-3">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="img-thumbnail"
-                  style={{ width: "80px", height: "80px" }}
-                />
-                <div>
-                  <h5 className="mb-1">{product.name}</h5>
-                  <small>Cantidad: {product.quantity}</small>
-                </div>
-              </div>
-              <div>
-                <h5>${(product.price * product.quantity).toFixed(2)}</h5>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h4>Total:</h4>
-          <h4>${total.toFixed(2)}</h4>
-        </div>
-
-        <button className="btn btn-primary btn-lg w-100">
-          Finalizar Compra
-        </button>
-      </div>
+      {/* 3. Footer: Este elemento será empujado por el content-wrapper */}
+      <Footer />
     </main>
   );
 }
 
 export default Home;
-export { Productos, DetalleProducto, Carrito };

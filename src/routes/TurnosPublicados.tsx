@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../Components/Navbar.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Card from "../Components/Card.js";
+import Footer from "../Components/Footer";
 import { useNavigate } from "react-router-dom";
 
 function StyleCards({ background, width, heigth, children }) {
@@ -62,6 +63,27 @@ function TurnosPublicados() {
       </header>
       <div
         style={{
+          position: "absolute",
+          display: "flex",
+          gap: "8px",
+          zIndex: 1000,
+          left: "7%",
+          marginTop: "10px",
+        }}
+      >
+        <i
+          className="fa-solid fa-backward"
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+        <i
+          className="fa-solid fa-forward"
+          onClick={() => navigate(1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+      </div>
+      <div
+        style={{
           display: "flex",
           flexWrap: "wrap",
           gap: "1rem",
@@ -87,6 +109,7 @@ function TurnosPublicados() {
           </div>
         ))}
       </div>
+      <Footer />
     </main>
   );
 }
