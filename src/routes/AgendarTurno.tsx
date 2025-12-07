@@ -9,10 +9,6 @@ import Footer from "../Components/Footer";
 import "./css/AgendarTurnos.css";
 import { useNavigate } from "react-router-dom";
 
-/* ==========================================================
-   =============  FUNCIONES DE UTILIDAD  ====================
-   ========================================================== */
-
 function calcularHora(time: number): string {
   const pad = (n: number) => n.toString().padStart(2, "0");
   const hr = Math.floor(time / 3600);
@@ -40,10 +36,6 @@ function formatFecha(fecha: string): string {
     ? "Fecha inválida"
     : d.toLocaleDateString("es-AR", { timeZone: "UTC" });
 }
-
-/* ==========================================================
-   ===================== COMPONENTE HORA =====================
-   ========================================================== */
 
 interface HoraProps {
   hora: string;
@@ -78,10 +70,6 @@ function Hora({
     </span>
   );
 }
-
-/* ==========================================================
-   =================== ARRAY DE HORAS ========================
-   ========================================================== */
 
 interface ArrayHorasProps {
   horaInicio: string;
@@ -119,10 +107,6 @@ function ArrayHoras({
   );
 }
 
-/* ==========================================================
-   ================== COMPONENTE PRINCIPAL ===================
-   ========================================================== */
-
 interface TurnoData {
   id: string;
   fecha: string;
@@ -149,10 +133,6 @@ function AgendarTurno() {
   const [user] = useLocalStorage("user", null);
   const navigate = useNavigate();
 
-  /* ==========================================================
-     ============   TRAER TURNOS DISPONIBLES   =================
-     ========================================================== */
-
   useEffect(() => {
     if (!proveedorid) return;
 
@@ -164,10 +144,6 @@ function AgendarTurno() {
         setTurnos([]);
       });
   }, [proveedorid]);
-
-  /* ==========================================================
-     ==============   TRAER DATOS DEL PROVEEDOR   =============
-     ========================================================== */
 
   useEffect(() => {
     if (!proveedorid) return;
@@ -182,10 +158,6 @@ function AgendarTurno() {
       })
       .catch(() => setProveedorNombre("Error al cargar nombre"));
   }, [proveedorid]);
-
-  /* ==========================================================
-     ================   TOGGLE DE HORAS   ======================
-     ========================================================== */
 
   const handleToggleHora = (
     id: string,
@@ -207,10 +179,6 @@ function AgendarTurno() {
       return { ...prev, [id]: { fecha, horas: nuevasHoras } };
     });
   };
-
-  /* ==========================================================
-     ===================== SUBMIT ==============================
-     ========================================================== */
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -242,8 +210,6 @@ function AgendarTurno() {
       setIsSubmitting(false);
       return;
     }
-
-    /* === TODO TU CÓDIGO SE MANTIENE — solo agrego loading === */
 
     try {
       /* === PAGO CON SEÑA === */
@@ -350,10 +316,6 @@ function AgendarTurno() {
 
     setIsSubmitting(false);
   };
-
-  /* ==========================================================
-     ======================== RENDER ===========================
-     ========================================================== */
 
   return (
     <main>

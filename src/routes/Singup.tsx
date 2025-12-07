@@ -161,7 +161,7 @@ function Singup() {
                 onChange={(e) => setTipoCuenta(e.target.value)}
               />
               <label htmlFor="opcion1" className="form-check-label">
-                Cuenta usuario
+                Cuenta cliente
               </label>
             </div>
 

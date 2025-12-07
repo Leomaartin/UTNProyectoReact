@@ -1,7 +1,7 @@
 /* Estilos generales para el componente */
 .mainTusturnos {
   min-height: 100vh;
-  background-color: #f4f7f6; /* Fondo suave, manteniendo algo neutro */
+  background-color: #f4f7f6;
   padding-bottom: 50px;
 }
 
@@ -15,7 +15,7 @@
 
 .turnos-container h2 {
   margin-top: 2%;
-  color: #7b2cbf; /* Título principal en morado oscuro */
+  color: #7b2cbf;
   margin-bottom: 30px;
   font-size: 2.2rem;
   font-weight: 700;
@@ -24,9 +24,9 @@
 /* Contenedor para las tarjetas de turnos (CLAVE: Display Grid) */
 .turnos-list {
   display: grid;
-  /* Coloca tantas tarjetas de 300px (mínimo) como quepan en la fila */
+
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px; /* Espacio entre las tarjetas */
+  gap: 30px;
   padding: 0;
   list-style: none;
   margin: 0;
@@ -51,11 +51,11 @@
 }
 
 .turno-card h3 {
-  color: #7b2cbf; /* Título de la tarjeta en morado oscuro */
+  color: #7b2cbf;
   margin-top: 0;
   margin-bottom: 10px;
   font-size: 1.5rem;
-  border-bottom: 2px solid rgba(123, 44, 191, 0.3); /* Morado oscuro con transparencia */
+  border-bottom: 2px solid rgba(123, 44, 191, 0.3);
   padding-bottom: 10px;
 }
 
@@ -85,7 +85,7 @@
   margin-top: 15px;
   border-top: 1px dashed #ced4da;
   padding-top: 15px;
-  flex-grow: 1; /* Esto ayuda a empujar el botón "Cancelar" al fondo */
+  flex-grow: 1;
 }
 
 .horas-label {
@@ -94,7 +94,7 @@
 
 .horas-list {
   display: flex;
-  flex-wrap: wrap; /* Las horas se envuelven a la siguiente línea */
+  flex-wrap: wrap;
   list-style: none;
   padding: 0;
   margin: 5px 0 15px 0;
@@ -102,8 +102,8 @@
 }
 
 .hora-item {
-  background-color: #6ec1e4; /* Azul cielo para los ítems de hora */
-  color: #ffffff; /* Texto blanco para contrastar */
+  background-color: #6ec1e4;
+  color: #ffffff;
   padding: 4px 10px;
   border-radius: 5px;
   font-size: 0.9rem;
@@ -114,7 +114,7 @@
 .cancelar-turno {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: #dc3545; /* Rojo, manteniendo el color de acción negativa */
+  background-color: #dc3545;
   color: white;
   border: none;
   border-radius: 6px;
@@ -144,7 +144,7 @@
 /* Contenedor que alinea el título (h3) y el botón lado a lado */
 .turno-header {
   display: flex;
-  justify-content: space-between; /* Espacia el título y el botón */
+  justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid #e0e0e0;
   padding-bottom: 10px;
@@ -153,30 +153,28 @@
 
 /* Título (Nombre del Usuario/Proveedor) */
 .turno-card h3 {
-  /* Ajusta el margen para que no empuje otros elementos */
   margin: 0;
-  color: #7b2cbf; /* Título de la tarjeta en morado oscuro */
+  color: #7b2cbf;
   font-size: 1.3rem;
   font-weight: 600;
 }
 
 /* 🚀 ESTILO PARA EL BOTÓN "IR A PERFIL" */
 .ir-perfil-btn {
-  background-color: #2ab8b8; /* Verde azulado */
-  color: #ffffff; /* Texto blanco */
-  border: 1px solid #1e8e8e; /* Borde más oscuro del verde azulado */
+  background-color: #2ab8b8;
+  color: #ffffff;
+  border: 1px solid #1e8e8e;
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;
   transition: all 0.2s ease;
-  flex-shrink: 0; /* Evita que el botón se comprima en pantallas pequeñas */
+  flex-shrink: 0;
 }
 
-/* Efecto al pasar el ratón */
 .ir-perfil-btn:hover {
-  background-color: #1e8e8e; /* Un tono más oscuro del verde azulado */
+  background-color: #1e8e8e;
   color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
@@ -185,7 +183,6 @@
       AJUSTES ADICIONALES
     ==================================== */
 
-/* Asegúrate de que los estilos anteriores de la tarjeta sean coherentes */
 .turno-card {
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
@@ -196,46 +193,41 @@
   flex-direction: column;
 }
 
-/* Si tienes un botón de "Cancelar turno" también en la tarjeta,
-    asegúrate de que tenga un margen superior para separarlo. */
 .cancelar-turno {
-  margin-top: auto; /* Empuja el botón al final de la tarjeta */
-  /* ... (resto de estilos del botón cancelar) ... */
+  margin-top: auto;
 }
-/* 1. Contenedor Principal: main-app-container */
+
 .main-app-container {
   display: flex;
-  /* Coloca los hijos (header, content-wrapper, Footer) verticalmente */
+
   flex-direction: column;
-  /* La altura mínima es el 100% del viewport */
+
   min-height: 100vh;
 }
 
 /* 2. Contenido Intermedio: content-wrapper */
 .content-wrapper {
-  /* ¡CLAVE! Esto hace que este div se expanda y use todo el espacio libre disponible,
-     empujando el Footer hacia el final. */
   flex-grow: 1;
 }
 /* 1. Contenedor Principal: main-app-container */
 .main-app-container {
   display: flex;
-  flex-direction: column; /* Apila elementos verticalmente */
-  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* 2. Contenido Intermedio: content-wrapper */
 .content-wrapper {
-  flex-grow: 1; /* Ocupa todo el espacio vertical sobrante */
+  flex-grow: 1;
 }
 /* 1. Contenedor Principal: main-app-container */
 .main-app-container {
   display: flex;
-  flex-direction: column; /* Apila elementos verticalmente */
-  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* 2. Contenido Intermedio: content-wrapper */
 .content-wrapper {
-  flex-grow: 1; /* Hace que este div se expanda y empuje el footer */
+  flex-grow: 1;
 }

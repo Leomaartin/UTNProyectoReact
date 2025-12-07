@@ -140,9 +140,7 @@ function VerPerfilUsuario() {
           </a>
         </div>
       </div>
-      {/* FIN: content-wrapper */}
 
-      {/* 3. Footer: Este será empujado hacia el final de la ventana */}
       <Footer />
     </main>
   );

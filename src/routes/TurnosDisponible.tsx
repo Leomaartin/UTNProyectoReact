@@ -236,7 +236,11 @@ function TurnosDisponible() {
             )}
           </div>
 
-          <button type="submit" className="btn btn-primary mt-4">
+          <button
+            type="submit"
+            className="btn btn-primary mt-4"
+            style={{ marginBottom: "3%" }}
+          >
             Agregar Turno
           </button>
         </form>

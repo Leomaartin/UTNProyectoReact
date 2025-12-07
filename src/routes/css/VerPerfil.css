@@ -7,7 +7,7 @@
 }
 
 .perfil-card {
-  width: 90%;
+  width: 100%;
   max-width: 900px;
   margin: 80px auto 20px;
   background: #ffffff;
@@ -190,7 +190,6 @@ h3 {
 ====================================== */
 
 .perfil-card {
-  width: 80%;
   margin: 40px auto;
   background: #ffffff;
   border-radius: 22px;
@@ -369,25 +368,67 @@ h3 {
     top: 10px;
   }
 }
-/* Este CSS debe aplicarse a la etiqueta <main> */
+
 .main-app-container {
   display: flex;
-  flex-direction: column; /* Apila elementos verticalmente */
-  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* Este CSS debe aplicarse al <div> que envuelve el contenido principal */
 .content-wrapper {
-  flex-grow: 1; /* Hace que este div se expanda y empuje el footer */
+  flex-grow: 1;
 }
-/* 1. Contenedor Principal: main-app-container */
+
 .main-app-container {
   display: flex;
-  flex-direction: column; /* Apila elementos verticalmente */
-  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* 2. Contenido Intermedio: content-wrapper */
 .content-wrapper {
-  flex-grow: 1; /* Hace que este div se expanda y empuje el footer */
+  flex-grow: 1;
+}
+.descripcion-servicio {
+  font-size: 15px;
+  color: #555;
+
+  /* Evita que se agrande el contenedor */
+  max-height: 65px;
+
+  /* Oculta lo que sobra sí o sí */
+  overflow: hidden !important;
+
+  /* Crea las 3 líneas */
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  text-overflow: ellipsis !important;
+
+  /* Evita que se expanda por flex */
+  flex-shrink: 1;
+}.servicio-card {
+  align-items: flex-start;
+  overflow: hidden; /* evita que algo se salga de la card */
+}
+
+.servicio-info {
+  max-width: 100%;
+  flex-shrink: 1; /* evita que se expanda */
+}
+
+.descripcion-servicio {
+  font-size: 15px;
+  color: #555;
+  margin: 0;
+
+  /* Limitar altura */
+  max-height: 60px;
+
+  /* recorte sí o sí */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

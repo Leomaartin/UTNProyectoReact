@@ -1,27 +1,23 @@
-/* -------------------------------------------------------------------------- */
-/* 1. VARIABLES DE COLOR (Centralizadas) - ADAPTADAS A TU PALETA               */
-/* -------------------------------------------------------------------------- */
-:root {
-  /* Paleta proporcionada: #7b2cbf (Morado Oscuro), #6ec1e4 (Azul Cielo), #2ab8b8 (Verde Azulado), #ffffff (Blanco) */
 
-  /* Marca (Azules -> Morados/Azules) */
-  --color-primary: #7b2cbf; /* Morado Oscuro: Principal */
-  --color-primary-dark: #5a2191; /* Tono más oscuro para Hover */
-  --color-blue-medium: #6ec1e4; /* Azul Cielo: Botones/Bordes secundarios */
-  --color-blue-soft: #9fdee9; /* Tono muy suave de Azul Cielo para bordes/sombras */
-  --color-blue-light: #e8f5ff; /* Tono muy suave para fondos (similar al original) */
+:root {
+
+  --color-primary: #7b2cbf; 
+  --color-primary-dark: #5a2191; 
+  --color-blue-medium: #6ec1e4; 
+  --color-blue-soft: #9fdee9; 
+  --color-blue-light: #e8f5ff; 
 
   /* Fondos y Estructura */
-  --bg-general: #f4f7f6; /* Fondo general (Gris muy suave) */
+  --bg-general: #f4f7f6;
   --bg-card: #ffffff;
-  --bg-form: #f8fcff; /* Fondo muy claro para formularios */
-  --bg-service-panel: #fcfdff; /* Fondo del panel de servicio */
+  --bg-form: #f8fcff; 
+  --bg-service-panel: #fcfdff; 
 
   /* Texto, Peligro y Sombras */
-  --text-dark: #4a4a4a; /* Gris oscuro para títulos y labels */
-  --text-secondary: #7c7c7c; /* Gris claro para párrafos */
-  --color-danger: #dc3545; /* Rojo para acción de peligro (Mantenido el estándar para usabilidad) */
-  --color-success: #2ab8b8; /* Verde Azulado: Para acción de éxito/éxito */
+  --text-dark: #4a4a4a; 
+  --text-secondary: #7c7c7c; 
+  --color-danger: #dc3545; 
+  --color-success: #2ab8b8; 
   --shadow-soft: rgba(0, 0, 0, 0.08);
   --shadow-medium: rgba(0, 0, 0, 0.15);
 }
@@ -51,7 +47,7 @@
 h1 {
   font-size: 2rem;
   margin-bottom: 10px;
-  color: var(--color-primary); /* Usa Morado Oscuro */
+  color: var(--color-primary); 
   font-weight: 700;
 }
 
@@ -98,7 +94,7 @@ p {
   border-radius: 50%;
   object-fit: cover;
   transition: 0.3s ease;
-  border: 4px solid var(--color-blue-medium); /* Usa Azul Cielo */
+  border: 4px solid var(--color-blue-medium); 
 }
 
 /* Overlay */
@@ -136,7 +132,7 @@ p {
 }
 
 .btn-add-service {
-  background: var(--color-primary); /* Usa Morado Oscuro como principal */
+  background: var(--color-primary); 
   border: none;
   padding: 12px 20px;
   font-size: 1rem;
@@ -151,7 +147,7 @@ p {
 }
 
 .btn-add-service:hover {
-  background: var(--color-primary-dark); /* Usa Morado Oscuro más oscuro */
+  background: var(--color-primary-dark); 
   transform: translateY(-2px);
 }
 
@@ -159,7 +155,7 @@ p {
   margin-top: 25px;
   padding: 20px;
   background: var(--bg-service-panel);
-  border: 1px dashed var(--color-blue-medium); /* Usa Azul Cielo */
+  border: 1px dashed var(--color-blue-medium);
   border-radius: 10px;
   text-align: left;
   display: flex;
@@ -169,7 +165,7 @@ p {
 
 .service-panel h3 {
   text-align: center;
-  color: var(--color-primary); /* Usa Morado Oscuro */
+  color: var(--color-primary); 
   margin-bottom: 10px;
 }
 
@@ -191,12 +187,12 @@ p {
 
 .service-panel input:focus,
 .service-panel textarea:focus {
-  border-color: var(--color-primary); /* Usa Morado Oscuro */
+  border-color: var(--color-primary); 
   outline: none;
 }
 
 .service-panel button[type="submit"] {
-  background: var(--color-success); /* Usa Verde Azulado */
+  background: var(--color-success);
   color: white;
   border: none;
   padding: 10px 15px;
@@ -208,7 +204,7 @@ p {
 }
 
 .service-panel button[type="submit"]:hover {
-  background: #1e8e8e; /* Tono más oscuro de Verde Azulado */
+  background: #1e8e8e; 
   transform: translateY(-1px);
 }
 
@@ -225,7 +221,7 @@ p {
 
 /* Botón para guardar o aplicar cambios (Usado en el formulario de categoría) */
 .btn-primary-action {
-  background: var(--color-primary); /* Usa Morado Oscuro */
+  background: var(--color-primary); 
   border: none;
   padding: 10px 18px;
   font-weight: 600;
@@ -236,7 +232,7 @@ p {
 }
 
 .btn-primary-action:hover {
-  background: var(--color-primary-dark); /* Usa Morado Oscuro más oscuro */
+  background: var(--color-primary-dark); 
   transform: translateY(-1px);
 }
 
@@ -260,7 +256,7 @@ p {
 
 /* Botón Entrar (Home) */
 .btn-home {
-  border: 2px solid var(--color-success); /* Usa Verde Azulado */
+  border: 2px solid var(--color-success); 
   color: var(--color-success);
   background: transparent;
   padding: 10px 18px;
@@ -332,9 +328,9 @@ p {
 }
 
 .divinputdashboard input:focus {
-  border-color: var(--color-primary); /* Usa Morado Oscuro */
+  border-color: var(--color-primary); 
   outline: none;
-  box-shadow: 0px 0px 0px 3px rgba(123, 44, 191, 0.25); /* Sombra enfocada con Morado Oscuro */
+  box-shadow: 0px 0px 0px 3px rgba(123, 44, 191, 0.25); 
 }
 
 /* -------------------------------------------------------------- */
@@ -354,7 +350,7 @@ p {
 }
 
 .btn-edit-info:hover {
-  background: var(--color-primary); /* Usa Morado Oscuro */
+  background: var(--color-primary); 
   transform: translateY(-1px);
 }
 
@@ -384,9 +380,9 @@ p {
 }
 
 .styled-input:focus {
-  border-color: var(--color-primary); /* Usa Morado Oscuro */
+  border-color: var(--color-primary);
   outline: none;
-  box-shadow: 0px 0px 0px 3px rgba(123, 44, 191, 0.25); /* Sombra enfocada con Morado Oscuro */
+  box-shadow: 0px 0px 0px 3px rgba(123, 44, 191, 0.25); 
 }
 
 /* -------------------------------------------------------------- */
@@ -394,7 +390,7 @@ p {
 /* -------------------------------------------------------------- */
 
 .btn-view-public {
-  background: var(--color-primary); /* Usa Morado Oscuro */
+  background: var(--color-primary); 
   color: white;
   padding: 10px 18px;
   border: none;
@@ -406,18 +402,18 @@ p {
 }
 
 .btn-view-public:hover {
-  background: var(--color-primary-dark); /* Usa Morado Oscuro más oscuro */
+  background: var(--color-primary-dark); 
   transform: translateY(-1px);
 }
 
 .botoneseditarver button {
   margin: 5%;
   background-color: #e7e7e7;
-  color: var(--color-primary); /* Usa Morado Oscuro */
+  color: var(--color-primary); 
 }
 
 .botoneseditarver button:hover {
-  color: #ffffff; /* Color de hover para el texto */
+  color: #ffffff; 
   background-color: var(--color-primary-dark);
 }
 .current-category {
@@ -425,25 +421,24 @@ p {
   color: var(--text-dark);
 }
 
-/* Los colores de las categorías se adaptan para ser tonos más oscuros o brillantes
-   que contrasten bien con el fondo, manteniendo la diferenciación. */
+
 .cat-0 b {
-  color: #ff7043; /* Naranja (Educación) */
+  color: #ff7043;
 }
 .cat-1 b {
-  color: #7b2cbf; /* Morado Oscuro (Tecnología) */
+  color: #7b2cbf; 
 }
 .cat-2 b {
-  color: #2ab8b8; /* Verde Azulado (Administrativo) */
-}
+  color: #2ab8b8;
 .cat-3 b {
-  color: #ffb300; /* Ámbar (Mascotas) */
+  color: #ffb300;
 }
 .cat-4 b {
-  color: #e91e63; /* Rosa/Frambuesa (Salud) */
+  color: #e91e63; 
 }
 .cat-5 b {
-  color: #6ec1e4; /* Azul Cielo (Belleza y Cuidado) */
+  color: #6ec1e4;
+}
 }
 /* ======================================================= */
 /* 🚀 TRANSICIONES DE PANELES (Servicio y Edición) */
@@ -457,13 +452,13 @@ p {
   margin-top: 0;
 }
 
-/* Estado ABIERTO (se aplica con la clase 'is-open' en el JSX) */
+
 .service-panel-wrapper.is-open {
   max-height: 800px;
   margin-top: 25px;
 }
 
-/* El contenido del panel de edición necesita un margen para separarse */
+
 .edit-panel-wrapper.is-open {
   max-height: 1000px;
   margin-top: 25px;
@@ -473,7 +468,7 @@ p {
   margin-top: 0;
 }
 
-/* El contenido interno del panel de edición */
+
 .edit-panel-content {
   padding: 20px;
   background: var(--bg-form);
@@ -481,7 +476,7 @@ p {
   box-shadow: 0px 4px 12px var(--shadow-soft);
 }
 
-/* Dashboard.css - Modificación en .btn-add-service */
+
 .btn-add-service {
   background: var(--color-primary);
   border: none;
@@ -493,9 +488,9 @@ p {
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
   margin: 20px auto 0 auto;
-  display: flex; /* Añadir display flex */
-  justify-content: center; /* Centra horizontalmente el contenido del botón */
-  align-items: center; /* Centra verticalmente */
-  gap: 10px; /* Espacio entre el ícono y el texto */
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  gap: 10px;
   box-shadow: 0px 3px 6px var(--shadow-medium);
 }

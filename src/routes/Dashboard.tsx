@@ -9,7 +9,6 @@ import toast, { Toaster } from "react-hot-toast";
 import personita from "../img/personita2.png";
 import tienda from "../img/tienda.png";
 
-// Mapeo de categorías
 const CATEGORIES = [
   "Educación",
   "Tecnología",
@@ -37,11 +36,11 @@ function Dashboard() {
     precio: "",
     descripcion: "",
     imagen: null,
-  }); // ===================================================== // VER PERFIL PÚBLICO // =====================================================
+  });
 
   const verperfilpublico = () => {
     navigate(`/verperfilproveedor/${userData?.id}`);
-  }; // ===================================================== // HANDLERS // =====================================================
+  }; 
 
   const handleServiceChange = (e) => {
     const { name, value } = e.target;
@@ -60,7 +59,7 @@ function Dashboard() {
     navigate("/");
   };
 
-  const navigateHome = () => navigate("/"); // ===================================================== // API: GUARDAR NUEVO SERVICIO // =====================================================
+  const navigateHome = () => navigate("/"); 
 
   const handleSubmitService = async (e) => {
     e.preventDefault();
@@ -129,7 +128,7 @@ function Dashboard() {
   }; // ===================================================== // API: GUARDAR DESCRIPCIÓN Y SERVICIO (USA MISMA API) // =====================================================
 
   const handleSubmitDescripcionServicio = async (e) => {
-    e.preventDefault(); // Solo enviar los campos que el usuario realmente cambió
+    e.preventDefault();
 
     const payload = { id: userData?.id };
 

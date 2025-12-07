@@ -170,7 +170,7 @@ function VerPerfil() {
 
               <div className="servicio-info">
                 <h4>{s.nombre}</h4>
-                <p>{s.descripcion}</p>
+                <p className="descripcion-servicio">{s.descripcion}</p>
               </div>
             </div>
           ))}

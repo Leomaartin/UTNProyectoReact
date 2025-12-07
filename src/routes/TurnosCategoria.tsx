@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "../Components/Navbar";
-import Footer from "../Components/Footer";
+
 import "./css/ProveedoresPorCategoria.css";
 import tienda from "../img/tienda.png";
 function ProveedoresPorCategoria() {
@@ -160,7 +160,7 @@ function ProveedoresPorCategoria() {
       ) : (
         <p>No hay proveedores en esta categoría.</p>
       )}
-      <Footer />
+    
     </main>
   );
 }

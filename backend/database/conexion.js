@@ -90,7 +90,7 @@ export default function registrarEndpoints(app) {
           .json({ success: false, message: "Error al enviar el correo" });
       res.json({ success: true, message: "Correo enviado correctamente" });
     } catch (error) {
-      console.error("Error en enviar-mail:", error); // <--- esto te va a decir qué falla
+      console.error("Error en enviar-mail:", error); 
       res
         .status(500)
         .json({ success: false, message: "Error interno del servidor", error });

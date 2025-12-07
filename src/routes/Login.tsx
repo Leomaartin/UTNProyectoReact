@@ -82,7 +82,6 @@ function Login() {
           marginTop: "10px",
         }}
       >
-        {/* Íconos de navegación (se estilizarán con .fa-solid en Login.css si lo deseas) */}
         <i
           className="fa-solid fa-backward"
           onClick={() => navegar(-1)}
@@ -104,7 +103,7 @@ function Login() {
               <label htmlFor="email" className="form-label">
                 Correo electrónico
               </label>
-              {/* Mantener form-control para el estilo base si no quieres redefinir TODO */}
+
               <input
                 type="email"
                 id="email"
@@ -129,13 +128,11 @@ function Login() {
               />
             </div>
 
-            {/* ⚠️ APLICAR CLASE CUSTOM: btn-ingresar */}
             <button type="submit" className="btn-ingresar">
               Ingresar
             </button>
           </form>
           {mensaje ? (
-            /* ⚠️ APLICAR CLASE CUSTOM: alert-error */
             <div className="alert-error" role="alert">
               <div>{mensaje}</div>
             </div>

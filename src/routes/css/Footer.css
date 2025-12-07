@@ -8,24 +8,24 @@
 /* FOOTER COMPACTO Y ORDENADO */
 .footer {
   width: 100%;
-  /* Reducido el padding vertical para hacerlo menos alto */
+
   padding: 8px 18px;
   background: linear-gradient(135deg, #7b2cbf, #6ec1e4, #2ab8b8, #ffffff);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* El nowrap ayuda a mantener el orden en una línea */
+
   flex-wrap: nowrap;
-  gap: 16px; /* Espacio entre los grupos (izquierda vs copyright) */
+  gap: 16px;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .footer-left {
   display: flex;
   align-items: center;
-  gap: 20px; /* Mayor separación para más orden visual */
-  flex-shrink: 0; /* Asegura que no se encoja primero */
+  gap: 20px;
+  flex-shrink: 0;
 }
 
 /* Marca de la empresa/sitio */
@@ -38,14 +38,14 @@
 /* Enlaces de navegación */
 .links {
   display: flex;
-  gap: 16px; /* Espacio limpio entre enlaces */
+  gap: 16px;
 }
 
 .links a {
   color: #fff;
-  opacity: 0.85; /* Un poco menos de opacidad para el estado normal */
+  opacity: 0.85;
   text-decoration: none;
-  font-size: 0.9rem; /* Un poco más pequeño para ser compacto */
+  font-size: 0.9rem;
   transition: opacity 0.2s;
 }
 
@@ -55,27 +55,24 @@
 
 /* Texto de Copyright */
 .copy {
-  font-size: 0.85rem; /* Pequeño y discreto */
+  font-size: 0.85rem;
   opacity: 0.75;
   text-align: right;
-  flex-shrink: 0; /* Asegura que no se encoja */
+  flex-shrink: 0;
 }
 
-/* RESPONSIVE: Ajuste para pantallas pequeñas */
 @media (max-width: 650px) {
   .footer {
-    /* En pantallas pequeñas, apilamos los elementos para que no se rompan */
     flex-direction: column;
-    align-items: flex-start; /* Alineamos a la izquierda */
-    padding: 12px 18px; /* Aumento un poco el padding vertical para el apilamiento */
+    align-items: flex-start;
+    padding: 12px 18px;
     gap: 10px;
   }
 
   .footer-left {
-    /* Opcional: Centrar los links y la marca cuando están apilados */
     width: 100%;
     justify-content: space-between;
-    gap: 10px; /* Menor gap para el modo móvil */
+    gap: 10px;
   }
 
   .links {
@@ -83,14 +80,12 @@
   }
 
   .copy {
-    /* Mantenemos el copyright alineado con el resto del contenido en móvil */
     text-align: left;
     width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  /* Si la pantalla es muy pequeña, apilamos marca y links */
   .footer-left {
     flex-direction: column;
     align-items: flex-start;
