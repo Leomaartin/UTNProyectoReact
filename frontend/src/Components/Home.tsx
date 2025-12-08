@@ -327,29 +327,28 @@ function Home() {
                 height="20rem"
                 background="#fff"
               >
-                <h2 className="agregar-turnos-titulo">
-                  <a
-                    href="/turnosdisponibles"
-                    className="turno-titulo"
-                    style={{ color: "#7b2cbf" }}
-                  >
-                    Turnos Disponibles +
-                  </a>
+              <h2 className="agregar-turnos-titulo">
+  <a
+    href="/turnosdisponibles"
+    className="turno-titulo"
+    style={{ color: "#7b2cbf" }}
+  >
+    Turnos Disponibles +
+  </a>
 
-                  <i
-                    className="fa-solid fa-pen-to-square"
-                    style={{
-                      cursor: "pointer",
-                      fontSize: hover ? "22px" : "18px",
-
-                      transition: "all 0.2s ease",
-                      marginLeft: "40%",
-                    }}
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-                    onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
-                  />
-                </h2>
+  <i
+    className="fa-solid fa-pen-to-square"
+    style={{
+      cursor: "pointer",
+      fontSize: hover ? "22px" : "18px",
+      transition: "all 0.2s ease",
+      // marginLeft: "40%",  <-- ¡ELIMINADO!
+    }}
+    onMouseEnter={() => setHover(true)}
+    onMouseLeave={() => setHover(false)}
+    onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
+  />
+</h2>
 
                 <div className="turnos-lista">
                   {turnos.length > 0 ? (

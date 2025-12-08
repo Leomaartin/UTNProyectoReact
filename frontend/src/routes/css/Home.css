@@ -32,7 +32,7 @@
 }
 
 .home-container {
-  font-family: "Poppins", sans-serif; /* Cambio a una fuente más moderna */
+  font-family: "Poppins", sans-serif;
   min-height: 100vh;
   background-color: var(--background-color);
   color: var(--dark-text);
@@ -60,7 +60,7 @@
 .home-card {
   border-radius: 1rem;
   background-color: var(--card-bg-light);
-  box-shadow: 0 8px 20px var(--shadow-color-soft); /* Sombra más pronunciada */
+  box-shadow: 0 8px 20px var(--shadow-color-soft);
   color: var(--dark-text);
   display: flex;
   flex-direction: column;
@@ -69,8 +69,14 @@
   font-size: 1rem;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   padding: 1.5rem;
+  /* Flex para soportar 49% en proveedor o 100% en usuario */
   flex: 1 1 48%;
-  min-height: 20rem; /* Mantenemos altura mínima */
+  min-height: 20rem;
+}
+
+.home-card.full-card {
+  flex: 1 1 100%; /* Tarjetas que ocupan todo el ancho (ej: Mis Turnos) */
+  min-height: auto;
 }
 
 .home-card:hover {
@@ -87,10 +93,24 @@
   align-items: center;
   font-size: 1.5rem;
   font-weight: 600;
+  /* Aseguramos que los títulos no se desborden si el texto es largo */
+  min-width: 0; 
+  overflow: hidden;
 }
 
-.home-card h2.category-title {
+.home-card h2.category-title,
+.home-card h2.buscar-categoria {
   color: var(--dark-text);
+}
+
+/* Ajuste específico para el título de la tarjeta de Turnos Disponibles (Proveedor) */
+.home-card h2.agregar-turnos-titulo {
+  flex-wrap: nowrap; /* Evita que el título se rompa en varias líneas si es largo */
+}
+
+/* Aseguramos que el ícono de edición esté a la derecha sin forzar margin */
+.fa-pen-to-square {
+  margin-left: auto; /* Empuja el ícono a la derecha, funciona en responsive */
 }
 
 /* Icono de Ver/Editar */
@@ -98,6 +118,7 @@
 .fa-eye {
   color: var(--primary-blue);
   transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0; /* Asegura que no se achique si el texto es muy largo */
 }
 .fa-pen-to-square:hover,
 .fa-eye:hover {
@@ -127,6 +148,15 @@
   padding: 0.8rem 1.2rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* Aseguramos que se comporte bien en móvil */
+  flex-wrap: nowrap;
+}
+
+.turno-info {
+  /* Contenedor de Fecha y Hora */
+  flex-grow: 1; 
+  min-width: 0;
+  margin-right: 1rem; /* Espacio antes del botón X */
 }
 
 .turno-box:hover {
@@ -139,6 +169,10 @@
 .turno-hora {
   margin: 0;
   line-height: 1.4;
+  /* El overflow: hidden y white-space: nowrap evita que el texto de la hora se rompa */
+  overflow: hidden; 
+  white-space: nowrap; 
+  text-overflow: ellipsis;
 }
 .turno-fecha {
   font-weight: 600;
@@ -157,6 +191,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0; /* Asegura que el botón X no se encoja */
 }
 
 .btn-eliminar-turno:hover {
@@ -267,6 +302,11 @@
 .proveedor-nombre {
   font-size: 1.1rem;
   color: var(--dark-text);
+  /* Asegura que el nombre no se desborde */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .info-detalle {
@@ -480,168 +520,8 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* 9. RESPONSIVE                                */
-/* -------------------------------------------------------------------------- */
-
-@media (max-width: 992px) {
-  /* Tablet */
-  .category-grid-buttons.user-mode {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablet */
-  }
-}
-
-@media (max-width: 768px) {
-  /* Dispositivos más pequeños */
-  .home-grid {
-    flex-direction: column;
-    padding: 1rem 5%;
-  }
-
-  .home-card {
-    flex: 1 1 100%;
-    max-width: 100% !important;
-    height: auto !important;
-  }
-
-  /* Ajuste de categorías a una columna en móvil */
-  .category-grid-buttons.user-mode,
-  .categorias-botones.provider-mode {
-    grid-template-columns: 1fr;
-  }
-
-  /* Mis Turnos */
-  .info-detalle {
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  /* HOME INVITADO */
-  .invitado-title {
-    font-size: 2.5rem;
-  }
-  .invitado-subtitle {
-    font-size: 1.1rem;
-  }
-  .invitado-buttons {
-    flex-direction: column;
-    gap: 1rem;
-    width: 80%;
-    margin: auto;
-  }
-  .btn-invitado-primary,
-  .btn-invitado-secondary {
-    width: 100%;
-    padding: 10px 20px;
-    font-size: 1.1rem;
-  }
-
-  .carousel-container {
-    height: 300px;
-  }
-  .carousel-caption h3 {
-    font-size: 1.6rem;
-  }
-  .carousel-caption p {
-    font-size: 1rem;
-  }
-  .carousel-btn {
-    font-size: 2rem;
-    padding: 6px 10px;
-  }
-}
-
-/* Scrollbar personalizado para navegadores basados en Webkit */
-.turnos-agendados-lista::-webkit-scrollbar,
-.turnos-lista::-webkit-scrollbar {
-  width: 8px;
-}
-
-.turnos-agendados-lista::-webkit-scrollbar-track,
-.turnos-lista::-webkit-scrollbar-track {
-  background: var(--background-color);
-  border-radius: 10px;
-}
-
-.turnos-agendados-lista::-webkit-scrollbar-thumb,
-.turnos-lista::-webkit-scrollbar-thumb {
-  background: var(--soft-blue);
-  border-radius: 10px;
-}
-
-.turnos-agendados-lista::-webkit-scrollbar-thumb:hover,
-.turnos-lista::-webkit-scrollbar-thumb:hover {
-  background: var(--light-blue);
-}
-.hand {
-  display: inline-block;
-  animation: wave 1.5s infinite;
-  transform-origin: 70% 70%;
-}
-
-/* Animación del saludo 👋 */
-@keyframes wave {
-  0% {
-    transform: rotate(0deg);
-  }
-  10% {
-    transform: rotate(14deg);
-  }
-  20% {
-    transform: rotate(-8deg);
-  }
-  30% {
-    transform: rotate(14deg);
-  }
-  40% {
-    transform: rotate(-4deg);
-  }
-  50% {
-    transform: rotate(10deg);
-  }
-  60% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
-}
-.category-action-button {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease;
-}
-
-.category-action-button:active {
-  transform: scale(0.96);
-}
-
-/* Animación ONDA */
-.category-action-button.ripple::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  animation: rippleEffect 0.6s ease-out;
-}
-
-@keyframes rippleEffect {
-  from {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: translate(-50%, -50%) scale(25);
-    opacity: 0;
-  }
-}
-/* ====================================================================== */
 /* 9. RESPONSIVE REVISADO – TABLET Y MOBILE */
-/* ====================================================================== */
+/* -------------------------------------------------------------------------- */
 
 /* Tablets grandes y medianas */
 @media (max-width: 992px) {
@@ -649,6 +529,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  /* El proveedor sigue usando 2 columnas en tablet */
   .categorias-botones.provider-mode {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -657,9 +538,14 @@
     gap: 1rem;
     padding: 1.5rem 3%;
   }
+
+  /* En tablet, las tarjetas pequeñas y grandes del proveedor se mantienen al 48% */
+  .home-card {
+    flex: 1 1 48%; 
+  }
 }
 
-/* Tablets y móviles */
+/* Teléfonos y Tablets pequeñas */
 @media (max-width: 768px) {
   /* Home grid pasa a columna */
   .home-grid {
@@ -669,13 +555,12 @@
   }
 
   /* Tarjetas full width */
-  .home-card,
-  .home-card.small-card,
-  .home-card.large-card {
+  .home-card {
+    /* Esto sobreescribe el 48% para que siempre use 100% en móvil */
+    flex: 1 1 100% !important; 
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
-    margin: 0 !important;
     height: auto !important;
   }
 
@@ -695,6 +580,17 @@
   .info-detalle {
     flex-direction: column;
     gap: 0.3rem;
+  }
+  
+  /* Nombre de proveedor/cliente en una línea en móvil */
+  .info-principal {
+      flex-direction: column;
+      align-items: flex-start;
+  }
+  .proveedor-nombre {
+      white-space: normal; /* Permite que el nombre se envuelva si es muy largo */
+      text-overflow: clip; 
+      margin-bottom: 0.5rem;
   }
 
   /* Home invitado */
@@ -759,5 +655,101 @@
   }
   .invitado-buttons {
     gap: 0.8rem;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 10. SCROLLBARS Y ANIMACIONES */
+/* -------------------------------------------------------------------------- */
+
+/* Scrollbar personalizado para navegadores basados en Webkit */
+.turnos-agendados-lista::-webkit-scrollbar,
+.turnos-lista::-webkit-scrollbar {
+  width: 8px;
+}
+
+.turnos-agendados-lista::-webkit-scrollbar-track,
+.turnos-lista::-webkit-scrollbar-track {
+  background: var(--background-color);
+  border-radius: 10px;
+}
+
+.turnos-agendados-lista::-webkit-scrollbar-thumb,
+.turnos-lista::-webkit-scrollbar-thumb {
+  background: var(--soft-blue);
+  border-radius: 10px;
+}
+
+.turnos-agendados-lista::-webkit-scrollbar-thumb:hover,
+.turnos-lista::-webkit-scrollbar-thumb:hover {
+  background: var(--light-blue);
+}
+
+/* Animación del saludo 👋 */
+.hand {
+  display: inline-block;
+  animation: wave 1.5s infinite;
+  transform-origin: 70% 70%;
+}
+
+@keyframes wave {
+  0% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(14deg);
+  }
+  20% {
+    transform: rotate(-8deg);
+  }
+  30% {
+    transform: rotate(14deg);
+  }
+  40% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* Animación ONDA (Ripple) */
+.category-action-button {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.category-action-button:active {
+  transform: scale(0.96);
+}
+
+.category-action-button.ripple::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: rippleEffect 0.6s ease-out;
+}
+
+@keyframes rippleEffect {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(25);
+    opacity: 0;
   }
 }
