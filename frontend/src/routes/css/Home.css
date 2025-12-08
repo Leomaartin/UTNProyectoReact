@@ -3,219 +3,220 @@
 /* -------------------------------------------------------------------------- */
 
 :root {
-  /* Colores principales y de marca */
-  --primary-blue: #2196f3; /* Azul principal */
-  --light-blue: #42a5f5; /* Azul más suave para fondos/íconos */
-  --soft-blue: #bbdefb; /* Fondo suave para interacciones */
-  --extra-light-blue: #e3f2fd; /* Fondo de tarjetas de lista */
+ /* Colores principales y de marca */
+ --primary-blue: #2196f3; /* Azul principal */
+ --light-blue: #42a5f5; /* Azul más suave para fondos/íconos */
+ --soft-blue: #bbdefb; /* Fondo suave para interacciones */
+ --extra-light-blue: #e3f2fd; /* Fondo de tarjetas de lista */
 
-  /* Colores de fondo y estructura */
-  --background-color: #f7f9fc; /* Fondo general, más claro */
-  --card-bg-light: #ffffff; /* Fondo de tarjetas */
+ /* Colores de fondo y estructura */
+ --background-color: #f7f9fc; /* Fondo general, más claro */
+ --card-bg-light: #ffffff; /* Fondo de tarjetas */
 
-  /* Colores de texto y elementos */
-  --dark-text: #2c3e50; /* Texto oscuro y principal */
-  --secondary-text: #7f8c8d; /* Texto secundario, descripciones */
-  --shadow-color-soft: rgba(0, 0, 0, 0.08);
-  --shadow-color-medium: rgba(0, 0, 0, 0.15);
-  --delete-color: #e74c3c; /* Rojo para eliminar */
-  --success-color: #2ecc71;
+ /* Colores de texto y elementos */
+ --dark-text: #2c3e50; /* Texto oscuro y principal */
+ --secondary-text: #7f8c8d; /* Texto secundario, descripciones */
+ --shadow-color-soft: rgba(0, 0, 0, 0.08);
+ --shadow-color-medium: rgba(0, 0, 0, 0.15);
+ --delete-color: #e74c3c; /* Rojo para eliminar */
+ --success-color: #2ecc71;
 }
 
 /* -------------------------------------------------------------------------- */
 /* 2. RESET & BASE                              */
 /* -------------------------------------------------------------------------- */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
 }
 
 .home-container {
-  font-family: "Poppins", sans-serif;
-  min-height: 100vh;
-  background-color: var(--background-color);
-  color: var(--dark-text);
-  padding-top: 0;
+ font-family: "Poppins", sans-serif;
+ min-height: 100vh;
+ background-color: var(--background-color);
+ color: var(--dark-text);
+ padding-top: 0;
 }
 
 /* -------------------------------------------------------------------------- */
 /* 3. LAYOUT GRID (LOGUEADO)                    */
 /* -------------------------------------------------------------------------- */
 .home-grid {
-  display: flex;
-  gap: 1.5rem;
-  padding: 2rem 5%;
-  flex-wrap: wrap;
+ display: flex;
+ gap: 1.5rem;
+ padding: 2rem 5%;
+ flex-wrap: wrap;
 }
 
 .bottom-section {
-  padding: 0 5%;
-  margin-bottom: 2rem;
+ padding: 0 5%;
+ margin-bottom: 2rem;
 }
 
 /* -------------------------------------------------------------------------- */
 /* 4. ESTILOS DE TARJETAS                      */
 /* -------------------------------------------------------------------------- */
 .home-card {
-  border-radius: 1rem;
-  background-color: var(--card-bg-light);
-  box-shadow: 0 8px 20px var(--shadow-color-soft);
-  color: var(--dark-text);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  font-weight: 500;
-  font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  padding: 1.5rem;
-  /* Flex para soportar 49% en proveedor o 100% en usuario */
-  flex: 1 1 48%;
-  min-height: 20rem;
+ border-radius: 1rem;
+ background-color: var(--card-bg-light);
+ box-shadow: 0 8px 20px var(--shadow-color-soft);
+ color: var(--dark-text);
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-start;
+ font-weight: 500;
+ font-size: 1rem;
+ transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+ padding: 1.5rem;
+ /* Flex base para las dos tarjetas de proveedor (small-card y large-card) */
+ flex: 1 1 48%; 
+ min-height: 20rem;
 }
 
 .home-card.full-card {
-  flex: 1 1 100%; /* Tarjetas que ocupan todo el ancho (ej: Mis Turnos) */
-  min-height: auto;
+ flex: 1 1 100%; /* Tarjetas que ocupan todo el ancho (ej: Mis Turnos, Categorías Usuario) */
+ min-height: auto;
 }
 
 .home-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px var(--shadow-color-medium);
+ transform: translateY(-5px);
+ box-shadow: 0 12px 25px var(--shadow-color-medium);
 }
 
 .home-card h2 {
-  margin-bottom: 1rem;
-  color: var(--primary-blue);
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1.5rem;
-  font-weight: 600;
-  /* Aseguramos que los títulos no se desborden si el texto es largo */
-  min-width: 0; 
-  overflow: hidden;
+ margin-bottom: 1rem;
+ color: var(--primary-blue);
+ width: 100%;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ font-size: 1.5rem;
+ font-weight: 600;
+ /* Aseguramos que los títulos no se desborden si el texto es largo */
+ min-width: 0; 
+ overflow: hidden;
 }
 
 .home-card h2.category-title,
 .home-card h2.buscar-categoria {
-  color: var(--dark-text);
+ color: var(--dark-text);
 }
 
 /* Ajuste específico para el título de la tarjeta de Turnos Disponibles (Proveedor) */
 .home-card h2.agregar-turnos-titulo {
-  flex-wrap: nowrap; /* Evita que el título se rompa en varias líneas si es largo */
+ flex-wrap: nowrap; /* Evita que el título se rompa en varias líneas si es largo */
 }
 
-/* Aseguramos que el ícono de edición esté a la derecha sin forzar margin */
-.fa-pen-to-square {
-  margin-left: auto; /* Empuja el ícono a la derecha, funciona en responsive */
+/* CLAVE: Aseguramos que los íconos se alineen a la derecha usando margin-left: auto */
+.fa-pen-to-square,
+.fa-eye {
+ margin-left: auto; /* Empuja el ícono a la derecha, funciona con flex y responsive */
 }
 
 /* Icono de Ver/Editar */
 .fa-pen-to-square,
 .fa-eye {
-  color: var(--primary-blue);
-  transition: color 0.2s ease, transform 0.2s ease;
-  flex-shrink: 0; /* Asegura que no se achique si el texto es muy largo */
+ color: var(--primary-blue);
+ transition: color 0.2s ease, transform 0.2s ease;
+ flex-shrink: 0; /* Asegura que no se achique si el texto es muy largo */
 }
 .fa-pen-to-square:hover,
 .fa-eye:hover {
-  color: var(--light-blue) !important;
-  transform: scale(1.1);
+ color: var(--light-blue) !important;
+ transform: scale(1.1);
 }
 
 /* -------------------------------------------------------------------------- */
 /* 5. AGREGAR TURNOS + (PROVEEDOR)             */
 /* -------------------------------------------------------------------------- */
 .turnos-lista {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-height: 14rem;
-  overflow-y: auto;
-  gap: 0.8rem;
-  padding-right: 0.5rem;
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+ max-height: 14rem;
+ overflow-y: auto;
+ gap: 0.8rem;
+ padding-right: 0.5rem;
 }
 
 .turno-box {
-  background-color: var(--extra-light-blue);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 0.75rem;
-  padding: 0.8rem 1.2rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  /* Aseguramos que se comporte bien en móvil */
-  flex-wrap: nowrap;
+ background-color: var(--extra-light-blue);
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ border-radius: 0.75rem;
+ padding: 0.8rem 1.2rem;
+ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+ transition: transform 0.2s ease, box-shadow 0.2s ease;
+ /* Aseguramos que se comporte bien en móvil */
+ flex-wrap: nowrap;
 }
 
 .turno-info {
-  /* Contenedor de Fecha y Hora */
-  flex-grow: 1; 
-  min-width: 0;
-  margin-right: 1rem; /* Espacio antes del botón X */
+ /* Contenedor de Fecha y Hora */
+ flex-grow: 1; 
+ min-width: 0;
+ margin-right: 1rem; /* Espacio antes del botón X */
 }
 
 .turno-box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  background-color: var(--soft-blue);
+ transform: translateY(-2px);
+ box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+ background-color: var(--soft-blue);
 }
 
 .turno-fecha,
 .turno-hora {
-  margin: 0;
-  line-height: 1.4;
-  /* El overflow: hidden y white-space: nowrap evita que el texto de la hora se rompa */
-  overflow: hidden; 
-  white-space: nowrap; 
-  text-overflow: ellipsis;
+ margin: 0;
+ line-height: 1.4;
+ /* El overflow: hidden y white-space: nowrap evita que el texto de la hora se rompa */
+ overflow: hidden; 
+ white-space: nowrap; 
+ text-overflow: ellipsis;
 }
 .turno-fecha {
-  font-weight: 600;
-  color: var(--dark-text);
+ font-weight: 600;
+ color: var(--dark-text);
 }
 .turno-hora {
-  font-size: 0.9rem;
-  color: var(--secondary-text);
+ font-size: 0.9rem;
+ color: var(--secondary-text);
 }
 
 .btn-eliminar-turno {
-  background-color: transparent;
-  border: none;
-  color: var(--secondary-text);
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
-  flex-shrink: 0; /* Asegura que el botón X no se encoja */
+ background-color: transparent;
+ border: none;
+ color: var(--secondary-text);
+ font-size: 1.5rem;
+ font-weight: bold;
+ cursor: pointer;
+ transition: color 0.2s ease, transform 0.2s ease;
+ flex-shrink: 0; /* Asegura que el botón X no se encoja */
 }
 
 .btn-eliminar-turno:hover {
-  color: var(--delete-color);
-  transform: scale(1.1);
+ color: var(--delete-color);
+ transform: scale(1.1);
 }
 
 .sin-turnos {
-  color: var(--secondary-text);
-  font-style: italic;
-  margin-top: 2rem;
-  text-align: center;
+ color: var(--secondary-text);
+ font-style: italic;
+ margin-top: 2rem;
+ text-align: center;
 }
 
 .turno-titulo {
-  color: var(--primary-blue);
-  text-decoration: none;
-  font-weight: 700;
-  transition: color 0.2s ease;
+ color: var(--primary-blue);
+ text-decoration: none;
+ font-weight: 700;
+ transition: color 0.2s ease;
 }
 
 .turno-titulo:hover {
-  color: var(--light-blue);
-  text-decoration: underline;
+ color: var(--light-blue);
+ text-decoration: underline;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -224,299 +225,300 @@
 
 /* Grid para categorías (Usuario Normal - 3 Columnas) */
 .category-grid-buttons.user-mode {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 1rem;
 }
 
 /* Grid para categorías (Proveedor - 2 Columnas) */
 .categorias-botones.provider-mode {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 1rem;
 }
 
 .category-action-button,
 .categoria-btn {
-  background-color: var(--extra-light-blue);
-  color: var(--dark-text);
-  border: none;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  text-align: center;
+ background-color: var(--extra-light-blue);
+ color: var(--dark-text);
+ border: none;
+ padding: 1rem;
+ border-radius: 0.75rem;
+ font-size: 1rem;
+ font-weight: 600;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+ width: 100%;
+ text-align: center;
 }
 
 .category-action-button:hover,
 .categoria-btn:hover {
-  background-color: var(--soft-blue);
-  color: var(--primary-blue);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+ background-color: var(--soft-blue);
+ color: var(--primary-blue);
+ transform: translateY(-3px);
+ box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* -------------------------------------------------------------------------- */
 /* 7. MIS TURNOS (AGENDADOS)                         */
 /* -------------------------------------------------------------------------- */
 .turnos-agendados-lista {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-height: 25rem;
-  overflow-y: auto;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding-right: 0.5rem;
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+ max-height: 25rem;
+ overflow-y: auto;
+ gap: 1rem;
+ margin-top: 1rem;
+ padding-right: 0.5rem;
 }
 
 .appointment-card {
-  border-left: 6px solid var(--primary-blue);
-  border-radius: 0.8rem;
-  padding: 1.2rem 1.5rem;
-  color: var(--dark-text);
-  box-shadow: 0 2px 10px var(--shadow-color-soft);
-  transition: all 0.3s ease;
+ border-left: 6px solid var(--primary-blue);
+ border-radius: 0.8rem;
+ padding: 1.2rem 1.5rem;
+ color: var(--dark-text);
+ box-shadow: 0 2px 10px var(--shadow-color-soft);
+ transition: all 0.3s ease;
 }
 
 .appointment-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px var(--shadow-color-medium);
-  border-left-color: var(--light-blue);
+ transform: translateY(-3px);
+ box-shadow: 0 6px 15px var(--shadow-color-medium);
+ border-left-color: var(--light-blue);
 }
 
 .info-principal {
-  border-bottom: 1px solid var(--soft-blue);
-  padding-bottom: 0.75rem;
-  margin-bottom: 0.75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 600;
+ border-bottom: 1px solid var(--soft-blue);
+ padding-bottom: 0.75rem;
+ margin-bottom: 0.75rem;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ font-weight: 600;
 }
 
 .proveedor-nombre {
-  font-size: 1.1rem;
-  color: var(--dark-text);
-  /* Asegura que el nombre no se desborde */
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+ font-size: 1.1rem;
+ color: var(--dark-text);
+ /* Asegura que el nombre no se desborde */
+ min-width: 0;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
 }
 
 .info-detalle {
-  display: flex;
-  gap: 1rem;
+ display: flex;
+ gap: 1rem;
 }
 
 .detalle-fecha,
 .detalle-hora {
-  margin: 0;
-  font-size: 0.95rem;
+ margin: 0;
+ font-size: 0.95rem;
 }
 
 .info-detalle strong {
-  color: var(--primary-blue);
-  font-weight: 700;
+ color: var(--primary-blue);
+ font-weight: 700;
 }
 
 .loading-text,
 .no-turnos-agendados {
-  text-align: center;
-  color: var(--secondary-text);
-  margin-top: 1.5rem;
+ text-align: center;
+ color: var(--secondary-text);
+ margin-top: 1.5rem;
 }
 .loading-text {
-  font-weight: 600;
+ font-weight: 600;
 }
 
 /* -------------------------------------------------------------------------- */
 /* 8. HOME INVITADO (NUEVOS ESTILOS PARA EL CARRUSEL EN REACT)                */
 /* -------------------------------------------------------------------------- */
 .invitado-container {
-  width: 100%;
-  min-height: 100vh;
-  /* Degradado más suave y vibrante */
-  background: linear-gradient(135deg, #4a90e2, #50b8a2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+ width: 100%;
+ min-height: 100vh;
+ /* Degradado más suave y vibrante */
+ background: linear-gradient(135deg, #4a90e2, #50b8a2);
+ display: flex;
+ flex-direction: column;
+ align-items: center;
 }
 
 .invitado-content {
-  margin-top: 6rem;
-  text-align: center;
-  color: white;
-  max-width: 90%;
-  width: 900px;
+ margin-top: 6rem;
+ text-align: center;
+ color: white;
+ max-width: 90%;
+ width: 900px;
 }
 
 .invitado-title {
-  font-size: 3.5rem;
-  font-weight: 800; /* Más audaz */
-  margin-bottom: 1rem;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+ font-size: 3.5rem;
+ font-weight: 800; /* Más audaz */
+ margin-bottom: 1rem;
+ text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .invitado-subtitle {
-  font-size: 1.4rem;
-  opacity: 0.9;
-  margin-bottom: 3rem;
-  font-weight: 300;
+ font-size: 1.4rem;
+ opacity: 0.9;
+ margin-bottom: 3rem;
+ font-weight: 300;
 }
 
 .invitado-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
+ display: flex;
+ justify-content: center;
+ gap: 2rem;
 }
 
 .btn-invitado-primary {
-  padding: 14px 30px;
-  font-size: 1.25rem;
-  border-radius: 12px;
-  background: #fff;
-  color: #4a90e2;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-weight: 600;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+ padding: 14px 30px;
+ font-size: 1.25rem;
+ border-radius: 12px;
+ background: #fff;
+ color: #4a90e2;
+ border: none;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ font-weight: 600;
+ box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .btn-invitado-primary:hover {
-  background: #f0f0f0;
-  transform: translateY(-2px);
+ background: #f0f0f0;
+ transform: translateY(-2px);
 }
 
 .btn-invitado-secondary {
-  padding: 14px 30px;
-  font-size: 1.25rem;
-  border-radius: 12px;
-  background: transparent;
-  border: 2px solid white;
-  color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-weight: 600;
+ padding: 14px 30px;
+ font-size: 1.25rem;
+ border-radius: 12px;
+ background: transparent;
+ border: 2px solid white;
+ color: white;
+ cursor: pointer;
+ transition: all 0.2s ease;
+ font-weight: 600;
 }
 
 .btn-invitado-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
+ background: rgba(255, 255, 255, 0.15);
+ transform: translateY(-2px);
 }
 
 .carousel-container {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  height: 400px; /* Aumento la altura */
-  overflow: hidden;
-  border-radius: 20px;
-  margin: 40px auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Sombra elegante */
+ position: relative;
+ width: 100%;
+ max-width: 900px;
+ height: 400px; /* Aumento la altura */
+ overflow: hidden;
+ border-radius: 20px;
+ margin: 40px auto;
+ box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Sombra elegante */
 }
 
 .carousel-content {
-  display: flex;
-  height: 100%;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+ display: flex;
+ height: 100%;
+ transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .carousel-slide {
-  min-width: 100%;
-  height: 100%;
-  position: relative;
+ min-width: 100%;
+ height: 100%;
+ position: relative;
 }
 
 .carousel-slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(75%); /* Más oscuro para mejor contraste de texto */
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ filter: brightness(75%); /* Más oscuro para mejor contraste de texto */
 }
 
 /* Texto del caption */
 .carousel-caption {
-  position: absolute;
-  bottom: 30px;
-  left: 30px;
-  right: 30px;
-  color: white;
-  text-align: left;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+ position: absolute;
+ bottom: 30px;
+ left: 30px;
+ right: 30px;
+ color: white;
+ text-align: left;
+ text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 .carousel-caption h3 {
-  font-size: 2.2rem;
-  margin: 0;
-  font-weight: 700;
+ font-size: 2.2rem;
+ margin: 0;
+ font-weight: 700;
 }
 
 .carousel-caption p {
-  margin-top: 8px;
-  font-size: 1.3rem;
-  font-weight: 300;
+ margin-top: 8px;
+ font-size: 1.3rem;
+ font-weight: 300;
+ color: white; /* Asegura el color blanco para el subtitulo */
 }
 
 /* Botones del carrusel */
 .carousel-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.25); /* Fondo oscuro semitransparente */
-  border: none;
-  color: white;
-  font-size: 2.5rem;
-  line-height: 1;
-  padding: 10px 16px;
-  cursor: pointer;
-  border-radius: 50%;
-  z-index: 10;
-  transition: background 0.2s ease;
+ position: absolute;
+ top: 50%;
+ transform: translateY(-50%);
+ background: rgba(0, 0, 0, 0.25); /* Fondo oscuro semitransparente */
+ border: none;
+ color: white;
+ font-size: 2.5rem;
+ line-height: 1;
+ padding: 10px 16px;
+ cursor: pointer;
+ border-radius: 50%;
+ z-index: 10;
+ transition: background 0.2s ease;
 }
 
 .carousel-btn:hover {
-  background: rgba(0, 0, 0, 0.4);
+ background: rgba(0, 0, 0, 0.4);
 }
 
 .carousel-btn.left {
-  left: 20px;
+ left: 20px;
 }
 
 .carousel-btn.right {
-  right: 20px;
+ right: 20px;
 }
 
 /* Indicadores */
 .carousel-indicators {
-  position: absolute;
-  bottom: 15px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+ position: absolute;
+ bottom: 15px;
+ width: 100%;
+ display: flex;
+ justify-content: center;
+ gap: 12px;
 }
 
 .indicator {
-  width: 10px;
-  height: 10px;
-  background: white;
-  opacity: 0.6;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
+ width: 10px;
+ height: 10px;
+ background: white;
+ opacity: 0.6;
+ border-radius: 50%;
+ cursor: pointer;
+ transition: all 0.3s ease;
 }
 
 .indicator.active {
-  opacity: 1;
-  width: 25px; /* Indicador activo más alargado */
-  border-radius: 10px;
+ opacity: 1;
+ width: 25px; /* Indicador activo más alargado */
+ border-radius: 10px;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -525,137 +527,139 @@
 
 /* Tablets grandes y medianas */
 @media (max-width: 992px) {
-  .category-grid-buttons.user-mode {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.category-grid-buttons.user-mode {
+grid-template-columns: repeat(2, 1fr);
+}
 
-  /* El proveedor sigue usando 2 columnas en tablet */
-  .categorias-botones.provider-mode {
-    grid-template-columns: repeat(2, 1fr);
-  }
+ /* El proveedor sigue usando 2 columnas en tablet */
+.categorias-botones.provider-mode {
+ grid-template-columns: repeat(2, 1fr);
+}
 
-  .home-grid {
-    gap: 1rem;
-    padding: 1.5rem 3%;
-  }
+.home-g rid {
+gap: 1rem;
+padding: 1.5rem 3%;
+}
 
-  /* En tablet, las tarjetas pequeñas y grandes del proveedor se mantienen al 48% */
-  .home-card {
-    flex: 1 1 48%; 
-  }
+/* En tablet, las tarjetas pequeñas y grandes del proveedor se mantienen al 48% */
+.home-card {
+flex: 1 1 48%; 
+}
 }
 
 /* Teléfonos y Tablets pequeñas */
 @media (max-width: 768px) {
-  /* Home grid pasa a columna */
-  .home-grid {
-    flex-direction: column;
-    padding: 1rem 3%;
-    gap: 1rem;
-  }
+ /* Home grid pasa a columna */
+ .home-grid {
+ flex-direction: column;
+ padding: 1rem 3%;
+ gap: 1rem;
+}
 
-  /* Tarjetas full width */
-  .home-card {
-    /* Esto sobreescribe el 48% para que siempre use 100% en móvil */
-    flex: 1 1 100% !important; 
-    width: 100% !important;
-    min-width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-  }
+ /* CLAVE: Tarjetas full width */
+ .home-card {
+/* Esto sobreescribe el 48% para que siempre use 100% en móvil */
+flex: 1 1 100% !important; 
+width: 100% !important;
+min-width: 100% !important;
+max-width: 100% !important;
+height: auto !important;
+}
 
-  /* Ajuste de grids de categorías a 1 columna */
-  .category-grid-buttons.user-mode,
-  .categorias-botones.provider-mode {
-    grid-template-columns: 1fr !important;
-    gap: 0.8rem;
-  }
+/* Ajuste de grids de categorías a 1 columna */
+.category-grid-buttons.user-mode,
+.categorias-botones.provider-mode {
+ grid-template-columns: 1fr !important;
+ gap: 0.8rem;
+ }
 
-  .category-action-button,
-  .categoria-btn {
-    width: 100%;
-  }
+.category-action-button,
+.categoria-btn {
+ width: 100%;
+ }
 
-  /* Mis turnos agendados */
-  .info-detalle {
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-  
-  /* Nombre de proveedor/cliente en una línea en móvil */
-  .info-principal {
-      flex-direction: column;
-      align-items: flex-start;
-  }
-  .proveedor-nombre {
-      white-space: normal; /* Permite que el nombre se envuelva si es muy largo */
-      text-overflow: clip; 
-      margin-bottom: 0.5rem;
-  }
+ /* Mis turnos agendados */
+ .info-detalle {
+ flex-direction: column;
+ gap: 0.3rem;
+ }
+ 
+ /* Nombre de proveedor/cliente en una línea en móvil */
+ .info-principal {
+ flex-direction: column;
+ align-items: flex-start;
+ }
+ .proveedor-nombre {
+ white-space: normal; /* Permite que el nombre se envuelva si es muy largo */
+ text-overflow: clip; 
+ margin-bottom: 0.5rem;
+ }
 
-  /* Home invitado */
-  .invitado-title {
-    font-size: 2.5rem;
-  }
-  .invitado-subtitle {
-    font-size: 1.1rem;
-  }
-  .invitado-buttons {
-    flex-direction: column;
-    gap: 1rem;
-    width: 90%;
-    margin: auto;
-  }
-  .btn-invitado-primary,
-  .btn-invitado-secondary {
-    width: 100%;
-    padding: 10px 20px;
-    font-size: 1.1rem;
-  }
+ /* Home invitado */
+ .invitado-title {
+ font-size: 2.5rem;
+ }
+ .invitado-subtitle {
+ font-size: 1.1rem;
+ }
+ .invitado-buttons {
+ flex-direction: column;
+ gap: 1rem;
+ width: 90%;
+ margin: auto;
+ }
+ .btn-invitado-primary,
+ .btn-invitado-secondary {
+ width: 100%;
+ padding: 10px 20px;
+ font-size: 1.1rem;
+ }
 
-  /* Carrusel */
-  .carousel-container {
-    height: 250px;
-  }
-  .carousel-caption h3 {
-    font-size: 1.5rem;
-  }
-  .carousel-caption p {
-    font-size: 0.95rem;
-  }
-  .carousel-btn {
-    font-size: 1.8rem;
-    padding: 6px 10px;
-  }
+ .carousel-container {
+ height: 250px;
+ }
+ .carousel-caption h3 {
+ font-size: 1.5rem;
+ }
+ .carousel-caption p {
+ font-size: 0.95rem;
+ }
+ .carousel-btn {
+ font-size: 1.8rem;
+ padding: 6px 10px;
+ }
 }
 
 /* Celulares muy chicos */
 @media (max-width: 480px) {
-  .home-grid {
-    padding: 0 6px !important;
-  }
+ .home-grid {
+ padding: 0 6px !important;
+ }
 
-  /* Ajuste extra carrusel */
-  .carousel-container {
-    height: 200px;
-  }
-  .carousel-caption h3 {
-    font-size: 1.3rem;
-  }
-  .carousel-caption p {
-    font-size: 0.85rem;
-  }
+ .carousel-container {
+ height: 200px;
+ }
+ .carousel-caption h3 {
+ font-size: 1.3rem;
+ }
+ .carousel-caption p {
+ font-size: 0.85rem;
+ }
+ .carousel-btn {
+ font-size: 1.8rem;
+ padding: 6px 10px;
+ }
+}
 
-  /* Invitado */
-  .invitado-title {
-    font-size: 2rem;
-  }
-  .invitado-subtitle {
-    font-size: 0.95rem;
-  }
-  .invitado-buttons {
-    gap: 0.8rem;
-  }
+ .invitado-title {
+ font-size: 2rem;
+ }
+ .invitado-subtitle {
+ font-size: 0.95rem;
+ }
+ .invitado-buttons {
+ gap: 0.8rem;
+ }
 }
 
 /* -------------------------------------------------------------------------- */
@@ -665,91 +669,91 @@
 /* Scrollbar personalizado para navegadores basados en Webkit */
 .turnos-agendados-lista::-webkit-scrollbar,
 .turnos-lista::-webkit-scrollbar {
-  width: 8px;
+ width: 8px;
 }
 
 .turnos-agendados-lista::-webkit-scrollbar-track,
 .turnos-lista::-webkit-scrollbar-track {
-  background: var(--background-color);
-  border-radius: 10px;
+ background: var(--background-color);
+ border-radius: 10px;
 }
 
 .turnos-agendados-lista::-webkit-scrollbar-thumb,
 .turnos-lista::-webkit-scrollbar-thumb {
-  background: var(--soft-blue);
-  border-radius: 10px;
+ background: var(--soft-blue);
+ border-radius: 10px;
 }
 
 .turnos-agendados-lista::-webkit-scrollbar-thumb:hover,
 .turnos-lista::-webkit-scrollbar-thumb:hover {
-  background: var(--light-blue);
+ background: var(--light-blue);
 }
 
 /* Animación del saludo 👋 */
 .hand {
-  display: inline-block;
-  animation: wave 1.5s infinite;
-  transform-origin: 70% 70%;
+ display: inline-block;
+ animation: wave 1.5s infinite;
+ transform-origin: 70% 70%;
 }
 
 @keyframes wave {
-  0% {
-    transform: rotate(0deg);
-  }
-  10% {
-    transform: rotate(14deg);
-  }
-  20% {
-    transform: rotate(-8deg);
-  }
-  30% {
-    transform: rotate(14deg);
-  }
-  40% {
-    transform: rotate(-4deg);
-  }
-  50% {
-    transform: rotate(10deg);
-  }
-  60% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+ 0% {
+ transform: rotate(0deg);
+ }
+ 10% {
+ transform: rotate(14deg);
+ }
+ 20% {
+ transform: rotate(-8deg);
+ }
+ 30% {
+ transform: rotate(14deg);
+ }
+ 40% {
+ transform: rotate(-4deg);
+ }
+ 50% {
+ transform: rotate(10deg);
+ }
+ 60% {
+ transform: rotate(0deg);
+ }
+ 100% {
+ transform: rotate(0deg);
+ }
 }
 
 /* Animación ONDA (Ripple) */
 .category-action-button {
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease;
+ position: relative;
+ overflow: hidden;
+ transition: transform 0.2s ease;
 }
 
 .category-action-button:active {
-  transform: scale(0.96);
+ transform: scale(0.96);
 }
 
 .category-action-button.ripple::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  animation: rippleEffect 0.6s ease-out;
+ content: "";
+ position: absolute;
+ left: 50%;
+ top: 50%;
+ width: 10px;
+ height: 10px;
+ background: rgba(255, 255, 255, 0.5);
+ border-radius: 50%;
+ transform: translate(-50%, -50%);
+ animation: rippleEffect 0.6s ease-out;
 }
 
 @keyframes rippleEffect {
-  from {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: translate(-50%, -50%) scale(25);
-    opacity: 0;
-  }
+ from {
+ transform: translate(-50%, -50%) scale(1);
+ opacity: 1;
+ }
+ to {
+ transform: translate(-50%, -50%) scale(25);
+ opacity: 0;
+ }
 }

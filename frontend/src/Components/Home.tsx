@@ -44,7 +44,7 @@ function SimpleCarousel() {
     );
   const goToSlide = (index) => setActiveIndex(index);
 
-  // Auto-play (opcional)
+  // Auto-play
   useEffect(() => {
     const interval = setInterval(goToNext, 5000);
     return () => clearInterval(interval);
@@ -61,7 +61,7 @@ function SimpleCarousel() {
             <img src={item.src} alt={`Slide ${index + 1}`} />
             <div className="carousel-caption">
               <h3>{item.title}</h3>
-              <p style={{ color: "#ffffffff" }}>{item.subtitle}</p>
+              <p>{item.subtitle}</p> {/* Se elimina el style inline */}
             </div>
           </div>
         ))}
@@ -100,7 +100,8 @@ function HomeInvitado({ navigate }) {
           Bienvenido a TurnoSmart <span className="hand">👋</span>
         </h1>
 
-        <p className="invitado-subtitle" style={{ color: "white" }}>
+        <p className="invitado-subtitle">
+          {/* Se elimina el style inline */}
           Gestioná tus turnos de manera rápida, fácil y segura.
         </p>
 
@@ -129,14 +130,14 @@ function HomeInvitado({ navigate }) {
 /* ============================================================
   COMPONENTE REUTILIZABLE PARA TARJETAS
   ============================================================ */
-function StyleCards({ background, width, height, className, children }) {
+// Se mantienen width y height, pero se manejan mejor en el CSS.
+function StyleCards({ background, className, children }) {
   return (
     <Card
       className={className}
       style={{
         backgroundColor: background,
-        width,
-        height,
+        // Eliminados: width, height. Ahora solo se usan clases CSS.
       }}
     >
       {children}
@@ -190,9 +191,12 @@ function Home() {
 
     const fetchTurnosDisponibles = async () => {
       try {
-        const res = await axios.post("https://api-node-turnos.onrender.com/api/buscarTurnos", {
-          id: user.id,
-        });
+        const res = await axios.post(
+          "https://api-node-turnos.onrender.com/api/buscarTurnos",
+          {
+            id: user.id,
+          }
+        );
         setTurnos(res.data.result || []);
       } catch (err) {
         console.error("Error al traer turnos disponibles:", err);
@@ -244,7 +248,6 @@ function Home() {
     RENDER PRINCIPAL USER LOGUEADO
     ============================================================ */
   return (
-    // 1. Contenedor Principal: Usa 'home-container' para aplicar min-height: 100vh y flex-direction: column
     <main className="home-container">
       <header>
         <Toaster
@@ -260,40 +263,14 @@ function Home() {
         <Navbar />
       </header>
 
-      {/* ========================================================================= */}
-      {/* 2. CONTENEDOR INTERMEDIO QUE CRECE: Aplica flex-grow: 1 en el CSS */}
       <div className="content-wrapper">
-        {/* Tus flechas de navegación con position: absolute */}
-        <div
-          style={{
-            position: "absolute",
-            display: "flex",
-            gap: "8px",
-            zIndex: 1000,
-            left: "7%",
-            marginTop: "10px",
-          }}
-        >
-          <i
-            className="fa-solid fa-backward"
-            onClick={() => navigate(-1)}
-            style={{ cursor: "pointer" }}
-          ></i>
-          <i
-            className="fa-solid fa-forward"
-            onClick={() => navigate(1)}
-            style={{ cursor: "pointer" }}
-          ></i>
-        </div>
-
         <section className="home-grid">
           {user.tipoCuenta === 0 ? (
             /* =========================== CATEGORÍAS – USUARIO NORMAL =========================== */
             <StyleCards
               className="home-card full-card"
-              width="100%"
-              height="auto"
               background="#fff"
+              // Eliminados: width="100%" height="auto"
             >
               <h2 className="category-title" style={{ color: "#7b2cbf" }}>
                 Categorías:
@@ -323,32 +300,30 @@ function Home() {
               {/* =========================== PROVEEDOR – TURNOS DISPONIBLES =========================== */}
               <StyleCards
                 className="home-card small-card"
-                width="49%"
-                height="20rem"
                 background="#fff"
+                // Eliminados: width="49%" height="20rem"
               >
-              <h2 className="agregar-turnos-titulo">
-  <a
-    href="/turnosdisponibles"
-    className="turno-titulo"
-    style={{ color: "#7b2cbf" }}
-  >
-    Turnos Disponibles +
-  </a>
+                <h2 className="agregar-turnos-titulo">
+                  <a
+                    href="/turnosdisponibles"
+                    className="turno-titulo"
+                    style={{ color: "#7b2cbf" }}
+                  >
+                    Turnos Disponibles +
+                  </a>
 
-  <i
-    className="fa-solid fa-pen-to-square"
-    style={{
-      cursor: "pointer",
-      fontSize: hover ? "22px" : "18px",
-      transition: "all 0.2s ease",
-      // marginLeft: "40%",  <-- ¡ELIMINADO!
-    }}
-    onMouseEnter={() => setHover(true)}
-    onMouseLeave={() => setHover(false)}
-    onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
-  />
-</h2>
+                  <i
+                    className="fa-solid fa-pen-to-square"
+                    style={{
+                      cursor: "pointer",
+                      fontSize: hover ? "22px" : "18px",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={() => setHover(true)}
+                    onMouseLeave={() => setHover(false)}
+                    onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
+                  />
+                </h2>
 
                 <div className="turnos-lista">
                   {turnos.length > 0 ? (
@@ -382,9 +357,8 @@ function Home() {
               {/* =========================== PROVEEDOR – BUSCAR CATEGORÍAS (Para reservar) =========================== */}
               <StyleCards
                 className="home-card large-card"
-                width="49%"
-                height="20rem"
                 background="#fff"
+                // Eliminados: width="49%" height="20rem"
               >
                 <h2 className="buscar-categoria" style={{ color: "#7b2cbf" }}>
                   Buscar Profesionales:
@@ -417,8 +391,8 @@ function Home() {
         <section className="bottom-section">
           <StyleCards
             className="home-card full-card"
-            width="100%"
             background="#fff"
+            // Eliminados: width="100%"
           >
             <h2 style={{ color: "#7b2cbf" }}>
               Mis Turnos Agendados
@@ -429,7 +403,7 @@ function Home() {
                   transition: "all 0.2s ease",
                   color: "var(--light-blue)",
                   fontSize: "1.5rem",
-                  marginLeft: "70%",
+                  marginLeft: "auto", // CLAVE: Cambiado de "70%" a "auto" para responsividad
                 }}
                 onClick={() =>
                   navigate(
@@ -491,9 +465,7 @@ function Home() {
           </StyleCards>
         </section>
       </div>
-      {/* ========================================================================= */}
 
-      {/* 3. Footer: Este elemento será empujado por el content-wrapper */}
       <Footer />
     </main>
   );
