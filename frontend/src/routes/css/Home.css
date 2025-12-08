@@ -737,3 +737,28 @@
     gap: 10px;
   }
 }
+/* Todas las tarjetas ocupan 100% en móvil */
+@media (max-width: 768px) {
+  .home-grid {
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .home-card,
+  .home-card.small-card,
+  .home-card.large-card,
+  .home-card.full-card {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+  }
+
+  .category-grid-buttons.user-mode,
+  .categorias-botones.provider-mode {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
