@@ -7,9 +7,9 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import useLocalStorage from "../auth/useLocalStorage";
 
-import banner6 from "../assets/banners/banner6.png";
-import banner5 from "../assets/banners/banner5.png";
-import banner9 from "../assets/banners/banner9.png";
+import banner6 from "../img/banner6.jpg";
+import banner5 from "../img/banner5.jpg";
+import banner9 from "../img/banner9.jpg";
 
 const CAROUSEL_ITEMS = [
   { src: banner6, title: "Agendá en segundos 🕒", subtitle: "Turnos rápidos y sin complicaciones." },
