@@ -263,210 +263,210 @@ function Home() {
         <Navbar />
       </header>
 
-      <div className="content-wrapper">
-        <section className="home-grid">
-          {user.tipoCuenta === 0 ? (
-            /* =========================== CATEGORÍAS – USUARIO NORMAL =========================== */
-           <StyleCards
-  className="home-card small-card"
-  width="49%"    {/* RESTAURADO para PC */}
-  height="20rem" {/* RESTAURADO para PC */}
-  background="#fff"
->
-              <h2 className="category-title" style={{ color: "#7b2cbf" }}>
-                Categorías:
-              </h2>
+    <div className="content-wrapper">
+  <section className="home-grid">
+    {user.tipoCuenta === 0 ? (
+      /* =========================== CATEGORÍAS – USUARIO NORMAL (CORREGIDO) =========================== */
+      <StyleCards
+        className="home-card full-card"  {/* CLASE CORREGIDA: Debe ser full-card */}
+        width="100%"                    {/* ANCHO CORREGIDO: Debe ser 100% */}
+        background="#fff"
+      >
+        <h2 className="category-title" style={{ color: "#7b2cbf" }}>
+          Categorías:
+        </h2>
 
-              <div className="category-grid-buttons user-mode">
-                {[
-                  "Educación 📚",
-                  "Tecnología 💻",
-                  "Administrativos / Profesionales 💼",
-                  "Mascotas 🐾",
-                  "Salud y Bienestar 🧘",
-                  "Belleza y Cuidado Personal 💅",
-                ].map((cat, index) => (
-                  <button
-                    key={index}
-                    className="category-action-button"
-                    onClick={(e) => handleRedirectRipple(e, index)}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-            </StyleCards>
-          ) : (
-            <>
-              {/* =========================== PROVEEDOR – TURNOS DISPONIBLES =========================== */}
-              <StyleCards
-                className="home-card small-card"
-                background="#fff"
-                // Eliminados: width="49%" height="20rem"
-              >
-                <h2 className="agregar-turnos-titulo">
-                  <a
-                    href="/turnosdisponibles"
-                    className="turno-titulo"
-                    style={{ color: "#7b2cbf" }}
-                  >
-                    Turnos Disponibles +
-                  </a>
+        <div className="category-grid-buttons user-mode">
+          {[
+            "Educación 📚",
+            "Tecnología 💻",
+            "Administrativos / Profesionales 💼",
+            "Mascotas 🐾",
+            "Salud y Bienestar 🧘",
+            "Belleza y Cuidado Personal 💅",
+          ].map((cat, index) => (
+            <button
+              key={index}
+              className="category-action-button"
+              onClick={(e) => handleRedirectRipple(e, index)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </StyleCards>
+    ) : (
+      <>
+        {/* =========================== PROVEEDOR – TURNOS DISPONIBLES (CORREGIDO) =========================== */}
+        <StyleCards
+          className="home-card small-card"
+          width="49%"    {/* RESTAURADO para PC */}
+          height="20rem" {/* RESTAURADO para PC */}
+          background="#fff"
+        >
+          <h2 className="agregar-turnos-titulo">
+            <a
+              href="/turnosdisponibles"
+              className="turno-titulo"
+              style={{ color: "#7b2cbf" }}
+            >
+              Turnos Disponibles +
+            </a>
 
-                  <i
-                    className="fa-solid fa-pen-to-square"
-                    style={{
-                      cursor: "pointer",
-                      fontSize: hover ? "22px" : "18px",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-                    onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
-                  />
-                </h2>
+            <i
+              className="fa-solid fa-pen-to-square"
+              style={{
+                cursor: "pointer",
+                fontSize: hover ? "22px" : "18px",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+              onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
+            />
+          </h2>
 
-                <div className="turnos-lista">
-                  {turnos.length > 0 ? (
-                    turnos.map((t) => (
-                      <div key={t.id} className="turno-box">
-                        <div className="turno-info">
-                          <p className="turno-fecha">
-                            📅 {new Date(t.fecha).toLocaleDateString("es-AR")}
-                          </p>
-                          <p className="turno-hora">
-                            ⏰ {t.hora_inicio} a {t.hora_fin}
-                          </p>
-                        </div>
-
-                        <button
-                          className="btn-eliminar-turno"
-                          onClick={() => borrarTurno(t.id)}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="sin-turnos">
-                      No hay turnos disponibles. **Agregá uno!**
+          <div className="turnos-lista">
+            {turnos.length > 0 ? (
+              turnos.map((t) => (
+                <div key={t.id} className="turno-box">
+                  <div className="turno-info">
+                    <p className="turno-fecha">
+                      📅 {new Date(t.fecha).toLocaleDateString("es-AR")}
                     </p>
-                  )}
+                    <p className="turno-hora">
+                      ⏰ {t.hora_inicio} a {t.hora_fin}
+                    </p>
+                  </div>
+
+                  <button
+                    className="btn-eliminar-turno"
+                    onClick={() => borrarTurno(t.id)}
+                  >
+                    ✕
+                  </button>
                 </div>
-              </StyleCards>
-
-              {/* =========================== PROVEEDOR – BUSCAR CATEGORÍAS (Para reservar) =========================== */}
-              <StyleCards
-  className="home-card large-card"
-  width="49%"    {/* RESTAURADO para PC */}
-  height="20rem" {/* RESTAURADO para PC */}
-  background="#fff"
->
-                <h2 className="buscar-categoria" style={{ color: "#7b2cbf" }}>
-                  Buscar Profesionales:
-                </h2>
-
-                <div className="categorias-botones provider-mode">
-                  {[
-                    "Educación 📚",
-                    "Tecnología 💻",
-                    "Administrativos 💼",
-                    "Mascotas 🐾",
-                    "Salud y Bienestar 🧘",
-                    "Belleza y Cuidado 💅",
-                  ].map((cat, index) => (
-                    <button
-                      key={index}
-                      className="categoria-btn"
-                      onClick={() => navigate(`/proveedores/${index}`)}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              </StyleCards>
-            </>
-          )}
-        </section>
-
-        {/* =========================== MIS TURNOS AGENDADOS / RESERVADOS =========================== */}
-        <section className="bottom-section">
-          <StyleCards
-            className="home-card full-card"
-            background="#fff"
-            // Eliminados: width="100%"
-          >
-            <h2 style={{ color: "#7b2cbf" }}>
-              Mis Turnos Agendados
-              <i
-                className="fa-regular fa-eye"
-                style={{
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  color: "var(--light-blue)",
-                  fontSize: "1.5rem",
-                  marginLeft: "auto", // CLAVE: Cambiado de "70%" a "auto" para responsividad
-                }}
-                onClick={() =>
-                  navigate(
-                    user.tipoCuenta === 1
-                      ? `/turnosagendadosproveedor`
-                      : `/turnosagendadosusuario`
-                  )
-                }
-              />
-            </h2>
-
-            {loading && <p className="loading-text">Cargando...</p>}
-
-            {!loading && turnosAgendados.length === 0 && (
-              <p className="no-turnos-agendados">
-                **¡Genial!** No hay turnos agendados pendientes.
+              ))
+            ) : (
+              <p className="sin-turnos">
+                No hay turnos disponibles. **Agregá uno!**
               </p>
             )}
+          </div>
+        </StyleCards>
 
-            {!loading && turnosAgendados.length > 0 && (
-              <div className="turnos-agendados-lista">
-                {turnosAgendados.map((t, index) => (
-                  <div
-                    key={index}
-                    className="turno-agendado-item appointment-card"
-                  >
-                    <div className="info-principal">
-                      {user.tipoCuenta === 1 ? (
-                        <span className="proveedor-nombre">
-                          Cliente: {t.nombre || "Desconocido"}
-                        </span>
-                      ) : (
-                        <span className="proveedor-nombre">
-                          Proveedor: {t.proveedorNombre}
-                        </span>
-                      )}
-                    </div>
+        {/* =========================== PROVEEDOR – BUSCAR CATEGORÍAS (Para reservar) =========================== */}
+        <StyleCards
+          className="home-card large-card"
+          width="49%"    
+          height="20rem" 
+          background="#fff"
+        >
+          <h2 className="buscar-categoria" style={{ color: "#7b2cbf" }}>
+            Buscar Profesionales:
+          </h2>
 
-                    <div className="info-detalle">
-                      <p className="detalle-fecha">
-                        Fecha:{" "}
-                        <strong>
-                          {new Date(t.fecha).toLocaleDateString("es-AR")}
-                        </strong>
-                      </p>
+          <div className="categorias-botones provider-mode">
+            {[
+              "Educación 📚",
+              "Tecnología 💻",
+              "Administrativos 💼",
+              "Mascotas 🐾",
+              "Salud y Bienestar 🧘",
+              "Belleza y Cuidado 💅",
+            ].map((cat, index) => (
+              <button
+                key={index}
+                className="categoria-btn"
+                onClick={() => navigate(`/proveedores/${index}`)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </StyleCards>
+      </>
+    )}
+  </section>
 
-                      {Array.isArray(t.horas) ? (
-                        <p className="detalle-hora">
-                          Horas: <strong>{t.horas.join(", ")}</strong>
-                        </p>
-                      ) : (
-                        <p className="detalle-hora">Sin horas asignadas</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
+  {/* =========================== MIS TURNOS AGENDADOS / RESERVADOS (CORREGIDO) =========================== */}
+  <section className="bottom-section">
+    <StyleCards
+      className="home-card full-card"
+      width="100%" {/* RESTAURADO: Necesita width="100%" inline */}
+      background="#fff"
+    >
+      <h2 style={{ color: "#7b2cbf" }}>
+        Mis Turnos Agendados
+        <i
+          className="fa-regular fa-eye"
+          style={{
+            cursor: "pointer",
+            transition: "all 0.2s ease",
+            color: "var(--light-blue)",
+            fontSize: "1.5rem",
+            marginLeft: "auto", 
+          }}
+          onClick={() =>
+            navigate(
+              user.tipoCuenta === 1
+                ? `/turnosagendadosproveedor`
+                : `/turnosagendadosusuario`
+            )
+          }
+        />
+      </h2>
+
+      {loading && <p className="loading-text">Cargando...</p>}
+
+      {!loading && turnosAgendados.length === 0 && (
+        <p className="no-turnos-agendados">
+          **¡Genial!** No hay turnos agendados pendientes.
+        </p>
+      )}
+
+      {!loading && turnosAgendados.length > 0 && (
+        <div className="turnos-agendados-lista">
+          {turnosAgendados.map((t, index) => (
+            <div
+              key={index}
+              className="turno-agendado-item appointment-card"
+            >
+              <div className="info-principal">
+                {user.tipoCuenta === 1 ? (
+                  <span className="proveedor-nombre">
+                    Cliente: {t.nombre || "Desconocido"}
+                  </span>
+                ) : (
+                  <span className="proveedor-nombre">
+                    Proveedor: {t.proveedorNombre}
+                  </span>
+                )}
               </div>
-            )}
-          </StyleCards>
-        </section>
-      </div>
+
+              <div className="info-detalle">
+                <p className="detalle-fecha">
+                  Fecha:{" "}
+                  <strong>
+                    {new Date(t.fecha).toLocaleDateString("es-AR")}
+                  </strong>
+                </p>
+
+                {Array.isArray(t.horas) ? (
+                  <p className="detalle-hora">
+                    Horas: <strong>{t.horas.join(", ")}</strong>
+                  </p>
+                ) : (
+                  <p className="detalle-hora">Sin horas asignadas</p>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </StyleCards>
+  </section>
+</div>
 
       <Footer />
     </main>
