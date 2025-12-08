@@ -32,7 +32,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg custom-navbar">
       {/* LOGO CIRCULAR */}
       <div className="navbar-logo-container">
-        <img src={logo} className="navbar-logo" alt="Logo" />
+        <img src={"https://api-node-turnos.onrender.com/uploads/logo.jpg"} className="navbar-logo" alt="Logo" />
       </div>
 
       <div className="container-fluid">
