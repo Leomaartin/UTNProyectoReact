@@ -14,17 +14,17 @@ import banner6 from "../img/banner6.jpg";
 // Datos del carrusel, más limpios aquí
 const CAROUSEL_ITEMS = [
   {
-    src: {banner6},
+    src: banner6,
     title: "Agendá en segundos 🕒",
     subtitle: "Turnos rápidos y sin complicaciones.",
   },
   {
-    src: {banner5},
+    src: banner5,
     title: "Conectate con profesionales 🤝",
     subtitle: "Elegí entre cientos de proveedores.",
   },
   {
-    src: {banner9},
+    src: banner9,
     title: "Recordatorios automáticos 🔔",
     subtitle: "Nunca más te olvides de un turno.",
   },
