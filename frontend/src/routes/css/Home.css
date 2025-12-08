@@ -698,3 +698,42 @@
 .content-wrapper {
   flex-grow: 1;
 }
+@media (max-width: 768px) {
+  /* Dispositivos más pequeños */
+  .home-grid {
+    flex-direction: column; /* Apila las tarjetas */
+    padding: 1rem 5%;
+    gap: 1.5rem; /* Separación vertical */
+    justify-content: flex-start; /* Resetea el justify-content */
+    width: 100% !important;
+  }
+
+  /* Aplica 100% a todas las tarjetas en móvil */
+  .home-card,
+  .home-card.small-card,
+  .home-card.large-card,
+  .home-card.full-card {
+    width: 100% !important;
+    max-width: 100% !important; /* Asegura el 100% */
+    min-width: 100% !important;
+    height: auto !important; /* Permite que el contenido determine la altura */
+    margin: 0 !important;
+  }
+  
+  /* ... (mantén el resto del CSS que ya tenías para este breakpoint) ... */
+
+  /* HOME INVITADO (Ajuste para que el botón no tenga ancho fijo si ya está en 100%) */
+  .invitado-buttons {
+    flex-direction: column;
+    gap: 1rem;
+    width: 90%; /* Ajuste a un ancho más amplio */
+    margin: auto;
+  }
+
+  /* Ajuste de categorías a una columna en móvil */
+  .category-grid-buttons.user-mode,
+  .categorias-botones.provider-mode {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

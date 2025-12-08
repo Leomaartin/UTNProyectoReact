@@ -130,13 +130,15 @@ function HomeInvitado({ navigate }) {
   COMPONENTE REUTILIZABLE PARA TARJETAS
   ============================================================ */
 function StyleCards({ background, width, height, className, children }) {
+  // Las props width y height son ahora solo para escritorio y se manejan con CSS.
+  // Las pasamos como estilo en línea para mantener la compatibilidad, aunque el CSS lo sobreescribirá en móvil.
   return (
     <Card
       className={className}
       style={{
         backgroundColor: background,
-        width,
-        height,
+        width: width, // En escritorio será 49%, en móvil 100% por CSS
+        height: height,
       }}
     >
       {children}
@@ -244,7 +246,6 @@ function Home() {
     RENDER PRINCIPAL USER LOGUEADO
     ============================================================ */
   return (
-    // 1. Contenedor Principal: Usa 'home-container' para aplicar min-height: 100vh y flex-direction: column
     <main className="home-container">
       <header>
         <Toaster
@@ -260,10 +261,7 @@ function Home() {
         <Navbar />
       </header>
 
-      {/* ========================================================================= */}
-      {/* 2. CONTENEDOR INTERMEDIO QUE CRECE: Aplica flex-grow: 1 en el CSS */}
       <div className="content-wrapper">
-        {/* Tus flechas de navegación con position: absolute */}
         <div
           style={{
             position: "absolute",
@@ -323,7 +321,7 @@ function Home() {
               {/* =========================== PROVEEDOR – TURNOS DISPONIBLES =========================== */}
               <StyleCards
                 className="home-card small-card"
-                width="49%"
+                width="49%" // Se usará solo en desktop
                 height="20rem"
                 background="#fff"
               >
@@ -341,9 +339,8 @@ function Home() {
                     style={{
                       cursor: "pointer",
                       fontSize: hover ? "22px" : "18px",
-
                       transition: "all 0.2s ease",
-                      marginLeft: "40%",
+                      // Se eliminó el marginLeft fijo para que el CSS responsive maneje el espacio
                     }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
@@ -383,7 +380,7 @@ function Home() {
               {/* =========================== PROVEEDOR – BUSCAR CATEGORÍAS (Para reservar) =========================== */}
               <StyleCards
                 className="home-card large-card"
-                width="49%"
+                width="49%" // Se usará solo en desktop
                 height="20rem"
                 background="#fff"
               >
@@ -430,7 +427,7 @@ function Home() {
                   transition: "all 0.2s ease",
                   color: "var(--light-blue)",
                   fontSize: "1.5rem",
-                  marginLeft: "70%",
+                  // Se eliminó el marginLeft fijo para que el CSS responsive maneje el espacio
                 }}
                 onClick={() =>
                   navigate(
@@ -492,9 +489,7 @@ function Home() {
           </StyleCards>
         </section>
       </div>
-      {/* ========================================================================= */}
 
-      {/* 3. Footer: Este elemento será empujado por el content-wrapper */}
       <Footer />
     </main>
   );
