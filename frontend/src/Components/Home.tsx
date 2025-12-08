@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
-import { Card } from "../Components/Card";
+import { Card } from "@mui/material"; // Componente Card importado desde MUI
 
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
-import useLocalStorage from "../auth/useLocalStorage";
+import useLocalStorage from "../auth/useLocalStorage"; // Revisa la ruta
 
 import banner6 from "../img/banner6.jpg";
 import banner5 from "../img/banner5.jpg";
@@ -23,7 +23,7 @@ function SimpleCarousel() {
 
   const goToNext = () => setActiveIndex((prev) => (prev + 1) % CAROUSEL_ITEMS.length);
   const goToPrev = () => setActiveIndex((prev) => (prev - 1 + CAROUSEL_ITEMS.length) % CAROUSEL_ITEMS.length);
-  const goToSlide = (index: number) => setActiveIndex(index);
+  const goToSlide = (index) => setActiveIndex(index); // Eliminada la anotación : number de TypeScript
 
   useEffect(() => {
     const interval = setInterval(goToNext, 5000);
@@ -60,7 +60,7 @@ function SimpleCarousel() {
   );
 }
 
-function HomeInvitado({ navigate }: { navigate: any }) {
+function HomeInvitado({ navigate }) { // Eliminada la anotación de TypeScript
   return (
     <main className="invitado-container">
       <Navbar />
@@ -85,7 +85,7 @@ function HomeInvitado({ navigate }: { navigate: any }) {
   );
 }
 
-function StyleCards({ background, className, children, width, height }: any) {
+function StyleCards({ background, className, children, width, height }) { // Eliminada la anotación de TypeScript
   return (
     <Card
       className={className}
@@ -102,9 +102,9 @@ function StyleCards({ background, className, children, width, height }: any) {
 
 function Home() {
   const [user] = useLocalStorage("user", null);
-  const [turnosAgendados, setTurnosAgendados] = useState<any[]>([]);
+  const [turnosAgendados, setTurnosAgendados] = useState([]); // Eliminada la anotación de TypeScript
   const [loading, setLoading] = useState(false);
-  const [turnos, setTurnos] = useState<any[]>([]);
+  const [turnos, setTurnos] = useState([]); // Eliminada la anotación de TypeScript
   const [hover, setHover] = useState(false);
   const navigate = useNavigate();
 
@@ -141,7 +141,7 @@ function Home() {
     fetchTurnosDisponibles();
   }, [user?.id, user.tipoCuenta]);
 
-  const borrarTurno = async (id: number) => {
+  const borrarTurno = async (id) => { // Eliminada la anotación : number de TypeScript
     const notify = toast.loading("Eliminando turno...");
     try {
       const res = await axios.post("https://api-node-turnos.onrender.com/api/borrarTurnoDisponible", { id });
@@ -157,7 +157,7 @@ function Home() {
     }
   };
 
-  const handleRedirectRipple = (e: any, index: number) => {
+  const handleRedirectRipple = (e, index) => { // Eliminada la anotación de TypeScript
     const btn = e.currentTarget;
     btn.classList.add("ripple");
     setTimeout(() => {
@@ -198,7 +198,7 @@ function Home() {
                   <a href="/turnosdisponibles" className="turno-titulo" style={{ color: "#7b2cbf" }}>Turnos Disponibles +</a>
                   <i
                     className="fa-solid fa-pen-to-square"
-                    style={{ cursor: "pointer", fontSize: hover ? 22 : 18, transition: "all 0.2s ease" }}
+                    style={{ cursor: "pointer", fontSize: hover ? "22px" : "18px", transition: "all 0.2s ease" }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
                     onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
@@ -214,7 +214,7 @@ function Home() {
                       <button className="btn-eliminar-turno" onClick={() => borrarTurno(t.id)}>✕</button>
                     </div>
                   )) : (
-                    <p className="sin-turnos">No hay turnos disponibles. Agregá uno!</p>
+                    <p className="sin-turnos">No hay turnos disponibles. **Agregá uno!**</p>
                   )}
                 </div>
               </StyleCards>
@@ -243,7 +243,7 @@ function Home() {
             </h2>
 
             {loading && <p className="loading-text">Cargando...</p>}
-            {!loading && turnosAgendados.length === 0 && <p className="no-turnos-agendados">¡Genial! No hay turnos agendados pendientes.</p>}
+            {!loading && turnosAgendados.length === 0 && <p className="no-turnos-agendados">**¡Genial!** No hay turnos agendados pendientes.</p>}
             {!loading && turnosAgendados.length > 0 && (
               <div className="turnos-agendados-lista">
                 {turnosAgendados.map((t, index) => (
