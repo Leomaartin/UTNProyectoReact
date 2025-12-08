@@ -11,17 +11,17 @@ import toast, { Toaster } from "react-hot-toast";
 // Datos del carrusel, más limpios aquí
 const CAROUSEL_ITEMS = [
   {
-    src: "./backend/uploads/banner6.jpg",
+    src: "https://api-node-turnos.onrender.com/banner6.jpg",
     title: "Agendá en segundos 🕒",
     subtitle: "Turnos rápidos y sin complicaciones.",
   },
   {
-    src: "./backend/uploads/banner9.jpg",
+    src: "https://api-node-turnos.onrender.com/banner9.jpg",
     title: "Conectate con profesionales 🤝",
     subtitle: "Elegí entre cientos de proveedores.",
   },
   {
-    src: "./backend/uploads/banner5.jpg",
+    src: "https://api-node-turnos.onrender.com/banner5.jpg",
     title: "Recordatorios automáticos 🔔",
     subtitle: "Nunca más te olvides de un turno.",
   },
