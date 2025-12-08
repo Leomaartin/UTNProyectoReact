@@ -2,20 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
-import { Card } from "@mui/material"; // Componente Card importado desde MUI
 
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
-import useLocalStorage from "../auth/useLocalStorage"; // Revisa la ruta
-
-import banner6 from "../img/banner6.jpg";
-import banner5 from "../img/banner5.jpg";
-import banner9 from "../img/banner9.jpg";
+import useLocalStorage from "../auth/useLocalStorage";
 
 const CAROUSEL_ITEMS = [
-  { src: banner6, title: "Agendá en segundos 🕒", subtitle: "Turnos rápidos y sin complicaciones." },
-  { src: banner5, title: "Conectate con profesionales 🤝", subtitle: "Elegí entre cientos de proveedores." },
-  { src: banner9, title: "Recordatorios automáticos 🔔", subtitle: "Nunca más te olvides de un turno." },
+  { src: "../img/banner6.jpg", title: "Agendá en segundos 🕒", subtitle: "Turnos rápidos y sin complicaciones." },
+  { src: "../img/banner5.jpg", title: "Conectate con profesionales 🤝", subtitle: "Elegí entre cientos de proveedores." },
+  { src: "../img/banner9.jpg", title: "Recordatorios automáticos 🔔", subtitle: "Nunca más te olvides de un turno." },
 ];
 
 function SimpleCarousel() {
@@ -23,7 +18,7 @@ function SimpleCarousel() {
 
   const goToNext = () => setActiveIndex((prev) => (prev + 1) % CAROUSEL_ITEMS.length);
   const goToPrev = () => setActiveIndex((prev) => (prev - 1 + CAROUSEL_ITEMS.length) % CAROUSEL_ITEMS.length);
-  const goToSlide = (index) => setActiveIndex(index); // Eliminada la anotación : number de TypeScript
+  const goToSlide = (index: number) => setActiveIndex(index);
 
   useEffect(() => {
     const interval = setInterval(goToNext, 5000);
@@ -60,7 +55,7 @@ function SimpleCarousel() {
   );
 }
 
-function HomeInvitado({ navigate }) { // Eliminada la anotación de TypeScript
+function HomeInvitado({ navigate }: { navigate: any }) {
   return (
     <main className="invitado-container">
       <Navbar />
@@ -85,7 +80,7 @@ function HomeInvitado({ navigate }) { // Eliminada la anotación de TypeScript
   );
 }
 
-function StyleCards({ background, className, children, width, height }) { // Eliminada la anotación de TypeScript
+function StyleCards({ background, className, children, width, height }: any) {
   return (
     <Card
       className={className}
@@ -102,9 +97,9 @@ function StyleCards({ background, className, children, width, height }) { // Eli
 
 function Home() {
   const [user] = useLocalStorage("user", null);
-  const [turnosAgendados, setTurnosAgendados] = useState([]); // Eliminada la anotación de TypeScript
+  const [turnosAgendados, setTurnosAgendados] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [turnos, setTurnos] = useState([]); // Eliminada la anotación de TypeScript
+  const [turnos, setTurnos] = useState<any[]>([]);
   const [hover, setHover] = useState(false);
   const navigate = useNavigate();
 
@@ -141,7 +136,7 @@ function Home() {
     fetchTurnosDisponibles();
   }, [user?.id, user.tipoCuenta]);
 
-  const borrarTurno = async (id) => { // Eliminada la anotación : number de TypeScript
+  const borrarTurno = async (id: number) => {
     const notify = toast.loading("Eliminando turno...");
     try {
       const res = await axios.post("https://api-node-turnos.onrender.com/api/borrarTurnoDisponible", { id });
@@ -157,7 +152,7 @@ function Home() {
     }
   };
 
-  const handleRedirectRipple = (e, index) => { // Eliminada la anotación de TypeScript
+  const handleRedirectRipple = (e: any, index: number) => {
     const btn = e.currentTarget;
     btn.classList.add("ripple");
     setTimeout(() => {
@@ -198,7 +193,7 @@ function Home() {
                   <a href="/turnosdisponibles" className="turno-titulo" style={{ color: "#7b2cbf" }}>Turnos Disponibles +</a>
                   <i
                     className="fa-solid fa-pen-to-square"
-                    style={{ cursor: "pointer", fontSize: hover ? "22px" : "18px", transition: "all 0.2s ease" }}
+                    style={{ cursor: "pointer", fontSize: hover ? 22 : 18, transition: "all 0.2s ease" }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
                     onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
@@ -214,7 +209,7 @@ function Home() {
                       <button className="btn-eliminar-turno" onClick={() => borrarTurno(t.id)}>✕</button>
                     </div>
                   )) : (
-                    <p className="sin-turnos">No hay turnos disponibles. **Agregá uno!**</p>
+                    <p className="sin-turnos">No hay turnos disponibles. Agregá uno!</p>
                   )}
                 </div>
               </StyleCards>
@@ -243,7 +238,7 @@ function Home() {
             </h2>
 
             {loading && <p className="loading-text">Cargando...</p>}
-            {!loading && turnosAgendados.length === 0 && <p className="no-turnos-agendados">**¡Genial!** No hay turnos agendados pendientes.</p>}
+            {!loading && turnosAgendados.length === 0 && <p className="no-turnos-agendados">¡Genial! No hay turnos agendados pendientes.</p>}
             {!loading && turnosAgendados.length > 0 && (
               <div className="turnos-agendados-lista">
                 {turnosAgendados.map((t, index) => (
