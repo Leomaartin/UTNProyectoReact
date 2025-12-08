@@ -108,7 +108,7 @@ function Dashboard() {
 
     try {
       const res = await axios.post(
-        "http://localhost:3333/api/actualizarCategoria",
+        "https://api-node-turnos.onrender.com/api/actualizarCategoria",
         {
           categoria: selectedCategory,
           id: userData?.id,
@@ -142,7 +142,7 @@ function Dashboard() {
 
     try {
       const res = await axios.post(
-        "https://backend-abc.onrender.com/api/actualizarCategoria",
+        "https://api-node-turnos.onrender.com/actualizarCategoria",
         payload
       );
 
