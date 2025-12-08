@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
+import { Card } from "../Components/Card";
 
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
