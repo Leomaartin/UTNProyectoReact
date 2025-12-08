@@ -7,21 +7,24 @@ import useLocalStorage from "../auth/useLocalStorage.js";
 import "../routes/css/Home.css";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import banner5 from "../img/banner5.jpg";
+import banner9 from "../img/banner9.jpg";
+import banner6 from "../img/banner6.jpg";
 
 // Datos del carrusel, más limpios aquí
 const CAROUSEL_ITEMS = [
   {
-    src: "https://api-node-turnos.onrender.com/banner6.jpg",
+    src: {banner6},
     title: "Agendá en segundos 🕒",
     subtitle: "Turnos rápidos y sin complicaciones.",
   },
   {
-    src: "https://api-node-turnos.onrender.com/banner9.jpg",
+    src: {banner5},
     title: "Conectate con profesionales 🤝",
     subtitle: "Elegí entre cientos de proveedores.",
   },
   {
-    src: "https://api-node-turnos.onrender.com/banner5.jpg",
+    src: {banner9},
     title: "Recordatorios automáticos 🔔",
     subtitle: "Nunca más te olvides de un turno.",
   },
