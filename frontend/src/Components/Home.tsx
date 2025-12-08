@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
-import { Card } from "@mui/material";
 
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import useLocalStorage from "../hooks/useLocalStorage";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
+import useLocalStorage from "../auth/useLocalStorage";
 
 import banner6 from "../assets/banners/banner6.png";
 import banner5 from "../assets/banners/banner5.png";
