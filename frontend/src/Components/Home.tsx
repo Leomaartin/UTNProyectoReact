@@ -300,8 +300,7 @@ function Home() {
         {/* =========================== PROVEEDOR – TURNOS DISPONIBLES (CORREGIDO) =========================== */}
         <StyleCards
           className="home-card small-card"
-          width="49%"    {/* RESTAURADO para PC */}
-          height="20rem" {/* RESTAURADO para PC */}
+      
           background="#fff"
         >
           <h2 className="agregar-turnos-titulo">
@@ -358,8 +357,7 @@ function Home() {
         {/* =========================== PROVEEDOR – BUSCAR CATEGORÍAS (Para reservar) =========================== */}
         <StyleCards
           className="home-card large-card"
-          width="49%"    
-          height="20rem" 
+      
           background="#fff"
         >
           <h2 className="buscar-categoria" style={{ color: "#7b2cbf" }}>
