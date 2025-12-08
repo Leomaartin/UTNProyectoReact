@@ -267,11 +267,12 @@ function Home() {
         <section className="home-grid">
           {user.tipoCuenta === 0 ? (
             /* =========================== CATEGORÍAS – USUARIO NORMAL =========================== */
-            <StyleCards
-              className="home-card full-card"
-              background="#fff"
-              // Eliminados: width="100%" height="auto"
-            >
+           <StyleCards
+  className="home-card small-card"
+  width="49%"    {/* RESTAURADO para PC */}
+  height="20rem" {/* RESTAURADO para PC */}
+  background="#fff"
+>
               <h2 className="category-title" style={{ color: "#7b2cbf" }}>
                 Categorías:
               </h2>
@@ -356,10 +357,11 @@ function Home() {
 
               {/* =========================== PROVEEDOR – BUSCAR CATEGORÍAS (Para reservar) =========================== */}
               <StyleCards
-                className="home-card large-card"
-                background="#fff"
-                // Eliminados: width="49%" height="20rem"
-              >
+  className="home-card large-card"
+  width="49%"    {/* RESTAURADO para PC */}
+  height="20rem" {/* RESTAURADO para PC */}
+  background="#fff"
+>
                 <h2 className="buscar-categoria" style={{ color: "#7b2cbf" }}>
                   Buscar Profesionales:
                 </h2>

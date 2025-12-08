@@ -756,4 +756,23 @@ height: auto !important;
  transform: translate(-50%, -50%) scale(25);
  opacity: 0;
  }
+}.home-card {
+ /* ... estilos generales ... */
+ 
+ /* CLAVE: Eliminamos el flex: 1 1 48% */
+/* Y usamos min-height como altura mínima base */
+ min-height: 20rem; 
+}
+
+.home-card.full-card {
+  flex: 1 1 100%; /* SÍ se mantiene en full-card */
+  min-height: auto;
+}
+.home-card {
+ /* Esto sobreescribe el 49% y el 20rem (inline de React) */
+ flex: 1 1 100% !important; 
+ width: 100% !important;
+ min-width: 100% !important;
+ max-width: 100% !important;
+ height: auto !important; /* Altura automática en móvil */
 }
