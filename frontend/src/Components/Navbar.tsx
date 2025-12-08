@@ -11,6 +11,7 @@ import {
   faRegistered,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../img/logo.png";
+import { Link } from "react-router-dom";
 import "../routes/css/Navbar.css";
 
 function Navbar() {
@@ -61,10 +62,10 @@ function Navbar() {
             {/* Mi Perfil */}
             {user && (
               <li className="nav-item">
-                <a className="nav-link nav-link-custom" href="/dashboard">
-                  <FontAwesomeIcon icon={faUser} />
-                  <span>Mi Perfil</span>
-                </a>
+               <Link className="nav-link nav-link-custom" to="/dashboard">
+    <FontAwesomeIcon icon={faUser} />
+    <span>Mi Perfil</span>
+  </Link>
               </li>
             )}
 
