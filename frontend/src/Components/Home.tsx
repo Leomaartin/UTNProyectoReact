@@ -10,6 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 import banner5 from "../img/banner5.jpg";
 import banner9 from "../img/banner9.jpg";
 import banner6 from "../img/banner6.jpg";
+import { Link } from "react-router-dom";
 
 // Datos del carrusel, más limpios aquí
 const CAROUSEL_ITEMS = [
@@ -228,7 +229,7 @@ function Home() {
             <>
               <div className="home-card small-card">
                 <h2 className="agregar-turnos-titulo">
-                  <a href="/turnosdisponibles" className="turno-titulo">Turnos Disponibles +</a>
+                  <Link to="/turnosdisponibles" className="turno-titulo">Turnos Disponibles +</Link >
                   <i
                     className="fa-solid fa-pen-to-square"
                     style={{ cursor: "pointer", fontSize: hover ? "22px" : "18px", transition: "all 0.2s ease" }}

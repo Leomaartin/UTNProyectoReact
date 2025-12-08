@@ -951,36 +951,5 @@ export default function registrarEndpoints(app) {
       res.json({ success: true, servicios: results });
     });
   });
-  app.post("/api/payment", async (req, res) => {
-    try {
-      const prod = req.body;
-
-      const preference = {
-        items: [
-          {
-            id: "turno",
-            title: prod.titulo,
-            quantity: 1,
-            currency_id: "ARS",
-            unit_price: Number(prod.valorsena),
-          },
-        ],
-        back_urls: {
-          success: "http://localhost:5173/pago-exitoso",
-          failure: "http://localhost:5173/pago-fallido",
-          pending: "http://localhost:5173/pago-pendiente",
-        },
-        auto_return: "approved",
-        binary_mode: true,
-        metadata: prod.metadata,
-      };
-
-      const response = await new Preference(mpClient).create({
-        body: preference,
-      });
-      res.status(200).send({ response: response });
-    } catch (error) {
-      res.status(400).send({ error: error.message });
-    }
-  });
+  
 }
