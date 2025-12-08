@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Environment files
+.env
+.env.*  # si tenés otros .env como .env.production, .env.development
+
+# Builds de frontend
+/build
+/.vite

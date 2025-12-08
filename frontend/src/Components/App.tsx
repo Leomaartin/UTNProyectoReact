@@ -4,7 +4,7 @@ function App() {
 
   const fetchTurnos = async () => {
     try {
-      const response = await fetch("http://localhost:3333/api/proveedores");
+      const response = await fetch("https://api-node-turnos.onrender.com/api/proveedores");
       if (!response.ok) {
         throw new Error("Error al obtener los datos del servidor!!");
       }

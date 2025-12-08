@@ -137,7 +137,7 @@ function AgendarTurno() {
     if (!proveedorid) return;
 
     axios
-      .get(`http://localhost:3333/api/tusTurnos/${proveedorid}`)
+      .get(`https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorid}`)
       .then((res) => setTurnos(res.data || []))
       .catch(() => {
         toast.error("Error al cargar la disponibilidad.");
@@ -149,7 +149,7 @@ function AgendarTurno() {
     if (!proveedorid) return;
 
     axios
-      .get(`http://localhost:3333/api/proveedor/${proveedorid}`)
+      .get(`https://api-node-turnos.onrender.com/api/proveedor/${proveedorid}`)
       .then((res) => {
         setProveedorNombre(
           res.data.proveedor?.nombre || "Proveedor desconocido"
@@ -183,14 +183,14 @@ function AgendarTurno() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isSubmitting) return; // 👌 Evita doble submit
+    if (isSubmitting) return;
 
     setIsSubmitting(true);
     toast.loading("Procesando turno... Esto puede tardar unos segundos.");
 
     const backendUrl =
       window.location.hostname === "localhost"
-        ? "http://localhost:3333"
+        ? "https://api-node-turnos.onrender.com"
         : "https://interbranchial-momentously-helga.ngrok-free.dev";
 
     if (!user) {

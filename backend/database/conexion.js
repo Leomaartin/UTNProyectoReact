@@ -56,11 +56,11 @@ export default function registrarEndpoints(app) {
         ],
         back_urls: {
           success:
-            "https://interbranchial-momentously-helga.ngrok-free.dev/success",
+            "https://front-nb0d.onrender.com/success",
           failure:
-            "https://interbranchial-momentously-helga.ngrok-free.dev/failure",
+            "https://front-nb0d.onrender.com/failure",
           pending:
-            "https://interbranchial-momentously-helga.ngrok-free.dev/pending",
+            "https://front-nb0d.onrender.com/pending",
         },
         auto_return: "approved",
       };
@@ -910,8 +910,8 @@ export default function registrarEndpoints(app) {
   app.post("/api/agragarservicio", upload.single("imagen"), (req, res) => {
     const { nombreservicio, precio, id_proveedor, descripcion } = req.body;
     const imagen = req.file
-      ? `http://localhost:3333/uploads/${req.file.filename}`
-      : null;
+  ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
+  : null;
 
     const SQL_QUERY =
       "INSERT INTO servicios (nombre, precio, id_proveedor, descripcion, imagen) VALUES (?, ?, ?, ?, ?)";

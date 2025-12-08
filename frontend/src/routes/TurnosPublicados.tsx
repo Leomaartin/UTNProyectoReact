@@ -27,7 +27,7 @@ function TurnosPublicados() {
 
   const fetchProveedores = async () => {
     try {
-      const res = await axios.get("http://localhost:3333/api/reservarturnos");
+      const res = await axios.get("https://api-node-turnos.onrender.com/api/reservarturnos");
       setProveedores(res.data);
     } catch (err) {
       console.error("Error al traer proveedores:", err);
@@ -36,7 +36,7 @@ function TurnosPublicados() {
 
   const fetchTurnos = async () => {
     try {
-      const res = await axios.get("http://localhost:3333/api/infoturnos");
+      const res = await axios.get("https://api-node-turnos.onrender.com/api/infoturnos");
       setTurnos(res.data);
     } catch (err) {
       console.error("Error al traer turnos:", err);

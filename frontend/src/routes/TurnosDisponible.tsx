@@ -76,7 +76,7 @@ function TurnosDisponible() {
 
     try {
       const res = await axios.post(
-        "http://localhost:3333/api/registrarTurnos",
+        "https://api-node-turnos.onrender.com/api/registrarTurnos",
         { turnosDispo }
       );
 

@@ -80,7 +80,7 @@ function Dashboard() {
       if (imagen) formData.append("imagen", imagen);
 
       const response = await axios.post(
-        "http://localhost:3333/api/agragarservicio",
+        "https://api-node-turnos.onrender.com/api/agragarservicio",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -142,7 +142,7 @@ function Dashboard() {
 
     try {
       const res = await axios.post(
-        "http://localhost:3333/api/actualizarCategoria",
+        "https://backend-abc.onrender.com/api/actualizarCategoria",
         payload
       );
 
@@ -173,7 +173,7 @@ function Dashboard() {
 
     try {
       const res = await axios.post(
-        "http://localhost:3333/api/upload",
+        "https://api-node-turnos.onrender.com/api/upload",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

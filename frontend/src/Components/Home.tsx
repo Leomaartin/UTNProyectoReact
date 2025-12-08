@@ -165,7 +165,7 @@ function Home() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://localhost:3333/api/turnosDelUsuario/${user.id}`,
+          `https://api-node-turnos.onrender.com/turnosDelUsuario/${user.id}`,
           { params: { tipoCuenta: user.tipoCuenta } }
         );
         setTurnosAgendados(res.data?.turnosAgendados || []);
@@ -187,7 +187,7 @@ function Home() {
 
     const fetchTurnosDisponibles = async () => {
       try {
-        const res = await axios.post("http://localhost:3333/api/buscarTurnos", {
+        const res = await axios.post("https://api-node-turnos.onrender.com/api/buscarTurnos", {
           id: user.id,
         });
         setTurnos(res.data.result || []);
@@ -206,7 +206,7 @@ function Home() {
     const notify = toast.loading("Eliminando turno...");
     try {
       const res = await axios.post(
-        "http://localhost:3333/api/borrarTurnoDisponible",
+        "https://api-node-turnos.onrender.com/api/borrarTurnoDisponible",
         { id }
       );
 

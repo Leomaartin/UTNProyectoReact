@@ -26,7 +26,7 @@ function TurnosAgendadosUsuario() {
     if (!user?.id) return;
 
     try {
-      const res = await axios.post("http://localhost:3333/api/cancelarTurno", {
+      const res = await axios.post("https://api-node-turnos.onrender.com/api/cancelarTurno", {
         proveedorid,
         usuarioid: user.id,
         id_turno,
@@ -45,7 +45,7 @@ function TurnosAgendadosUsuario() {
 
         // Correo al proveedor
         console.log(proveedorGmail);
-        await axios.post("http://localhost:3333/api/enviar-mail", {
+        await axios.post("https://api-node-turnos.onrender.com/api/enviar-mail", {
           email: proveedorGmail,
           asunto: "Turno cancelado",
           mensaje: `
@@ -59,7 +59,7 @@ function TurnosAgendadosUsuario() {
         });
 
         // Correo al usuario
-        await axios.post("http://localhost:3333/api/enviar-mail", {
+        await axios.post("https://api-node-turnos.onrender.com/api/enviar-mail", {
           email: user.gmail,
           asunto: "Turno cancelado",
           mensaje: `
@@ -95,7 +95,7 @@ function TurnosAgendadosUsuario() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://localhost:3333/api/turnosDelUsuario/${user.id}`,
+          `https://api-node-turnos.onrender.com/api/turnosDelUsuario/${user.id}`,
           { params: { tipoCuenta: user.tipoCuenta } }
         );
 

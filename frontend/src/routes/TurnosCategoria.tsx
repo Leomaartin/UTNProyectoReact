@@ -50,7 +50,7 @@ function ProveedoresPorCategoria() {
 
       try {
         const res = await axios.get(
-          `http://localhost:3333/api/buscarCategoria/${categoriaId}`
+          `https://api-node-turnos.onrender.com/api/buscarCategoria/${categoriaId}`
         );
         console.log(res.data.proveedores);
         if (res.data.success) {

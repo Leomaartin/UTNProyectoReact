@@ -8,7 +8,7 @@ function usePeticionBD(tabla: string) {
     const fetchDatos = async () => {
       try {
         setError(null);
-        const response = await fetch(`http://localhost:3333/api/${tabla}`);
+        const response = await fetch(`https://api-node-turnos.onrender.com/${tabla}`);
         if (!response.ok) {
           throw new Error(
             `Error al obtener los ${tabla}: ${response.statusText}`

@@ -28,14 +28,14 @@ function VerPerfil() {
     const fetchPerfilYServicios = async () => {
       try {
         const resPerfil = await axios.get(
-          `http://localhost:3333/api/perfilproveedor/${proveedorid}`
+          `https://api-node-turnos.onrender.com/api/perfilproveedor/${proveedorid}`
         );
 
         if (resPerfil.data.success) setPerfil(resPerfil.data.perfil);
         else toast.error(resPerfil.data.message || "No se encontró el perfil");
 
         const resServicios = await axios.get(
-          `http://localhost:3333/api/buscarservicio/${proveedorid}`
+          `https://api-node-turnos.onrender.com/api/buscarservicio/${proveedorid}`
         );
 
         if (resServicios.data.success)
@@ -159,7 +159,7 @@ function VerPerfil() {
               <img
                 src={
                   s.imagen.startsWith("/")
-                    ? `http://localhost:3333${s.imagen}`
+                    ? `https://api-node-turnos.onrender.com${s.imagen}`
                     : s.imagen
                 }
                 alt={s.nombre}

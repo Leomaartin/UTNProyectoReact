@@ -146,7 +146,7 @@ function VerTurnosProveedor() {
     const fetchTurnos = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3333/api/tusTurnos/${proveedorid}`
+          `https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorid}`
         );
         setTurnos(res.data || []);
       } catch (err) {
@@ -163,7 +163,7 @@ function VerTurnosProveedor() {
     const fetchProveedor = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3333/api/proveedor/${proveedorid}`
+          `https://api-node-turnos.onrender.com/api/proveedor/${proveedorid}`
         );
         setProveedorNombre(res.data.nombre || "Proveedor desconocido");
         console.log(res.data);
@@ -220,7 +220,7 @@ function VerTurnosProveedor() {
 
     try {
       // Bloquear turnos
-      await axios.post("http://localhost:3333/api/horasBloqueadas", {
+      await axios.post("https://api-node-turnos.onrender.com/api/horasBloqueadas", {
         turnos: Object.entries(agendarTurnos).map(([id, data]) => ({
           id,
           fecha: data.fecha,
@@ -232,7 +232,7 @@ function VerTurnosProveedor() {
       setAgendarTurnos({});
       // Recargar turnos
       const res = await axios.get(
-        `http://localhost:3333/api/tusTurnos/${proveedorid}`
+        `https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorid}`
       );
       setTurnos(res.data || []);
     } catch (err) {
@@ -298,7 +298,7 @@ function VerTurnosProveedor() {
               const borrarTurno = async () => {
                 try {
                   await axios.delete(
-                    `http://localhost:3333/api/borrarTurno/${t.id}`
+                    `https://api-node-turnos.onrender.com/api/borrarTurno/${t.id}`
                   );
                   setTurnos(turnos.filter((turno) => turno.id !== t.id));
                   toast.success("Turno borrado correctamente");

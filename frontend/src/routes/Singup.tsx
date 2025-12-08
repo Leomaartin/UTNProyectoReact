@@ -18,7 +18,7 @@ function Singup() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:3333/api/register", {
+      const res = await axios.post("https://api-node-turnos.onrender.com/api/register", {
         nombre: username,
         gmail: gmail,
         password: password,

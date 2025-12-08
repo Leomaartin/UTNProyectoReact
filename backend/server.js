@@ -16,7 +16,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://interbranchial-momentously-helga.ngrok-free.dev",
+      "https://front-nb0d.onrender.com",
     ],
     credentials: true,
   })

@@ -90,7 +90,7 @@ function TusTurnos() {
     const fetchTurnos = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:3333/api/tusTurnos/${proveedorId}`
+          `https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorId}`
         );
         setTurnos(res.data);
       } catch (err) {
@@ -104,7 +104,7 @@ function TusTurnos() {
 
   const borrarTurno = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:3333/api/borrarTurno/${id}`);
+      await axios.delete(`https://api-node-turnos.onrender.com/api/borrarTurno/${id}`);
       setTurnos(turnos.filter((t) => t.id !== id));
     } catch (err) {
       console.error("Error al borrar turno:", err);
