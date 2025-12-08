@@ -640,61 +640,124 @@
   }
 }
 /* ====================================================================== */
-/* 📱 MOBILE FULL WIDTH – Tarjetas proveedor */
+/* 9. RESPONSIVE REVISADO – TABLET Y MOBILE */
 /* ====================================================================== */
 
-@media (max-width: 768px) {
-  /* El grid principal pasa a columna */
-  .home-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    padding: 0 10px !important;
-    gap: 1rem !important;
+/* Tablets grandes y medianas */
+@media (max-width: 992px) {
+  .category-grid-buttons.user-mode {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  /* Tarjetas: Turnos disponibles + Buscar profesionales */
+  .categorias-botones.provider-mode {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .home-grid {
+    gap: 1rem;
+    padding: 1.5rem 3%;
+  }
+}
+
+/* Tablets y móviles */
+@media (max-width: 768px) {
+  /* Home grid pasa a columna */
+  .home-grid {
+    flex-direction: column;
+    padding: 1rem 3%;
+    gap: 1rem;
+  }
+
+  /* Tarjetas full width */
   .home-card,
   .home-card.small-card,
   .home-card.large-card {
     width: 100% !important;
-    max-width: 100% !important;
     min-width: 100% !important;
+    max-width: 100% !important;
     margin: 0 !important;
+    height: auto !important;
   }
 
-  /* Hacer que los botones de categoría también se adapten */
-  .categorias-botones {
-    display: grid !important;
+  /* Ajuste de grids de categorías a 1 columna */
+  .category-grid-buttons.user-mode,
+  .categorias-botones.provider-mode {
     grid-template-columns: 1fr !important;
-    gap: 10px !important;
-    width: 100% !important;
+    gap: 0.8rem;
   }
 
+  .category-action-button,
   .categoria-btn {
-    width: 100% !important;
+    width: 100%;
   }
 
-  /* Contenedor interno */
-  .home-container,
-  .card-body,
-  .turnos-lista {
-    width: 100% !important;
+  /* Mis turnos agendados */
+  .info-detalle {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  /* Home invitado */
+  .invitado-title {
+    font-size: 2.5rem;
+  }
+  .invitado-subtitle {
+    font-size: 1.1rem;
+  }
+  .invitado-buttons {
+    flex-direction: column;
+    gap: 1rem;
+    width: 90%;
+    margin: auto;
+  }
+  .btn-invitado-primary,
+  .btn-invitado-secondary {
+    width: 100%;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+  }
+
+  /* Carrusel */
+  .carousel-container {
+    height: 250px;
+  }
+  .carousel-caption h3 {
+    font-size: 1.5rem;
+  }
+  .carousel-caption p {
+    font-size: 0.95rem;
+  }
+  .carousel-btn {
+    font-size: 1.8rem;
+    padding: 6px 10px;
   }
 }
 
-/* Para celulares muy chicos */
+/* Celulares muy chicos */
 @media (max-width: 480px) {
   .home-grid {
     padding: 0 6px !important;
   }
-}
-.home-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
 
-.content-wrapper {
-  flex-grow: 1;
+  /* Ajuste extra carrusel */
+  .carousel-container {
+    height: 200px;
+  }
+  .carousel-caption h3 {
+    font-size: 1.3rem;
+  }
+  .carousel-caption p {
+    font-size: 0.85rem;
+  }
+
+  /* Invitado */
+  .invitado-title {
+    font-size: 2rem;
+  }
+  .invitado-subtitle {
+    font-size: 0.95rem;
+  }
+  .invitado-buttons {
+    gap: 0.8rem;
+  }
 }
