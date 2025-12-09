@@ -163,30 +163,32 @@ function Dashboard() {
     }
   }; // ===================================================== // SUBIR FOTO PERFIL // =====================================================
 
-  const handleProfilePhotoUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+ const handleProfilePhotoUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const formData = new FormData();
-    formData.append("foto", file);
-    formData.append("userId", userData.id);
+  const formData = new FormData();
+  formData.append("foto", file);
+  formData.append("userId", userData.id);
+  formData.append("tipoCuenta", userData.tipoCuenta); // enviar tipo de cuenta
 
-    try {
-      const res = await axios.post(
-        "https://api-node-turnos.onrender.com/api/upload",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+  try {
+    const res = await axios.post(
+      "https://api-node-turnos.onrender.com/api/upload",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
 
-      if (res.data.success) {
-        toast.success("Foto actualizada!");
-        setUserData({ ...userData, fotoPerfil: res.data.url });
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Error al subir imagen.");
+    if (res.data.success) {
+      toast.success("Foto actualizada!");
+      setUserData({ ...userData, fotoPerfil: res.data.url });
     }
-  }; // ===================================================== // RENDERIZAR CATEGORÍA ACTUAL // =====================================================
+  } catch (error) {
+    console.error("Error al subir imagen:", error);
+    toast.error("Error al subir imagen.");
+  }
+};
+ // ===================================================== // RENDERIZAR CATEGORÍA ACTUAL // =====================================================
 
   const renderCurrentCategory = () => {
     const currentCategoryName = CATEGORIES[userData?.categoria] || "Indefinida";

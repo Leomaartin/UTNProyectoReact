@@ -235,12 +235,16 @@ const handleSubmit = async (e: React.FormEvent) => {
     // ============================
     // 💳 PASO 1: PAGO CON SEÑA
     // ============================
-    let montoTotalSena = 0;
-    Object.entries(agendarTurnos).forEach(([id, data]) => {
-      const turno = turnos.find((t) => t.id === id);
-      if (turno?.sena === 1 && turno.valorsena)
-        montoTotalSena += Number(turno.valorsena) * data.horas.length;
-    });
+   let montoTotalSena = 0;
+Object.entries(agendarTurnos).forEach(([id, data]) => {
+  const turno = turnos.find((t) => t.id === Number(id));
+  console.log({ id, turno, horasSeleccionadas: data.horas.length });
+  if (turno?.sena === 1 && turno.valorsena) {
+    montoTotalSena += Number(turno.valorsena) * data.horas.length;
+  }
+});
+console.log("💰 montoTotalSena:", montoTotalSena);
+
     console.log(montoTotalSena)
 
     if (montoTotalSena > 0) {
