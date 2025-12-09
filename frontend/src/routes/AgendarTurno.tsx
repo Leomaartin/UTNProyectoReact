@@ -311,30 +311,7 @@ useEffect(() => {
         turnosParaEnviar[0].fecha
       ).toLocaleDateString("es-AR");
 
-      /* 📧 PASO 3: Emails */
-      const emailPayload = {
-        proveedor: {
-            email: proveedorGmail,
-            asunto: "Nuevo turno agendado",
-            mensaje: `Hola ${proveedorNombre},<br>El usuario <b>${
-                user.nombre
-            }</b> ha agendado un turno.<br><b>Fecha:</b> ${fechaFormateada}<br><b>Horas:</b> ${turnosParaEnviar
-                .flatMap((t) => t.horas)
-                .join(", ")}<br>Saludos.`,
-        },
-        usuario: {
-            email: user.gmail,
-            asunto: "Confirmación de Turno Agendado",
-            mensaje: `Hola ${
-                user.nombre
-            },<br>Has agendado un turno con: <b>${proveedorNombre}</b>.<br><b>Fecha:</b> ${fechaFormateada}<br><b>Horas:</b> ${turnosParaEnviar
-                .flatMap((t) => t.horas)
-                .join(", ")}<br>Saludos.`,
-        }
-      };
-      
-      await axios.post(`https://api-node-turnos.onrender.com/api/enviar-mail`, emailPayload.proveedor);
-      await axios.post(`https://api-node-turnos.onrender.com/api/enviar-mail`, emailPayload.usuario);
+
 
 
       // Éxito
