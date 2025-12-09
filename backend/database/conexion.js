@@ -38,34 +38,22 @@ conexion.getConnection((err, connection) => {
 export default function registrarEndpoints(app) {
   
   app.post("/api/enviar-mail", async (req, res) => {
-  const { email, asunto, mensaje } = req.body;
-  console.log("BODY:", req.body);
-
-  try {
-    const enviado = await enviarCorreo(email, asunto, `<p>${mensaje}</p>`);
-
-    if (!enviado) {
-      return res.status(500).json({
-        success: false,
-        message: "Error al enviar el correo con BravoMail",
-      });
+    const { email, asunto, mensaje } = req.body;
+    console.log("BODY:", req.body);
+    try {
+      const enviado = await enviarCorreo(email, asunto, `<p>${mensaje}</p>`);
+      if (!enviado)
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al enviar el correo" });
+      res.json({ success: true, message: "Correo enviado correctamente" });
+    } catch (error) {
+      console.error("Error en enviar-mail:", error); 
+      res
+        .status(500)
+        .json({ success: false, message: "Error interno del servidor", error });
     }
-
-    return res.json({
-      success: true,
-      message: "Correo enviado correctamente con BravoMail",
-    });
-
-  } catch (error) {
-    console.error("Error en enviar-mail:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Error interno del servidor",
-      error,
-    });
-  }
-});
+  });
   app.post("/api/create-order", async (req, res) => {
     console.log("💡 Entró al endpoint /create-order");
     try {

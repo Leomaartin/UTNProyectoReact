@@ -1,46 +1,30 @@
-// middleware/bravo.js
-import dotenv from "dotenv";
-dotenv.config();
+import nodemailer from "nodemailer";
 
 export const enviarCorreo = async (to, subject, html) => {
   try {
-    const KEY = process.env.BRAVO_API_KEY; 
-    const DOMAIN = process.env.BRAVO_DOMAIN; // Puede ser "g.bravomail.io" u otro
+    // Transporter: configuración del correo
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // Podés usar Outlook, Yahoo, SMTP, etc
+      auth: {
+        user: "leomartin9808@gmail.com",
+        pass: "dvoa oium mrew sajn", // No la contraseña real
+      },
+    });
 
-    if (!KEY || !DOMAIN) {
-      console.error("⛔ Faltan variables de entorno de BravoMail");
-      return false;
-    }
-
-    const url = `https://api.bravo.email/v1/domains/${DOMAIN}/messages`;
-
-    const body = {
-      from: `Turnos <no-reply@${DOMAIN}>`,
-      to: [to],
+    // Info del correo
+    const mailOptions = {
+      from: "leomartin9808@gmail.com",
+      to,
       subject,
       html,
     };
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!res.ok) {
-      const error = await res.text();
-      console.error("❌ Error BravoMail:", error);
-      return false;
-    }
-
-    console.log("📧 Correo enviado con BravoMail");
+    // Enviar
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Correo enviado:", info.messageId);
     return true;
-
-  } catch (err) {
-    console.error("⛔ Error al enviar correo con BravoMail:", err);
+  } catch (error) {
+    console.error("Error al enviar correo:", error);
     return false;
   }
 };
