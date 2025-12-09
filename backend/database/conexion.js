@@ -35,6 +35,8 @@ conexion.getConnection((err, connection) => {
 // ========================================
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
+export default function registrarEndpoints(app) {
+  
 app.post("/api/enviar-mail", async (req, res) => {
   const { email, asunto, mensaje } = req.body;
 
@@ -962,3 +964,4 @@ app.post("/api/enviar-mail", async (req, res) => {
     });
   });
   
+}
