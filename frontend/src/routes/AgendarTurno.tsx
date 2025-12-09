@@ -213,129 +213,113 @@ useEffect(() => {
   };
 
   // 3. Enviar Formulario (Agendamiento)
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (isSubmitting) return;
+  if (isSubmitting) return;
+  setIsSubmitting(true);
+  const loadingToastId = toast.loading(
+    "Procesando turno... Esto puede tardar unos segundos."
+  );
 
-    setIsSubmitting(true);
-    const loadingToastId = toast.loading(
-      "Procesando turno... Esto puede tardar unos segundos."
-    );
-
-    if (!user) {
-      toast.error("Debes iniciar sesión.");
-      setIsSubmitting(false);
-      toast.dismiss(loadingToastId);
-      return;
-    }
+  try {
+    if (!user) throw new Error("Debes iniciar sesión.");
 
     const turnosSeleccionadosCount = Object.values(agendarTurnos).flatMap(
       (t) => t.horas
     ).length;
 
-    if (turnosSeleccionadosCount === 0) {
+    if (turnosSeleccionadosCount === 0)
+      throw new Error("Selecciona al menos un turno.");
+
+    // ============================
+    // 💳 PASO 1: PAGO CON SEÑA
+    // ============================
+    let montoTotalSena = 0;
+    Object.entries(agendarTurnos).forEach(([id, data]) => {
+      const turno = turnos.find((t) => t.id === id);
+      if (turno?.sena === 1 && turno.valorsena)
+        montoTotalSena += Number(turno.valorsena) * data.horas.length;
+    });
+
+    if (montoTotalSena > 0) {
+      const prod = {
+        titulo: `Seña turnos con ${proveedorNombre}`,
+        valorsena: montoTotalSena,
+        cantidad: 1,
+      };
+
+      const res = await axios.post(
+        "https://api-node-turnos.onrender.com/api/create-order",
+        { prod }
+      );
+
+      const { init_point } = res.data;
+      if (!init_point) throw new Error("No se pudo obtener el enlace de pago.");
+
       toast.dismiss(loadingToastId);
-      toast("Selecciona al menos un turno.", { icon: "⚠️" });
-      setIsSubmitting(false);
-      return;
+      // Redirigir a Mercado Pago
+      window.location.href = init_point;
+      return; // ⚠️ Importantísimo para no ejecutar el paso 2
     }
 
-    try {
-      /* === 💳 PASO 1: PAGO CON SEÑA (si aplica) === */
-      let montoTotalSeña = 0;
-      Object.entries(agendarTurnos).forEach(([id, data]) => {
-        const turno = turnos.find((t) => t.id === id); // El ID es string, comparamos con string
-        if (turno?.sena === 1 && turno.valorsena)
-          montoTotalSeña += Number(turno.valorsena) * data.horas.length;
-      });
+    // ============================
+    // 💾 PASO 2: AGENDAR NORMAL
+    // ============================
+    const turnosParaEnviar = Object.entries(agendarTurnos).map(([id, data]) => ({
+      id_turno: generarIdTurno(),
+      nombre: user.nombre,
+      userid: user.id,
+      usergmail: user.gmail,
+      proveedorNombre,
+      proveedorid,
+      proveedorGmail,
+      fecha: data.fecha,
+      horas: data.horas,
+      turnoId: id,
+    }));
 
-      if (montoTotalSeña > 0) {
-        const prod = {
-          titulo: `Seña turnos con ${proveedorNombre}`,
-          valorsena: montoTotalSeña,
-          cantidad: 1,
-        };
+    const turnosParaBloquear = Object.entries(agendarTurnos).map(([id, data]) => ({
+      id,
+      fecha: data.fecha,
+      horas: data.horas,
+    }));
 
-        const res = await axios.post(`https://api-node-turnos.onrender.com/api/create-order`, {
-          prod,
-        });
-        const { init_point } = res.data;
+    // Bloquear horas
+    await axios.post("https://api-node-turnos.onrender.com/api/horasBloqueadas", {
+      turnos: turnosParaBloquear,
+    });
 
-        toast.dismiss(loadingToastId);
-        setIsSubmitting(false);
-
-        // Redirigir a Mercado Pago
-        window.location.href = init_point;
-        return;
-      }
-
-      /* === 💾 PASO 2: SI NO HAY SEÑA → AGENDAR NORMAL (Sin Redirección) === */
-      const turnosParaEnviar = Object.entries(agendarTurnos).map(
-        ([id, data]) => ({
-          id_turno: generarIdTurno(),
-          nombre: user.nombre,
-          userid: user.id,
-          usergmail: user.gmail,
-          proveedorNombre,
-          proveedorid,
-          proveedorGmail,
-          fecha: data.fecha,
-          horas: data.horas,
-          turnoId: id, // Incluir el id del turno disponible para referencia
-        })
-      );
-      
-      const turnosParaBloquear = Object.entries(agendarTurnos).map(
-        ([id, data]) => ({ id, fecha: data.fecha, horas: data.horas })
-      );
-
-      // Bloquear horas
-      await axios.post(`https://api-node-turnos.onrender.com/api/horasBloqueadas`, {
-        turnos: turnosParaBloquear,
-      });
-
-      // Guardar turno en la tabla del proveedor
-      await axios.post(`https://api-node-turnos.onrender.com/api/turnoAgendado`, {
+    // Guardar turno en tablas del proveedor y del usuario
+    await Promise.all([
+      axios.post("https://api-node-turnos.onrender.com/api/turnoAgendado", {
         proveedorid,
         turnos: turnosParaEnviar,
-      });
-
-      // Guardar turno en la tabla del usuario
-      await axios.post(`https://api-node-turnos.onrender.com/api/turnoGuardado`, {
+      }),
+      axios.post("https://api-node-turnos.onrender.com/api/turnoGuardado", {
         usuarioid: user.id,
         turnos: turnosParaEnviar,
-      });
+      }),
+    ]);
 
-      const fechaFormateada = new Date(
-        turnosParaEnviar[0].fecha
-      ).toLocaleDateString("es-AR");
+    toast.dismiss(loadingToastId);
+    toast.success(`${turnosSeleccionadosCount} turno(s) agendado(s) correctamente.`);
 
+    setAgendarTurnos({});
 
-
-
-      // Éxito
-      toast.dismiss(loadingToastId);
-      toast.success(
-        `${turnosSeleccionadosCount} turno(s) agendado(s) correctamente.`
-      );
-
-      setAgendarTurnos({});
-      
-      // Recargar la disponibilidad para mostrar las horas bloqueadas
-      const resTurnos = await axios.get(
-        `https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorid}`
-      );
-      setTurnos(resTurnos.data || []);
-
-    } catch (err) {
-      console.error("❌ Error en handleSubmit:", err);
-      toast.dismiss(loadingToastId);
-      toast.error("Error al agendar. Inténtalo de nuevo.");
-    }
-
+    // Recargar disponibilidad
+    const resTurnos = await axios.get(
+      `https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorid}`
+    );
+    setTurnos(resTurnos.data || []);
+  } catch (err: any) {
+    console.error("❌ Error en handleSubmit:", err);
+    toast.dismiss(loadingToastId);
+    toast.error(err.message || "Error al agendar. Inténtalo de nuevo.");
+  } finally {
     setIsSubmitting(false);
-  };
+  }
+};
 
   const totalHorasSeleccionadas = Object.values(agendarTurnos).flatMap((t) => t.horas).length;
 
