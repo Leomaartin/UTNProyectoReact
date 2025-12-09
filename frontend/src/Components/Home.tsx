@@ -169,7 +169,7 @@ function Home() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://api-node-turnos.onrender.com/turnosDelUsuario/${user.id}`,
+          `https://api-node-turnos.onrender.com/api/turnosDelUsuario/${user.id}`,
           { params: { tipoCuenta: user.tipoCuenta } }
         );
         setTurnosAgendados(res.data?.turnosAgendados || []);
