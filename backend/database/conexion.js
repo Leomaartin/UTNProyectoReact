@@ -35,25 +35,34 @@ conexion.getConnection((err, connection) => {
 // ========================================
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
-export default function registrarEndpoints(app) {
-  
-  app.post("/api/enviar-mail", async (req, res) => {
-    const { email, asunto, mensaje } = req.body;
-    console.log("BODY:", req.body);
-    try {
-      const enviado = await enviarCorreo(email, asunto, `<p>${mensaje}</p>`);
-      if (!enviado)
-        return res
-          .status(500)
-          .json({ success: false, message: "Error al enviar el correo" });
-      res.json({ success: true, message: "Correo enviado correctamente" });
-    } catch (error) {
-      console.error("Error en enviar-mail:", error); 
-      res
-        .status(500)
-        .json({ success: false, message: "Error interno del servidor", error });
+app.post("/api/enviar-mail", async (req, res) => {
+  const { email, asunto, mensaje } = req.body;
+
+  console.log("📨 Recibí petición de email:", req.body);
+
+  try {
+    const enviado = await enviarCorreo(email, asunto, mensaje);
+
+    if (!enviado) {
+      return res.status(500).json({
+        success: false,
+        message: "No se pudo enviar el correo con Resend"
+      });
     }
-  });
+
+    res.json({
+      success: true,
+      message: "Correo enviado correctamente con Resend"
+    });
+
+  } catch (error) {
+    console.error("❌ Error en endpoint /api/enviar-mail:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor"
+    });
+  }
+});
   app.post("/api/create-order", async (req, res) => {
     console.log("💡 Entró al endpoint /create-order");
     try {

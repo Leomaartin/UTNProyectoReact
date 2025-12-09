@@ -1,30 +1,29 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const enviarCorreo = async (to, subject, html) => {
   try {
-    // Transporter: configuración del correo
-    const transporter = nodemailer.createTransport({
-      service: "gmail", // Podés usar Outlook, Yahoo, SMTP, etc
-      auth: {
-        user: "leomartin9808@gmail.com",
-        pass: "dvoa oium mrew sajn", // No la contraseña real
-      },
-    });
-
-    // Info del correo
-    const mailOptions = {
-      from: "leomartin9808@gmail.com",
+    const { data, error } = await resend.emails.send({
+      from: "Turnos App <onboarding@resend.dev>", 
       to,
       subject,
       html,
-    };
+    });
 
-    // Enviar
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Correo enviado:", info.messageId);
+    if (error) {
+      console.error("❌ Error enviando con Resend:", error);
+      return false;
+    }
+
+    console.log("📧 Email enviado:", data.id);
     return true;
-  } catch (error) {
-    console.error("Error al enviar correo:", error);
+
+  } catch (err) {
+    console.error("🚨 Error general en enviarCorreo:", err);
     return false;
   }
 };
