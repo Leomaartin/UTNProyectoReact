@@ -1,13 +1,18 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../Components/Navbar";
 import useLocalStorage from "../auth/useLocalStorage";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import toast, { Toaster } from "react-hot-toast";
 import Footer from "../Components/Footer";
 import "./css/AgendarTurnos.css";
-import { useNavigate } from "react-router-dom";
+
+
+
+// ============================================================================
+// 🛠️ FUNCIONES DE UTILIDAD (SIN CAMBIOS)
+// ============================================================================
 
 function calcularHora(time: number): string {
   const pad = (n: number) => n.toString().padStart(2, "0");
@@ -36,6 +41,10 @@ function formatFecha(fecha: string): string {
     ? "Fecha inválida"
     : d.toLocaleDateString("es-AR", { timeZone: "UTC" });
 }
+
+// ============================================================================
+// 🎨 COMPONENTES HIJOS (SIN CAMBIOS FUNCIONALES)
+// ============================================================================
 
 interface HoraProps {
   hora: string;
@@ -107,6 +116,10 @@ function ArrayHoras({
   );
 }
 
+// ============================================================================
+// ⚙️ DEFINICIONES DE TIPOS
+// ============================================================================
+
 interface TurnoData {
   id: string;
   fecha: string;
@@ -122,43 +135,61 @@ interface AgendarTurnoState {
   [id: string]: { fecha: string; horas: string[] };
 }
 
+// ============================================================================
+// 🚀 COMPONENTE PRINCIPAL: AgendarTurno
+// ============================================================================
+
 function AgendarTurno() {
   const [turnos, setTurnos] = useState<TurnoData[]>([]);
   const [proveedorNombre, setProveedorNombre] = useState("Cargando...");
-  const [proveedorGmail, setProveedorGmail] = useState("Cargando...");
+  const [proveedorGmail, setProveedorGmail] = useState("");
   const [agendarTurnos, setAgendarTurnos] = useState<AgendarTurnoState>({});
-  const [isSubmitting, setIsSubmitting] = useState(false); // 👈 LOADING AGREGADO
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { proveedorid } = useParams<{ proveedorid: string }>();
   const [user] = useLocalStorage("user", null);
   const navigate = useNavigate();
 
+  // 1. Cargar Turnos Disponibles
+useEffect(() => {
+  if (!proveedorid) return;
+
+  console.log("📌 solicitando turnos para proveedor:", proveedorid);
+
+  axios
+    .get(`https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorid}`)
+    .then((res) => {
+      console.log("📥 respuesta turnos:", res.data);
+      setTurnos(res.data || []);
+    })
+    .catch((err) => {
+      console.error("❌ Error al cargar turnos", err);
+      toast.error("Error al cargar la disponibilidad.");
+      setTurnos([]);
+    });
+}, [proveedorid]);
+
+  // 2. Cargar Datos del Proveedor
   useEffect(() => {
-    if (!proveedorid) return;
+  if (!proveedorid) return;
 
-    axios
-      .get(`https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorid}`)
-      .then((res) => setTurnos(res.data || []))
-      .catch(() => {
-        toast.error("Error al cargar la disponibilidad.");
-        setTurnos([]);
-      });
-  }, [proveedorid]);
+  console.log("📌 solicitando datos del proveedor:", proveedorid);
 
-  useEffect(() => {
-    if (!proveedorid) return;
+  axios
+    .get(`https://api-node-turnos.onrender.com/api/proveedor/${proveedorid}`)
+    .then((res) => {
+      console.log("📥 respuesta proveedor:", res.data);
+      setProveedorNombre(res.data.proveedor?.nombre || "Proveedor desconocido");
+      setProveedorGmail(res.data.proveedor?.gmail);
+    })
+    .catch((err) => {
+      console.error("❌ Error al cargar proveedor:", err);
+      setProveedorNombre("Error al cargar nombre");
+    });
+}, [proveedorid]);
 
-    axios
-      .get(`https://api-node-turnos.onrender.com/api/proveedor/${proveedorid}`)
-      .then((res) => {
-        setProveedorNombre(
-          res.data.proveedor?.nombre || "Proveedor desconocido"
-        );
-        setProveedorGmail(res.data.proveedor?.gmail);
-      })
-      .catch(() => setProveedorNombre("Error al cargar nombre"));
-  }, [proveedorid]);
 
+  // Manejar la selección/deselección de horas
   const handleToggleHora = (
     id: string,
     fecha: string,
@@ -171,6 +202,7 @@ function AgendarTurno() {
         ? [...previo.horas, hora]
         : previo.horas.filter((h) => h !== hora);
 
+      // Si no quedan horas seleccionadas para este ID, eliminamos el objeto
       if (nuevasHoras.length === 0) {
         const { [id]: omitido, ...resto } = prev;
         return resto;
@@ -180,42 +212,40 @@ function AgendarTurno() {
     });
   };
 
+  // 3. Enviar Formulario (Agendamiento)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isSubmitting) return;
 
     setIsSubmitting(true);
-    toast.loading("Procesando turno... Esto puede tardar unos segundos.");
-
-    const backendUrl =
-      window.location.hostname === "localhost"
-        ? "https://api-node-turnos.onrender.com"
-        : "https://interbranchial-momentously-helga.ngrok-free.dev";
+    const loadingToastId = toast.loading(
+      "Procesando turno... Esto puede tardar unos segundos."
+    );
 
     if (!user) {
       toast.error("Debes iniciar sesión.");
       setIsSubmitting(false);
-      toast.dismiss();
+      toast.dismiss(loadingToastId);
       return;
     }
 
-    const turnosSeleccionados = Object.values(agendarTurnos).flatMap(
+    const turnosSeleccionadosCount = Object.values(agendarTurnos).flatMap(
       (t) => t.horas
     ).length;
 
-    if (turnosSeleccionados === 0) {
-      toast.dismiss();
+    if (turnosSeleccionadosCount === 0) {
+      toast.dismiss(loadingToastId);
       toast("Selecciona al menos un turno.", { icon: "⚠️" });
       setIsSubmitting(false);
       return;
     }
 
     try {
-      /* === PAGO CON SEÑA === */
+      /* === 💳 PASO 1: PAGO CON SEÑA (si aplica) === */
       let montoTotalSeña = 0;
       Object.entries(agendarTurnos).forEach(([id, data]) => {
-        const turno = turnos.find((t) => t.id === Number(id));
+        const turno = turnos.find((t) => t.id === id); // El ID es string, comparamos con string
         if (turno?.sena === 1 && turno.valorsena)
           montoTotalSeña += Number(turno.valorsena) * data.horas.length;
       });
@@ -227,19 +257,20 @@ function AgendarTurno() {
           cantidad: 1,
         };
 
-        const res = await axios.post(`${backendUrl}/api/create-order`, {
+        const res = await axios.post(`https://api-node-turnos.onrender.com/api/create-order`, {
           prod,
         });
         const { init_point } = res.data;
 
-        toast.dismiss();
+        toast.dismiss(loadingToastId);
         setIsSubmitting(false);
 
+        // Redirigir a Mercado Pago
         window.location.href = init_point;
         return;
       }
 
-      /* === SI NO HAY SEÑA → AGENDAR NORMAL === */
+      /* === 💾 PASO 2: SI NO HAY SEÑA → AGENDAR NORMAL (Sin Redirección) === */
       const turnosParaEnviar = Object.entries(agendarTurnos).map(
         ([id, data]) => ({
           id_turno: generarIdTurno(),
@@ -251,180 +282,208 @@ function AgendarTurno() {
           proveedorGmail,
           fecha: data.fecha,
           horas: data.horas,
+          turnoId: id, // Incluir el id del turno disponible para referencia
         })
       );
-
+      
       const turnosParaBloquear = Object.entries(agendarTurnos).map(
         ([id, data]) => ({ id, fecha: data.fecha, horas: data.horas })
       );
 
-      await axios.post(`${backendUrl}/api/horasBloqueadas`, {
+      // Bloquear horas
+      await axios.post(`https://api-node-turnos.onrender.com/api/horasBloqueadas`, {
         turnos: turnosParaBloquear,
       });
 
-      await axios.post(`${backendUrl}/api/turnoAgendado`, {
+      // Guardar turno en la tabla del proveedor
+      await axios.post(`https://api-node-turnos.onrender.com/api/turnoAgendado`, {
         proveedorid,
         turnos: turnosParaEnviar,
       });
 
-      await axios.post(`${backendUrl}/api/turnoGuardado`, {
+      // Guardar turno en la tabla del usuario
+      await axios.post(`https://api-node-turnos.onrender.com/api/turnoGuardado`, {
         usuarioid: user.id,
         turnos: turnosParaEnviar,
       });
 
       const fechaFormateada = new Date(
         turnosParaEnviar[0].fecha
-      ).toLocaleDateString();
+      ).toLocaleDateString("es-AR");
 
-      /* Emails */
-      await axios.post(`${backendUrl}/api/enviar-mail`, {
-        email: proveedorGmail,
-        asunto: "Nuevo turno agendado",
-        mensaje: `Hola ${proveedorNombre},<br>El usuario <b>${
-          user.nombre
-        }</b> ha agendado un turno.<br><b>Fecha:</b> ${fechaFormateada}<br><b>Horas:</b> ${turnosParaEnviar
-          .flatMap((t) => t.horas)
-          .join(", ")}<br>Saludos.`,
-      });
+      /* 📧 PASO 3: Emails */
+      const emailPayload = {
+        proveedor: {
+            email: proveedorGmail,
+            asunto: "Nuevo turno agendado",
+            mensaje: `Hola ${proveedorNombre},<br>El usuario <b>${
+                user.nombre
+            }</b> ha agendado un turno.<br><b>Fecha:</b> ${fechaFormateada}<br><b>Horas:</b> ${turnosParaEnviar
+                .flatMap((t) => t.horas)
+                .join(", ")}<br>Saludos.`,
+        },
+        usuario: {
+            email: user.gmail,
+            asunto: "Confirmación de Turno Agendado",
+            mensaje: `Hola ${
+                user.nombre
+            },<br>Has agendado un turno con: <b>${proveedorNombre}</b>.<br><b>Fecha:</b> ${fechaFormateada}<br><b>Horas:</b> ${turnosParaEnviar
+                .flatMap((t) => t.horas)
+                .join(", ")}<br>Saludos.`,
+        }
+      };
+      
+      await axios.post(`https://api-node-turnos.onrender.com/api/enviar-mail`, emailPayload.proveedor);
+      await axios.post(`https://api-node-turnos.onrender.com/api/enviar-mail`, emailPayload.usuario);
 
-      await axios.post(`${backendUrl}/api/enviar-mail`, {
-        email: user.gmail,
-        asunto: "Nuevo turno agendado",
-        mensaje: `Hola ${
-          user.nombre
-        },<br>Has agendado un turno con: <b>${proveedorNombre}</b>.<br><b>Fecha:</b> ${fechaFormateada}<br><b>Horas:</b> ${turnosParaEnviar
-          .flatMap((t) => t.horas)
-          .join(", ")}<br>Saludos.`,
-      });
 
-      toast.dismiss();
+      // Éxito
+      toast.dismiss(loadingToastId);
       toast.success(
-        `${turnosSeleccionados} turno(s) agendado(s) correctamente.`
+        `${turnosSeleccionadosCount} turno(s) agendado(s) correctamente.`
       );
 
       setAgendarTurnos({});
-
+      
+      // Recargar la disponibilidad para mostrar las horas bloqueadas
       const resTurnos = await axios.get(
-        `${backendUrl}/api/tusTurnos/${proveedorid}`
+        `https://api-node-turnos.onrender.com/api/tusTurnos/${proveedorid}`
       );
       setTurnos(resTurnos.data || []);
+
     } catch (err) {
       console.error("❌ Error en handleSubmit:", err);
-      toast.dismiss();
+      toast.dismiss(loadingToastId);
       toast.error("Error al agendar. Inténtalo de nuevo.");
     }
 
     setIsSubmitting(false);
   };
 
-  return (
-    <main>
-      <header>
-        <Toaster position="top-right" />
-        <Navbar />
-      </header>
+  const totalHorasSeleccionadas = Object.values(agendarTurnos).flatMap((t) => t.horas).length;
 
-      {/* BOTONES ATRÁS / ADELANTE */}
-      <div
-        style={{
-          position: "absolute",
-          display: "flex",
-          gap: "8px",
-          zIndex: 1000,
-          left: "7%",
-          marginTop: "10px",
-        }}
-      >
-        <i
-          className="fa-solid fa-backward"
-          onClick={() => navigate(-1)}
-          style={{ cursor: "pointer" }}
-        ></i>
-        <i
-          className="fa-solid fa-forward"
-          onClick={() => navigate(1)}
-          style={{ cursor: "pointer" }}
-        ></i>
-      </div>
+  return (
+    <main>
+      <header>
+        <Toaster position="top-right" />
+        <Navbar />
+      </header>
 
-      <div className="turnos-proveedor-content" style={{ marginBottom: "2%" }}>
-        <h3 className="titulo-turnos">
-          📅 Turnos disponibles con {proveedorNombre}
-        </h3>
+      {/* BOTONES ATRÁS / ADELANTE */}
+      <div
+        className="nav-buttons-container"
+        style={{
+          position: "absolute",
+          display: "flex",
+          gap: "8px",
+          zIndex: 1000,
+          left: "7%",
+          marginTop: "10px",
+        }}
+      >
+        <i
+          className="fa-solid fa-backward"
+          onClick={() => navigate(-1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+        <i
+          className="fa-solid fa-forward"
+          onClick={() => navigate(1)}
+          style={{ cursor: "pointer" }}
+        ></i>
+      </div>
 
-        <ul className="turnos-list">
-          {turnos.length === 0 ? (
-            <p className="text-center text-muted">
-              No hay turnos disponibles para este proveedor.
-            </p>
-          ) : (
-            turnos.map((t) => {
-              let turnosBloqueados: { fecha: string; horas: string[] }[] = [];
+      <div className="turnos-proveedor-content" style={{ marginBottom: "2%" }}>
+        <h3 className="titulo-turnos">
+          📅 Turnos disponibles con {proveedorNombre}
+        </h3>
 
-              if (
-                typeof t.turnos_bloqueados === "string" &&
-                t.turnos_bloqueados
-              ) {
-                try {
-                  turnosBloqueados = JSON.parse(t.turnos_bloqueados);
-                } catch {}
-              }
+        <ul className="turnos-list">
+          {turnos.length === 0 ? (
+            <p className="text-center text-muted no-turnos-text">
+              No hay turnos disponibles para este proveedor.
+            </p>
+          ) : (
+            turnos.map((t) => {
+              // Parsear turnos_bloqueados de string a objeto
+              let turnosBloqueados: { fecha: string; horas: string[] }[] = [];
+              if (
+                typeof t.turnos_bloqueados === "string" &&
+                t.turnos_bloqueados
+              ) {
+                try {
+                  const parsed = JSON.parse(t.turnos_bloqueados);
+                  if (Array.isArray(parsed)) {
+                    turnosBloqueados = parsed;
+                  }
+                } catch {}
+              }
 
-              const horasBloqueadas = turnosBloqueados
-                .filter((b) => b.fecha === t.fecha)
-                .flatMap((b) => b.horas);
+              // 🔑 CORRECCIÓN APLICADA AQUÍ: Comparar solo la porción de fecha (YYYY-MM-DD)
+              const fechaTurnoNormalizada = t.fecha.substring(0, 10);
 
-              const horasSeleccionadas = agendarTurnos[t.id]?.horas || [];
+              const horasBloqueadas = turnosBloqueados
+                .filter((b) => b.fecha.substring(0, 10) === fechaTurnoNormalizada)
+                .flatMap((b) => b.horas);
+                
+              const horasSeleccionadas = agendarTurnos[t.id]?.horas || [];
 
-              return (
-                <li key={t.id} className="turno-item">
-                  <div className="turno-header">
-                    <strong>{formatFecha(t.fecha)}</strong>
-                    <p className="titulo-turnos">{t.titulo}</p>
-                  </div>
+              return (
+                <li key={t.id} className="turno-item">
+                  <div className="turno-header">
+                    <strong>{formatFecha(t.fecha)}</strong>
+                    <p className="titulo-turnos">{t.titulo}</p>
+                  </div>
 
-                  {t.sena === 1 ? (
-                    <p className="text-muted">
-                      Estos turnos tienen seña de: ${t.valorsena}
-                    </p>
-                  ) : (
-                    <p className="text-muted">Estos turnos no tienen seña</p>
-                  )}
+                  <div className="seña-info">
+                    {t.sena === 1 ? (
+                      <p className="text-muted">
+                        <i className="fa-solid fa-credit-card"></i> Estos turnos tienen seña de: **${t.valorsena}**
+                      </p>
+                    ) : (
+                      <p className="text-muted">
+                        <i className="fa-regular fa-clock"></i> Estos turnos no tienen seña
+                      </p>
+                    )}
+                  </div>
+                  
+                  {horasBloqueadas.length > calcularNumero(t.hora_fin) / 3600 ? (
+                     <p className="no-horas-disponibles">No quedan horas disponibles en este bloque.</p>
+                  ) : (
+                    <ArrayHoras
+                      horaInicio={t.hora_inicio}
+                      horaFin={t.hora_fin}
+                      horasBloqueadas={horasBloqueadas}
+                      horasSeleccionadas={horasSeleccionadas}
+                      onToggleHora={(hora, selected) =>
+                        handleToggleHora(t.id, t.fecha, hora, selected)
+                      }
+                    />
+                  )}
+                </li>
+              );
+            })
+          )}
+        </ul>
 
-                  <ArrayHoras
-                    horaInicio={t.hora_inicio}
-                    horaFin={t.hora_fin}
-                    horasBloqueadas={horasBloqueadas}
-                    horasSeleccionadas={horasSeleccionadas}
-                    onToggleHora={(hora, selected) =>
-                      handleToggleHora(t.id, t.fecha, hora, selected)
-                    }
-                  />
-                </li>
-              );
-            })
-          )}
-        </ul>
-
-        {turnos.length > 0 && (
-          <button
-            onClick={handleSubmit}
-            className="btn-action-submit"
-            disabled={
-              Object.keys(agendarTurnos).length === 0 ||
-              isSubmitting /* 👈 BLOQUEADO */
-            }
-          >
-            {isSubmitting ? "Procesando..." : "Agendar"}{" "}
-            {!isSubmitting &&
-              Object.values(agendarTurnos).flatMap((t) => t.horas).length}{" "}
-            {!isSubmitting && "Turno(s)"}
-          </button>
-        )}
-      </div>
-      <Footer />
-    </main>
-  );
+        {turnos.length > 0 && (
+          <button
+            onClick={handleSubmit}
+            className="btn-action-submit"
+            disabled={
+              totalHorasSeleccionadas === 0 ||
+              isSubmitting
+            }
+          >
+            {isSubmitting ? "Procesando..." : "Agendar"}{" "}
+            {!isSubmitting && totalHorasSeleccionadas}{" "}
+            {!isSubmitting && (totalHorasSeleccionadas === 1 ? "Turno" : "Turnos")}
+          </button>
+        )}
+      </div>
+      <Footer />
+    </main>
+  );
 }
 
 export default AgendarTurno;
