@@ -2,7 +2,7 @@ import { upload } from "./middleware/upload.js";
 import path from "path";
 import mysql from "mysql2";
 import dotenv from "dotenv";
-import { enviarCorreo } from "./middleware/gmail.js";
+
 import mercadopago from "mercadopago";
 import express from "express";
 
