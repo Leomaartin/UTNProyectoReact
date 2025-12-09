@@ -5,21 +5,21 @@ import Footer from "./Footer.js";
 import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage.js";
 import "../routes/css/Home.css";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import banner5 from "../img/banner5.jpg";
 import banner9 from "../img/banner9.jpg";
 import banner6 from "../img/banner6.jpg";
 
-// Datos del carrusel
+// Datos del carrusel, más limpios aquí
 const CAROUSEL_ITEMS = [
   {
-    src: banner5,
+    src: banner6,
     title: "Agendá en segundos 🕒",
     subtitle: "Turnos rápidos y sin complicaciones.",
   },
   {
-    src: banner6,
+    src: banner5,
     title: "Conectate con profesionales 🤝",
     subtitle: "Elegí entre cientos de proveedores.",
   },
@@ -30,7 +30,9 @@ const CAROUSEL_ITEMS = [
   },
 ];
 
-// Carrusel simple
+/* ============================================================
+  CARRUSEL HECHO CON REACT/CSS (REEMPLAZO DE BOOTSTRAP)
+  ============================================================ */
 function SimpleCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -42,6 +44,7 @@ function SimpleCarousel() {
     );
   const goToSlide = (index) => setActiveIndex(index);
 
+  // Auto-play
   useEffect(() => {
     const interval = setInterval(goToNext, 5000);
     return () => clearInterval(interval);
@@ -58,7 +61,7 @@ function SimpleCarousel() {
             <img src={item.src} alt={`Slide ${index + 1}`} />
             <div className="carousel-caption">
               <h3>{item.title}</h3>
-              <p style={{ color: "#fff" }}>{item.subtitle}</p>
+              <p>{item.subtitle}</p> {/* Se elimina el style inline */}
             </div>
           </div>
         ))}
@@ -84,18 +87,24 @@ function SimpleCarousel() {
   );
 }
 
-// Home para invitados
+/* ============================================================
+  HOME – USUARIO INVITADO (NO LOGUEADO)
+  ============================================================ */
 function HomeInvitado({ navigate }) {
   return (
     <main className="invitado-container">
       <Navbar />
+
       <div className="invitado-content">
         <h1 className="invitado-title">
           Bienvenido a TurnoSmart <span className="hand">👋</span>
         </h1>
-        <p className="invitado-subtitle" style={{ color: "white" }}>
+
+        <p className="invitado-subtitle">
+          {/* Se elimina el style inline */}
           Gestioná tus turnos de manera rápida, fácil y segura.
         </p>
+
         <div className="invitado-buttons">
           <button
             className="btn-invitado-primary"
@@ -103,6 +112,7 @@ function HomeInvitado({ navigate }) {
           >
             Iniciar Sesión
           </button>
+
           <button
             className="btn-invitado-secondary"
             onClick={() => navigate("/registrarse")}
@@ -110,57 +120,95 @@ function HomeInvitado({ navigate }) {
             Crear Cuenta
           </button>
         </div>
+
         <SimpleCarousel />
       </div>
     </main>
   );
 }
 
-// Componente Home principal
+/* ============================================================
+  COMPONENTE REUTILIZABLE PARA TARJETAS
+  ============================================================ */
+// Se mantienen width y height, pero se manejan mejor en el CSS.
+function StyleCards({ background, className, children }) {
+  return (
+    <Card
+      className={className}
+      style={{
+        backgroundColor: background,
+        // Eliminados: width, height. Ahora solo se usan clases CSS.
+      }}
+    >
+      {children}
+    </Card>
+  );
+}
+
+/* ============================================================
+  HOME – USUARIO LOGUEADO
+  ============================================================ */
 function Home() {
   const [user] = useLocalStorage("user", null);
   const [turnosAgendados, setTurnosAgendados] = useState([]);
-  const [turnos, setTurnos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [turnos, setTurnos] = useState([]);
   const [hover, setHover] = useState(false);
   const navigate = useNavigate();
 
-  // Redirigir invitados
+  /* Si NO hay usuario → mostrar HOME INVITADO */
   if (!user) return <HomeInvitado navigate={navigate} />;
 
-  // Cargar turnos publicados y agendados
+  /* ============================================================
+    TRAER TURNOS AGENDADOS
+    ============================================================ */
   useEffect(() => {
-    if (!user) return;
+    if (!user?.id) return;
 
-    const fetchTurnos = async () => {
+    const fetchTurnosAgendados = async () => {
       setLoading(true);
       try {
-        // Turnos publicados (solo proveedores)
-        if (user.tipoCuenta === 1) {
-          const res = await axios.get(
-            `https://api-node-turnos.onrender.com/api/turnosDisponiblesProveedor/${user.id}`
-          );
-          if (res.data.success) setTurnos(res.data.turnos);
-        }
-
-        // Turnos agendados (todos)
-        const resAgendados = await axios.get(
-          `https://api-node-turnos.onrender.com/api/turnosAgendados/${user.id}`
+        const res = await axios.get(
+          `https://api-node-turnos.onrender.com/turnosDelUsuario/${user.id}`,
+          { params: { tipoCuenta: user.tipoCuenta } }
         );
-        if (resAgendados.data.success)
-          setTurnosAgendados(resAgendados.data.turnos);
+        setTurnosAgendados(res.data?.turnosAgendados || []);
       } catch (err) {
-        console.error(err);
-        toast.error("Error cargando los turnos.");
+        console.error("Error al traer turnos agendados:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchTurnos();
-  }, [user]);
+    fetchTurnosAgendados();
+  }, [user?.id, user?.tipoCuenta]);
 
-  // Borrar turno disponible (proveedor)
+  /* ============================================================
+    TRAER TURNOS DISPONIBLES (SI ES PROVEEDOR)
+    ============================================================ */
+  useEffect(() => {
+    if (!user?.id || user.tipoCuenta === 0) return;
+
+    const fetchTurnosDisponibles = async () => {
+      try {
+        const res = await axios.post(
+          "https://api-node-turnos.onrender.com/api/buscarTurnos",
+          {
+            id: user.id,
+          }
+        );
+        setTurnos(res.data.result || []);
+      } catch (err) {
+        console.error("Error al traer turnos disponibles:", err);
+      }
+    };
+
+    fetchTurnosDisponibles();
+  }, [user?.id, user.tipoCuenta]);
+
+  /* ============================================================
+    ELIMINAR TURNO DISPONIBLE
+    ============================================================ */
   const borrarTurno = async (id) => {
     const notify = toast.loading("Eliminando turno...");
     try {
@@ -178,11 +226,14 @@ function Home() {
         });
       }
     } catch (error) {
+      console.error("Error al cancelar turno:", error);
       toast.error("Error en el servidor", { id: notify });
     }
   };
 
-  // Animación de ripple + redirección
+  /* ============================================================
+    ANIMACIÓN RIPPLE + REDIRECCIÓN
+    ============================================================ */
   const handleRedirectRipple = (e, index) => {
     const btn = e.currentTarget;
     btn.classList.add("ripple");
@@ -193,13 +244,20 @@ function Home() {
     }, 600);
   };
 
+  /* ============================================================
+    RENDER PRINCIPAL USER LOGUEADO
+    ============================================================ */
   return (
     <main className="home-container">
       <header>
         <Toaster
           position="top-right"
           toastOptions={{
-            style: { fontSize: "1.1rem", padding: "14px 18px", borderRadius: "10px" },
+            style: {
+              fontSize: "1.1rem",
+              padding: "14px 18px",
+              borderRadius: "10px",
+            },
           }}
         />
         <Navbar />
@@ -207,10 +265,17 @@ function Home() {
 
       <div className="content-wrapper">
         <section className="home-grid">
-          {/* =========================== USUARIO NORMAL =========================== */}
-          {user.tipoCuenta === 0 && (
-            <div className="home-card full-card">
-              <h2 className="category-title">Categorías:</h2>
+          {user.tipoCuenta === 0 ? (
+            /* =========================== CATEGORÍAS – USUARIO NORMAL =========================== */
+            <StyleCards
+              className="home-card full-card"
+              background="#fff"
+              // Eliminados: width="100%" height="auto"
+            >
+              <h2 className="category-title" style={{ color: "#7b2cbf" }}>
+                Categorías:
+              </h2>
+
               <div className="category-grid-buttons user-mode">
                 {[
                   "Educación 📚",
@@ -229,17 +294,24 @@ function Home() {
                   </button>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* =========================== PROVEEDOR =========================== */}
-          {user.tipoCuenta === 1 && (
+            </StyleCards>
+          ) : (
             <>
-              <div className="home-card small-card">
+              {/* =========================== PROVEEDOR – TURNOS DISPONIBLES =========================== */}
+              <StyleCards
+                className="home-card small-card"
+                background="#fff"
+                // Eliminados: width="49%" height="20rem"
+              >
                 <h2 className="agregar-turnos-titulo">
-                  <Link to="/turnosdisponibles" className="turno-titulo">
+                  <a
+                    href="/turnosdisponibles"
+                    className="turno-titulo"
+                    style={{ color: "#7b2cbf" }}
+                  >
                     Turnos Disponibles +
-                  </Link>
+                  </a>
+
                   <i
                     className="fa-solid fa-pen-to-square"
                     style={{
@@ -265,6 +337,7 @@ function Home() {
                             ⏰ {t.hora_inicio} a {t.hora_fin}
                           </p>
                         </div>
+
                         <button
                           className="btn-eliminar-turno"
                           onClick={() => borrarTurno(t.id)}
@@ -279,10 +352,18 @@ function Home() {
                     </p>
                   )}
                 </div>
-              </div>
+              </StyleCards>
 
-              <div className="home-card large-card">
-                <h2 className="buscar-categoria">Buscar Profesionales:</h2>
+              {/* =========================== PROVEEDOR – BUSCAR CATEGORÍAS (Para reservar) =========================== */}
+              <StyleCards
+                className="home-card large-card"
+                background="#fff"
+                // Eliminados: width="49%" height="20rem"
+              >
+                <h2 className="buscar-categoria" style={{ color: "#7b2cbf" }}>
+                  Buscar Profesionales:
+                </h2>
+
                 <div className="categorias-botones provider-mode">
                   {[
                     "Educación 📚",
@@ -301,19 +382,29 @@ function Home() {
                     </button>
                   ))}
                 </div>
-              </div>
+              </StyleCards>
             </>
           )}
         </section>
 
-        {/* =========================== MIS TURNOS AGENDADOS =========================== */}
+        {/* =========================== MIS TURNOS AGENDADOS / RESERVADOS =========================== */}
         <section className="bottom-section">
-          <div className="home-card full-card">
-            <h2>
+          <StyleCards
+            className="home-card full-card"
+            background="#fff"
+            // Eliminados: width="100%"
+          >
+            <h2 style={{ color: "#7b2cbf" }}>
               Mis Turnos Agendados
               <i
                 className="fa-regular fa-eye"
-                style={{ cursor: "pointer", fontSize: "1.5rem", color: "var(--light-blue)" }}
+                style={{
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  color: "var(--light-blue)",
+                  fontSize: "1.5rem",
+                  marginLeft: "auto", // CLAVE: Cambiado de "70%" a "auto" para responsividad
+                }}
                 onClick={() =>
                   navigate(
                     user.tipoCuenta === 1
@@ -325,6 +416,7 @@ function Home() {
             </h2>
 
             {loading && <p className="loading-text">Cargando...</p>}
+
             {!loading && turnosAgendados.length === 0 && (
               <p className="no-turnos-agendados">
                 **¡Genial!** No hay turnos agendados pendientes.
@@ -334,20 +426,34 @@ function Home() {
             {!loading && turnosAgendados.length > 0 && (
               <div className="turnos-agendados-lista">
                 {turnosAgendados.map((t, index) => (
-                  <div key={index} className="turno-agendado-item appointment-card">
+                  <div
+                    key={index}
+                    className="turno-agendado-item appointment-card"
+                  >
                     <div className="info-principal">
                       {user.tipoCuenta === 1 ? (
-                        <span className="proveedor-nombre">Cliente: {t.nombre || "Desconocido"}</span>
+                        <span className="proveedor-nombre">
+                          Cliente: {t.nombre || "Desconocido"}
+                        </span>
                       ) : (
-                        <span className="proveedor-nombre">Proveedor: {t.proveedorNombre}</span>
+                        <span className="proveedor-nombre">
+                          Proveedor: {t.proveedorNombre}
+                        </span>
                       )}
                     </div>
+
                     <div className="info-detalle">
                       <p className="detalle-fecha">
-                        Fecha: <strong>{new Date(t.fecha).toLocaleDateString("es-AR")}</strong>
+                        Fecha:{" "}
+                        <strong>
+                          {new Date(t.fecha).toLocaleDateString("es-AR")}
+                        </strong>
                       </p>
+
                       {Array.isArray(t.horas) ? (
-                        <p className="detalle-hora">Horas: <strong>{t.horas.join(", ")}</strong></p>
+                        <p className="detalle-hora">
+                          Horas: <strong>{t.horas.join(", ")}</strong>
+                        </p>
                       ) : (
                         <p className="detalle-hora">Sin horas asignadas</p>
                       )}
@@ -356,7 +462,7 @@ function Home() {
                 ))}
               </div>
             )}
-          </div>
+          </StyleCards>
         </section>
       </div>
 
