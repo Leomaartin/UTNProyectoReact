@@ -13,7 +13,7 @@ export const enviarCorreo = async (to, subject, html) => {
 
     // Info del correo
     const mailOptions = {
-      from: "tuemail@gmail.com",
+      from: "leomartin9808@gmail.com",
       to,
       subject,
       html,
