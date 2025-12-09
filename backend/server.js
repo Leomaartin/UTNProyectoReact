@@ -22,6 +22,9 @@ cors({
   })
 );
 
+// AÑADE ESTA LÍNEA CLAVE PARA RESPONDER A LA SOLICITUD PREFLIGHT
+app.options('*', cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
