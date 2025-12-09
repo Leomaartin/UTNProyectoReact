@@ -12,13 +12,13 @@ const PORT = process.env.PORT || 3333;
 
 // Middleware
 // backend (Express)
+// Temporalmente, para diagnosticar si CORS es la única causa
 app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "https://front-nb0d.onrender.com",
-    ],
+cors({
+    origin: "*", // Acepta cualquier origen
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Asegura que los métodos usados estén permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Si usas tokens o JSON
   })
 );
 
