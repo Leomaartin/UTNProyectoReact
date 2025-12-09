@@ -323,12 +323,12 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   const totalHorasSeleccionadas = Object.values(agendarTurnos).flatMap((t) => t.horas).length;
 
-  return (
-    <main>
-      <header>
-        <Toaster position="top-right" />
-        <Navbar />
-      </header>
+  return (
+    <main>
+      <header>
+        <Toaster position="top-right" />
+        <Navbar />
+      </header>
 
       {/* BOTONES ATRÁS / ADELANTE */}
       <div
@@ -342,10 +342,10 @@ const handleSubmit = async (e: React.FormEvent) => {
           marginTop: "10px",
         }}
       >
-        <i
+         <i
           className="fa-solid fa-backward"
           onClick={() => navigate(-1)}
-          style={{ cursor: "pointer" }}
+           style={{ cursor: "pointer" }}
         ></i>
         <i
           className="fa-solid fa-forward"
