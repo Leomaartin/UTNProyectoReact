@@ -241,6 +241,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       if (turno?.sena === 1 && turno.valorsena)
         montoTotalSena += Number(turno.valorsena) * data.horas.length;
     });
+    console.log(montoTotalSena)
 
     if (montoTotalSena > 0) {
       const prod = {
