@@ -254,17 +254,24 @@ const handleSubmit = async (e: React.FormEvent) => {
         { prod }
       );
 
-      const { init_point } = res.data;
-      if (!init_point) throw new Error("No se pudo obtener el enlace de pago.");
+      // Escoger init_point según entorno
+      const initPoint =
+        process.env.NODE_ENV === "production"
+          ? res.data.init_point
+          : res.data.sandbox_init_point;
+
+      if (!initPoint) throw new Error("No se pudo obtener el enlace de pago.");
 
       toast.dismiss(loadingToastId);
-      // Redirigir a Mercado Pago
-      window.location.href = init_point;
-      return; // ⚠️ Importantísimo para no ejecutar el paso 2
+
+      // Redirigir a Mercado Pago (abre en misma pestaña o nueva)
+      window.location.href = initPoint;
+      // window.open(initPoint, "_blank"); // alternativa si el navegador bloquea la redirección
+      return; // ⚠️ Muy importante para que no ejecute el paso 2
     }
 
     // ============================
-    // 💾 PASO 2: AGENDAR NORMAL
+    // 💾 PASO 2: AGENDAR NORMAL (sin seña)
     // ============================
     const turnosParaEnviar = Object.entries(agendarTurnos).map(([id, data]) => ({
       id_turno: generarIdTurno(),
@@ -286,9 +293,10 @@ const handleSubmit = async (e: React.FormEvent) => {
     }));
 
     // Bloquear horas
-    await axios.post("https://api-node-turnos.onrender.com/api/horasBloqueadas", {
-      turnos: turnosParaBloquear,
-    });
+    await axios.post(
+      "https://api-node-turnos.onrender.com/api/horasBloqueadas",
+      { turnos: turnosParaBloquear }
+    );
 
     // Guardar turno en tablas del proveedor y del usuario
     await Promise.all([
@@ -323,12 +331,12 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   const totalHorasSeleccionadas = Object.values(agendarTurnos).flatMap((t) => t.horas).length;
 
-  return (
-    <main>
-      <header>
-        <Toaster position="top-right" />
-        <Navbar />
-      </header>
+  return (
+    <main>
+      <header>
+        <Toaster position="top-right" />
+        <Navbar />
+      </header>
 
       {/* BOTONES ATRÁS / ADELANTE */}
       <div
@@ -342,10 +350,10 @@ const handleSubmit = async (e: React.FormEvent) => {
           marginTop: "10px",
         }}
       >
-         <i
+        <i
           className="fa-solid fa-backward"
           onClick={() => navigate(-1)}
-           style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer" }}
         ></i>
         <i
           className="fa-solid fa-forward"
