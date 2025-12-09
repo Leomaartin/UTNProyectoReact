@@ -5,14 +5,13 @@ import Footer from "./Footer.js";
 import axios from "axios";
 import useLocalStorage from "../auth/useLocalStorage.js";
 import "../routes/css/Home.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import banner5 from "../img/banner5.jpg";
 import banner9 from "../img/banner9.jpg";
 import banner6 from "../img/banner6.jpg";
-import { Link } from "react-router-dom";
 
-// Datos del carrusel, más limpios aquí
+// Datos del carrusel
 const CAROUSEL_ITEMS = [
   {
     src: banner5,
@@ -31,9 +30,7 @@ const CAROUSEL_ITEMS = [
   },
 ];
 
-/* ============================================================
-  CARRUSEL HECHO CON REACT/CSS (REEMPLAZO DE BOOTSTRAP)
-  ============================================================ */
+// Carrusel simple
 function SimpleCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -45,7 +42,6 @@ function SimpleCarousel() {
     );
   const goToSlide = (index) => setActiveIndex(index);
 
-  // Auto-play (opcional)
   useEffect(() => {
     const interval = setInterval(goToNext, 5000);
     return () => clearInterval(interval);
@@ -62,7 +58,7 @@ function SimpleCarousel() {
             <img src={item.src} alt={`Slide ${index + 1}`} />
             <div className="carousel-caption">
               <h3>{item.title}</h3>
-              <p style={{ color: "#ffffffff" }}>{item.subtitle}</p>
+              <p style={{ color: "#fff" }}>{item.subtitle}</p>
             </div>
           </div>
         ))}
@@ -88,23 +84,18 @@ function SimpleCarousel() {
   );
 }
 
-/* ============================================================
-  HOME – USUARIO INVITADO (NO LOGUEADO)
-  ============================================================ */
+// Home para invitados
 function HomeInvitado({ navigate }) {
   return (
     <main className="invitado-container">
       <Navbar />
-
       <div className="invitado-content">
         <h1 className="invitado-title">
           Bienvenido a TurnoSmart <span className="hand">👋</span>
         </h1>
-
         <p className="invitado-subtitle" style={{ color: "white" }}>
           Gestioná tus turnos de manera rápida, fácil y segura.
         </p>
-
         <div className="invitado-buttons">
           <button
             className="btn-invitado-primary"
@@ -112,7 +103,6 @@ function HomeInvitado({ navigate }) {
           >
             Iniciar Sesión
           </button>
-
           <button
             className="btn-invitado-secondary"
             onClick={() => navigate("/registrarse")}
@@ -120,46 +110,57 @@ function HomeInvitado({ navigate }) {
             Crear Cuenta
           </button>
         </div>
-
         <SimpleCarousel />
       </div>
     </main>
   );
 }
 
-/* ============================================================
-  COMPONENTE REUTILIZABLE PARA TARJETAS
-  ============================================================ */
-function StyleCards({ background, width, height, className, children }) {
-  // Las props width y height son ahora solo para escritorio y se manejan con CSS.
-  // Las pasamos como estilo en línea para mantener la compatibilidad, aunque el CSS lo sobreescribirá en móvil.
-  return (
-    <Card
-      className={className}
-      style={{
-        backgroundColor: background,
-        width: width, // En escritorio será 49%, en móvil 100% por CSS
-        height: height,
-      }}
-    >
-      {children}
-    </Card>
-  );
-}
-
-/* ============================================================
-  HOME – USUARIO LOGUEADO
-  ============================================================ */
+// Componente Home principal
 function Home() {
   const [user] = useLocalStorage("user", null);
   const [turnosAgendados, setTurnosAgendados] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [turnos, setTurnos] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [hover, setHover] = useState(false);
   const navigate = useNavigate();
 
+  // Redirigir invitados
   if (!user) return <HomeInvitado navigate={navigate} />;
 
+  // Cargar turnos publicados y agendados
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchTurnos = async () => {
+      setLoading(true);
+      try {
+        // Turnos publicados (solo proveedores)
+        if (user.tipoCuenta === 1) {
+          const res = await axios.get(
+            `https://api-node-turnos.onrender.com/api/turnosDisponiblesProveedor/${user.id}`
+          );
+          if (res.data.success) setTurnos(res.data.turnos);
+        }
+
+        // Turnos agendados (todos)
+        const resAgendados = await axios.get(
+          `https://api-node-turnos.onrender.com/api/turnosAgendados/${user.id}`
+        );
+        if (resAgendados.data.success)
+          setTurnosAgendados(resAgendados.data.turnos);
+      } catch (err) {
+        console.error(err);
+        toast.error("Error cargando los turnos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTurnos();
+  }, [user]);
+
+  // Borrar turno disponible (proveedor)
   const borrarTurno = async (id) => {
     const notify = toast.loading("Eliminando turno...");
     try {
@@ -172,13 +173,16 @@ function Home() {
         setTurnos((prev) => prev.filter((t) => t.id !== id));
         toast.success("Turno eliminado con éxito.", { id: notify });
       } else {
-        toast.error(res.data.message || "No se pudo eliminar el turno.", { id: notify });
+        toast.error(res.data.message || "No se pudo eliminar el turno.", {
+          id: notify,
+        });
       }
     } catch (error) {
       toast.error("Error en el servidor", { id: notify });
     }
   };
 
+  // Animación de ripple + redirección
   const handleRedirectRipple = (e, index) => {
     const btn = e.currentTarget;
     btn.classList.add("ripple");
@@ -192,13 +196,17 @@ function Home() {
   return (
     <main className="home-container">
       <header>
-        <Toaster position="top-right" toastOptions={{ style: { fontSize: "1.1rem", padding: "14px 18px", borderRadius: "10px" } }} />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: { fontSize: "1.1rem", padding: "14px 18px", borderRadius: "10px" },
+          }}
+        />
         <Navbar />
       </header>
 
       <div className="content-wrapper">
         <section className="home-grid">
-
           {/* =========================== USUARIO NORMAL =========================== */}
           {user.tipoCuenta === 0 && (
             <div className="home-card full-card">
@@ -225,14 +233,20 @@ function Home() {
           )}
 
           {/* =========================== PROVEEDOR =========================== */}
-          {user.tipoCuenta !== 0 && (
+          {user.tipoCuenta === 1 && (
             <>
               <div className="home-card small-card">
                 <h2 className="agregar-turnos-titulo">
-                  <Link to="/turnosdisponibles" className="turno-titulo">Turnos Disponibles +</Link >
+                  <Link to="/turnosdisponibles" className="turno-titulo">
+                    Turnos Disponibles +
+                  </Link>
                   <i
                     className="fa-solid fa-pen-to-square"
-                    style={{ cursor: "pointer", fontSize: hover ? "22px" : "18px", transition: "all 0.2s ease" }}
+                    style={{
+                      cursor: "pointer",
+                      fontSize: hover ? "22px" : "18px",
+                      transition: "all 0.2s ease",
+                    }}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
                     onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
@@ -244,14 +258,25 @@ function Home() {
                     turnos.map((t) => (
                       <div key={t.id} className="turno-box">
                         <div className="turno-info">
-                          <p className="turno-fecha">📅 {new Date(t.fecha).toLocaleDateString("es-AR")}</p>
-                          <p className="turno-hora">⏰ {t.hora_inicio} a {t.hora_fin}</p>
+                          <p className="turno-fecha">
+                            📅 {new Date(t.fecha).toLocaleDateString("es-AR")}
+                          </p>
+                          <p className="turno-hora">
+                            ⏰ {t.hora_inicio} a {t.hora_fin}
+                          </p>
                         </div>
-                        <button className="btn-eliminar-turno" onClick={() => borrarTurno(t.id)}>✕</button>
+                        <button
+                          className="btn-eliminar-turno"
+                          onClick={() => borrarTurno(t.id)}
+                        >
+                          ✕
+                        </button>
                       </div>
                     ))
                   ) : (
-                    <p className="sin-turnos">No hay turnos disponibles. **Agregá uno!**</p>
+                    <p className="sin-turnos">
+                      No hay turnos disponibles. **Agregá uno!**
+                    </p>
                   )}
                 </div>
               </div>
@@ -259,8 +284,19 @@ function Home() {
               <div className="home-card large-card">
                 <h2 className="buscar-categoria">Buscar Profesionales:</h2>
                 <div className="categorias-botones provider-mode">
-                  {["Educación 📚","Tecnología 💻","Administrativos 💼","Mascotas 🐾","Salud y Bienestar 🧘","Belleza y Cuidado 💅"].map((cat, index) => (
-                    <button key={index} className="categoria-btn" onClick={() => navigate(`/proveedores/${index}`)}>
+                  {[
+                    "Educación 📚",
+                    "Tecnología 💻",
+                    "Administrativos 💼",
+                    "Mascotas 🐾",
+                    "Salud y Bienestar 🧘",
+                    "Belleza y Cuidado 💅",
+                  ].map((cat, index) => (
+                    <button
+                      key={index}
+                      className="categoria-btn"
+                      onClick={() => navigate(`/proveedores/${index}`)}
+                    >
                       {cat}
                     </button>
                   ))}
@@ -268,22 +304,32 @@ function Home() {
               </div>
             </>
           )}
-
         </section>
 
         {/* =========================== MIS TURNOS AGENDADOS =========================== */}
         <section className="bottom-section">
           <div className="home-card full-card">
-            <h2>Mis Turnos Agendados
+            <h2>
+              Mis Turnos Agendados
               <i
                 className="fa-regular fa-eye"
                 style={{ cursor: "pointer", fontSize: "1.5rem", color: "var(--light-blue)" }}
-                onClick={() => navigate(user.tipoCuenta === 1 ? `/turnosagendadosproveedor` : `/turnosagendadosusuario`)}
+                onClick={() =>
+                  navigate(
+                    user.tipoCuenta === 1
+                      ? `/turnosagendadosproveedor`
+                      : `/turnosagendadosusuario`
+                  )
+                }
               />
             </h2>
 
             {loading && <p className="loading-text">Cargando...</p>}
-            {!loading && turnosAgendados.length === 0 && <p className="no-turnos-agendados">**¡Genial!** No hay turnos agendados pendientes.</p>}
+            {!loading && turnosAgendados.length === 0 && (
+              <p className="no-turnos-agendados">
+                **¡Genial!** No hay turnos agendados pendientes.
+              </p>
+            )}
 
             {!loading && turnosAgendados.length > 0 && (
               <div className="turnos-agendados-lista">
@@ -297,7 +343,9 @@ function Home() {
                       )}
                     </div>
                     <div className="info-detalle">
-                      <p className="detalle-fecha">Fecha: <strong>{new Date(t.fecha).toLocaleDateString("es-AR")}</strong></p>
+                      <p className="detalle-fecha">
+                        Fecha: <strong>{new Date(t.fecha).toLocaleDateString("es-AR")}</strong>
+                      </p>
                       {Array.isArray(t.horas) ? (
                         <p className="detalle-hora">Horas: <strong>{t.horas.join(", ")}</strong></p>
                       ) : (

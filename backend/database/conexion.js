@@ -833,67 +833,52 @@ app.post("/api/enviar-mail", async (req, res) => {
         res.status(500).json({ success: false, error: err });
       });
   });
-app.post("/api/upload", upload.single("foto"), async (req, res) => {
+app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "No se subió ninguna imagen",
-      });
-    }
-
-    console.log("Archivo recibido:", req.file);
-    console.log("Body recibido:", req.body);
+    if (!req.file) return res.status(400).json({ success: false, message: "No se subió ninguna imagen" });
 
     const userId = Number(req.body.userId);
-    const tipoCuenta = Number(req.body.tipoCuenta); // 0 = proveedor, 1 = usuario
-
-    if (!userId || tipoCuenta === undefined) {
-      return res.status(400).json({
-        success: false,
-        message: "Falta userId o tipoCuenta",
-      });
-    }
+    if (!userId) return res.status(400).json({ success: false, message: "Falta userId" });
 
     const url = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
-    let result;
+    const [result] = await conexion.promise().query(
+      "UPDATE usuarios SET fotoPerfil = ? WHERE id = ?",
+      [url, userId]
+    );
 
-    if (tipoCuenta === 1) {
-      // Usuario
-      [result] = await conexion
-        .promise()
-        .query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [url, userId]);
-      console.log("UPDATE usuarios:", result);
-    } else if (tipoCuenta === 0) {
-      // Proveedor
-      [result] = await conexion
-        .promise()
-        .query("UPDATE proveedores SET fotoPerfil = ? WHERE id = ?", [url, userId]);
-      console.log("UPDATE proveedores:", result);
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "Tipo de cuenta inválido",
-      });
-    }
+    if (result.affectedRows === 0)
+      return res.status(404).json({ success: false, message: "Usuario no encontrado" });
 
-    if (result.affectedRows === 0) {
-      console.warn("⚠️ Ninguna fila actualizada, revisá el userId y la tabla correspondiente");
-    }
-
-    res.json({
-      success: true,
-      message: "Imagen subida y guardada correctamente",
-      url,
-    });
+    res.json({ success: true, message: "Foto de usuario actualizada", url });
   } catch (error) {
-    console.error("Error al subir imagen:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error interno al subir imagen",
-      error,
-    });
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error interno al subir imagen", error });
+  }
+});
+
+// ==================== SUBIR FOTO PROVEEDOR ====================
+app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ success: false, message: "No se subió ninguna imagen" });
+
+    const proveedorId = Number(req.body.proveedorId);
+    if (!proveedorId) return res.status(400).json({ success: false, message: "Falta proveedorId" });
+
+    const url = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
+    const [result] = await conexion.promise().query(
+      "UPDATE proveedores SET fotoPerfil = ? WHERE id = ?",
+      [url, proveedorId]
+    );
+
+    if (result.affectedRows === 0)
+      return res.status(404).json({ success: false, message: "Proveedor no encontrado" });
+
+    res.json({ success: true, message: "Foto de proveedor actualizada", url });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Error interno al subir imagen", error });
   }
 });
 
