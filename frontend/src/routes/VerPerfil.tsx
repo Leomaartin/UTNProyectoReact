@@ -159,7 +159,7 @@ function VerPerfil() {
               <img
                 src={
                   s.imagen.startsWith("/")
-                    ? `https://api-node-turnos.onrender.com${s.imagen}`
+                    ? `${s.imagen}`
                     : s.imagen
                 }
                 alt={s.nombre}

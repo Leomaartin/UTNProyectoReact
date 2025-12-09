@@ -253,6 +253,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         "https://api-node-turnos.onrender.com/api/create-order",
         { prod }
       );
+      console.log("Respuesta create-order:", res.data);
 
       // Escoger init_point según entorno
       const initPoint =
