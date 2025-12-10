@@ -35,9 +35,11 @@ conexion.getConnection((err, connection) => {
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
 export default function registrarEndpoints(app) {
- app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
-  // 1. Validar que Multer haya procesado el archivo
+app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
+  console.log("-> Se alcanzó /api/uploadProveedor");
+  
   if (!req.file) {
+    console.log("Error: No se encontró el archivo 'foto' en la solicitud.");
     return res.status(400).json({
       success: false,
       message: "No se encontró el archivo de imagen.",
@@ -47,10 +49,12 @@ export default function registrarEndpoints(app) {
   const proveedorId = req.body.proveedorId;
   const fotoUrl = `/uploads/${req.file.filename}`;
 
-  // 2. Validar que se haya enviado el ID
+  console.log(`ID Proveedor a actualizar: ${proveedorId}`);
+  console.log(`URL de la foto a guardar: ${fotoUrl}`);
+
+
   if (!proveedorId) {
-    // Si falla aquí, el archivo ya se subió a /uploads. Se recomienda borrarlo.
-    // fs.unlinkSync(path.join(process.cwd(), req.file.path)); 
+    console.log("Error: ID de Proveedor faltante en req.body.");
     return res.status(400).json({ success: false, message: "ID de Proveedor faltante." });
   }
 
@@ -60,33 +64,40 @@ export default function registrarEndpoints(app) {
       fotoUrl,
       proveedorId,
     ]);
+    
+    // Si tu librería de MySQL devuelve el resultado de forma diferente, usa esto en su lugar:
+    // const updateResult = await conexion.query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [fotoUrl, proveedorId]);
+    // const result = Array.isArray(updateResult) ? updateResult[0] : updateResult;
 
-    if (result.affectedRows === 0) {
-        // El ID no existe. Se recomienda borrar el archivo.
-        // fs.unlinkSync(path.join(process.cwd(), req.file.path)); 
+    console.log("Resultado de la consulta DB:", result);
+
+    if (result && result.affectedRows === 0) {
+        console.log("Advertencia: El proveedor con ese ID no fue encontrado en la DB.");
         return res.status(404).json({ success: false, message: "Proveedor no encontrado." });
     }
 
-    // Éxito: retorna la URL relativa
+    console.log("Éxito: Foto del proveedor actualizada.");
     res.json({ success: true, url: fotoUrl });
   } catch (error) {
-    console.error("Error al actualizar la foto del proveedor en DB:", error);
-    // Si falla la DB, se recomienda borrar el archivo.
-    // fs.unlinkSync(path.join(process.cwd(), req.file.path)); 
+    // ESTO DEBERÍA MOSTRAR LA CAUSA REAL DEL 500
+    console.error("--- ERROR FATAL DB /api/uploadProveedor ---");
+    console.error("Detalle del error:", error);
+    console.error("-------------------------------------------");
     res.status(500).json({
       success: false,
-      message: "Error interno del servidor al actualizar la base de datos.",
+      message: "Error interno del servidor al actualizar la base de datos. (Ver logs del backend)",
     });
   }
 });
 
 // =========================================================================
 // ENDPOINT PARA SUBIR FOTO DE USUARIO (POST /api/uploadUsuario)
-// Espera: Campo 'foto' (archivo) y 'userId' (en formData)
 // =========================================================================
 app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
-
+  console.log("-> Se alcanzó /api/uploadUsuario");
+  
   if (!req.file) {
+    console.log("Error: No se encontró el archivo 'foto' en la solicitud.");
     return res.status(400).json({
       success: false,
       message: "No se encontró el archivo de imagen.",
@@ -95,31 +106,39 @@ app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
 
   const userId = req.body.userId;
   const fotoUrl = `/uploads/${req.file.filename}`;
-
+  
+  console.log(`ID Usuario a actualizar: ${userId}`);
+  console.log(`URL de la foto a guardar: ${fotoUrl}`);
 
   if (!userId) {
+    console.log("Error: ID de Usuario faltante en req.body.");
     return res.status(400).json({ success: false, message: "ID de Usuario faltante." });
   }
 
+  // 3. Actualizar la Base de Datos
   try {
     const [result] = await conexion.query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
       fotoUrl,
       userId,
     ]);
     
-    if (result.affectedRows === 0) {
-      
+    console.log("Resultado de la consulta DB:", result);
+
+    if (result && result.affectedRows === 0) {
+        console.log("Advertencia: El usuario con ese ID no fue encontrado en la DB.");
         return res.status(404).json({ success: false, message: "Usuario no encontrado." });
     }
 
-  
+    console.log("Éxito: Foto del usuario actualizada.");
     res.json({ success: true, url: fotoUrl });
   } catch (error) {
-    console.error("Error al actualizar la foto del usuario en DB:", error);
-  
+    // ESTO DEBERÍA MOSTRAR LA CAUSA REAL DEL 500
+    console.error("--- ERROR FATAL DB /api/uploadUsuario ---");
+    console.error("Detalle del error:", error);
+    console.error("-----------------------------------------");
     res.status(500).json({
       success: false,
-      message: "Error interno del servidor al actualizar la base de datos.",
+      message: "Error interno del servidor al actualizar la base de datos. (Ver logs del backend)",
     });
   }
 });
