@@ -52,7 +52,6 @@ app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
   console.log(`ID Proveedor a actualizar: ${proveedorId}`);
   console.log(`URL de la foto a guardar: ${fotoUrl}`);
 
-
   if (!proveedorId) {
     console.log("Error: ID de Proveedor faltante en req.body.");
     return res.status(400).json({ success: false, message: "ID de Proveedor faltante." });
@@ -60,15 +59,12 @@ app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
 
   // 3. Actualizar la Base de Datos
   try {
-    const [result] = await conexion.query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
+    // CORRECCIÓN: Usamos .promise().query() para que 'await' funcione
+    const [result] = await conexion.promise().query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
       fotoUrl,
       proveedorId,
     ]);
     
-    // Si tu librería de MySQL devuelve el resultado de forma diferente, usa esto en su lugar:
-    // const updateResult = await conexion.query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [fotoUrl, proveedorId]);
-    // const result = Array.isArray(updateResult) ? updateResult[0] : updateResult;
-
     console.log("Resultado de la consulta DB:", result);
 
     if (result && result.affectedRows === 0) {
@@ -79,7 +75,7 @@ app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
     console.log("Éxito: Foto del proveedor actualizada.");
     res.json({ success: true, url: fotoUrl });
   } catch (error) {
-    // ESTO DEBERÍA MOSTRAR LA CAUSA REAL DEL 500
+    // Esto mostrará cualquier error que quede, como credenciales incorrectas
     console.error("--- ERROR FATAL DB /api/uploadProveedor ---");
     console.error("Detalle del error:", error);
     console.error("-------------------------------------------");
@@ -117,7 +113,8 @@ app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
 
   // 3. Actualizar la Base de Datos
   try {
-    const [result] = await conexion.query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
+    // CORRECCIÓN: Usamos .promise().query() para que 'await' funcione
+    const [result] = await conexion.promise().query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
       fotoUrl,
       userId,
     ]);
@@ -132,7 +129,7 @@ app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
     console.log("Éxito: Foto del usuario actualizada.");
     res.json({ success: true, url: fotoUrl });
   } catch (error) {
-    // ESTO DEBERÍA MOSTRAR LA CAUSA REAL DEL 500
+    // Esto mostrará cualquier error que quede, como credenciales incorrectas
     console.error("--- ERROR FATAL DB /api/uploadUsuario ---");
     console.error("Detalle del error:", error);
     console.error("-----------------------------------------");
