@@ -152,6 +152,7 @@ function Dashboard() {
         formData.append("userId", userData.id);
         urlEndpoint = "/api/uploadUsuario";
       }
+      console.log(`https://api-node-turnos.onrender.com${urlEndpoint}`);
 
       const res = await axios.post(`https://api-node-turnos.onrender.com${urlEndpoint}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },

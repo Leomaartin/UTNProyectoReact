@@ -833,6 +833,7 @@ app.post("/api/enviar-mail", async (req, res) => {
         res.status(500).json({ success: false, error: err });
       });
   });
+  
 app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: "No se subió ninguna imagen" });
