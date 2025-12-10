@@ -967,35 +967,40 @@ app.post("/api/enviar-mail", async (req, res) => {
   });
 
 
-  app.post("/api/agragarservicio", upload.single("imagen"), (req, res) => {
+ app.post("/api/agragarservicio", upload.single("imagen"), (req, res) => {
     const { nombreservicio, precio, id_proveedor, descripcion } = req.body;
-    const imagen = req.file
-  ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`
-  : null;
+    
+    const rutaRelativa = req.file ? `/uploads/${req.file.filename}` : null;
+    const imagenUrl = rutaRelativa ? BASE_URL + rutaRelativa : null;
+
+    console.log(`[INFO] Servicio agregado: ${nombreservicio}`);
+    console.log(`[INFO] URL de Imagen guardada: ${imagenUrl}`);
+
 
     const SQL_QUERY =
       "INSERT INTO servicios (nombre, precio, id_proveedor, descripcion, imagen) VALUES (?, ?, ?, ?, ?)";
+
     conexion.query(
       SQL_QUERY,
-      [nombreservicio, precio, id_proveedor, descripcion, imagen],
+      [nombreservicio, precio, id_proveedor, descripcion, imagenUrl], // Usamos imagenUrl aquí
       (err) => {
         if (err) {
-          console.error(err);
+          console.error("Error al insertar servicio:", err);
           return res.status(500).json({
-            success: false,
-            message: "Error al agregar servicio",
-            error: err.message,
-          });
-        }
-        res.json({
-          success: true,
-          message: "Servicio agregado correctamente",
-          imagen,
+          success: false,
+          message: "Error al agregar servicio",
+          error: err.message,
         });
       }
-    );
-  });
-  // backend
+    res.json({
+      success: true,
+      message: "Servicio agregado correctamente",
+      imagen: imagenUrl, // Devolvemos la URL absoluta
+    });
+  }
+);
+});
+
   app.get("/api/buscarservicio/:id_proveedor", (req, res) => {
     const { id_proveedor } = req.params;
     const SQL_QUERY = "SELECT * FROM servicios WHERE id_proveedor=?";
