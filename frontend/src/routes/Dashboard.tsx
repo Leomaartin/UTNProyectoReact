@@ -145,7 +145,7 @@ function Dashboard() {
 
     try {
       let urlEndpoint = "";
-      if (userData.tipoCuenta === 0) {
+      if (userData.tipoCuenta === 1) {
         formData.append("proveedorId", userData.id);
         urlEndpoint = "/api/uploadProveedor";
       } else {
