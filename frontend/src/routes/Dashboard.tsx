@@ -220,7 +220,7 @@ function Dashboard() {
           </div>
         </div>
 
-        {userData?.tipoCuenta === 0 ? (
+        {userData?.tipoCuenta === 1 ? (
           <>
             {renderCurrentCategory()}
 

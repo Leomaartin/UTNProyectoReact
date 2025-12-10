@@ -211,101 +211,103 @@ function Home() {
       </header>
 
       <div className="content-wrapper">
-        <section className="home-grid">
-          {user.tipoCuenta === 0 ? (
-            <div className="home-card full-card">
-              <h2 className="category-title">Categorías:</h2>
-              <div className="category-grid-buttons user-mode">
-                {[
-                  "Educación 📚",
-                  "Tecnología 💻",
-                  "Administrativos / Profesionales 💼",
-                  "Mascotas 🐾",
-                  "Salud y Bienestar 🧘",
-                  "Belleza y Cuidado Personal 💅",
-                ].map((cat, index) => (
+     <section className="home-grid">
+  {user.tipoCuenta === 0 ? (
+    <div className="home-card full-card">
+      <h2 className="category-title">Categorías:</h2>
+      <div className="category-grid-buttons user-mode">
+        {[
+          "Educación 📚",
+          "Tecnología 💻",
+          "Administrativos / Profesionales 💼",
+          "Mascotas 🐾",
+          "Salud y Bienestar 🧘",
+          "Belleza y Cuidado Personal 💅",
+        ].map((cat, index) => (
+          <button
+            key={index}
+            className="category-action-button"
+            onClick={(e) => handleRedirectRipple(e, index)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <>
+      {/* SOLO SE MUESTRA SI tipoCuenta === 1 */}
+      {user.tipoCuenta === 1 && (
+        <div className="home-card small-card">
+          <h2 className="agregar-turnos-titulo">
+            <a href="/turnosdisponibles" className="turno-titulo">
+              Turnos Disponibles +
+            </a>
+            <i
+              className="fa-solid fa-pen-to-square"
+              style={{
+                cursor: "pointer",
+                fontSize: hover ? "22px" : "18px",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={() => setHover(true)}
+              onMouseLeave={() => setHover(false)}
+              onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
+            />
+          </h2>
+
+          <div className="turnos-lista">
+            {turnos.length > 0 ? (
+              turnos.map((t) => (
+                <div key={t.id} className="turno-box">
+                  <div className="turno-info">
+                    <p className="turno-fecha">
+                      📅 {new Date(t.fecha).toLocaleDateString("es-AR")}
+                    </p>
+                    <p className="turno-hora">
+                      ⏰ {t.hora_inicio} a {t.hora_fin}
+                    </p>
+                  </div>
                   <button
-                    key={index}
-                    className="category-action-button"
-                    onClick={(e) => handleRedirectRipple(e, index)}
+                    className="btn-eliminar-turno"
+                    onClick={() => borrarTurno(t.id)}
                   >
-                    {cat}
+                    ✕
                   </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <>
-              {/* TURNOS DISPONIBLES */}
-              <div className="home-card small-card">
-                <h2 className="agregar-turnos-titulo">
-                  <a href="/turnosdisponibles" className="turno-titulo">
-                    Turnos Disponibles +
-                  </a>
-                  <i
-                    className="fa-solid fa-pen-to-square"
-                    style={{
-                      cursor: "pointer",
-                      fontSize: hover ? "22px" : "18px",
-                      transition: "all 0.2s ease",
-                    }}
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-                    onClick={() => navigate(`/verturnosproveedor/${user.id}`)}
-                  />
-                </h2>
-
-                <div className="turnos-lista">
-                  {turnos.length > 0 ? (
-                    turnos.map((t) => (
-                      <div key={t.id} className="turno-box">
-                        <div className="turno-info">
-                          <p className="turno-fecha">
-                            📅 {new Date(t.fecha).toLocaleDateString("es-AR")}
-                          </p>
-                          <p className="turno-hora">
-                            ⏰ {t.hora_inicio} a {t.hora_fin}
-                          </p>
-                        </div>
-                        <button
-                          className="btn-eliminar-turno"
-                          onClick={() => borrarTurno(t.id)}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="sin-turnos">No hay turnos disponibles. **Agregá uno!**</p>
-                  )}
                 </div>
-              </div>
+              ))
+            ) : (
+              <p className="sin-turnos">No hay turnos disponibles. **Agregá uno!**</p>
+            )}
+          </div>
+        </div>
+      )}
 
-              {/* BUSCAR PROFESIONALES */}
-              <div className="home-card large-card">
-                <h2 className="buscar-categoria">Buscar Profesionales:</h2>
-                <div className="categorias-botones provider-mode">
-                  {[
-                    "Educación 📚",
-                    "Tecnología 💻",
-                    "Administrativos 💼",
-                    "Mascotas 🐾",
-                    "Salud y Bienestar 🧘",
-                    "Belleza y Cuidado 💅",
-                  ].map((cat, index) => (
-                    <button
-                      key={index}
-                      className="categoria-btn"
-                      onClick={() => navigate(`/proveedores/${index}`)}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-        </section>
+      {/* BUSCAR PROFESIONALES */}
+      <div className="home-card large-card">
+        <h2 className="buscar-categoria">Buscar Profesionales:</h2>
+        <div className="categorias-botones provider-mode">
+          {[
+            "Educación 📚",
+            "Tecnología 💻",
+            "Administrativos 💼",
+            "Mascotas 🐾",
+            "Salud y Bienestar 🧘",
+            "Belleza y Cuidado 💅",
+          ].map((cat, index) => (
+            <button
+              key={index}
+              className="categoria-btn"
+              onClick={() => navigate(`/proveedores/${index}`)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+    </>
+  )}
+</section>
 
         {/* MIS TURNOS AGENDADOS */}
         <section className="bottom-section">
