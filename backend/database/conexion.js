@@ -61,8 +61,8 @@ app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
 
   // 3. Actualizar la Base de Datos
   try {
-    console.log("[DB] Intentando actualizar tabla 'usuarios'...");
-    const [result] = await conexion.promise().query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
+    console.log("[DB] Intentando actualizar tabla 'proveedores'...");
+    const [result] = await conexion.promise().query("UPDATE proveedores SET fotoPerfil = ? WHERE id = ?", [
       fotoUrl,
       proveedorId,
     ]);
