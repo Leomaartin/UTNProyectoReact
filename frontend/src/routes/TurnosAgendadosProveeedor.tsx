@@ -46,43 +46,13 @@ function TurnosAgendadosProveedor() {
 
       toast.success("Turno cancelado correctamente.");
 
-      const horasTurno = Array.isArray(horas) ? horas : [horas];
-      const fechaFormateada = new Date(fecha).toLocaleDateString();
 
-      // Correo al usuario
-      await axios.post("https://api-node-turnos.onrender.com/api/enviar-mail", {
-        email: usergmail,
-        asunto: "Turno cancelado",
-        mensaje: `
-          Hola ${usuarioNombre},<br><br>
-          El proveedor <b>${user.nombre}</b> ha CANCELADO tu turno.<br>
-          <b>Fecha:</b> ${fechaFormateada}<br>
-          <b>Horas:</b> ${horasTurno.join(", ")}<br><br>
-          Saludos,<br>
-          Tu sistema de turnos.
-        `,
-      });
+    
 
-      // Correo al proveedor
-      await axios.post("https://api-node-turnos.onrender.com/api/enviar-mail", {
-        email: user.gmail,
-        asunto: "Turno cancelado",
-        mensaje: `
-          Hola ${user.nombre},<br><br>
-          Has CANCELADO el turno con el usuario <b>${usuarioNombre}</b>.<br>
-          <b>Fecha:</b> ${fechaFormateada}<br>
-          <b>Horas:</b> ${horasTurno.join(", ")}<br><br>
-          Saludos,<br>
-          Tu sistema de turnos.
-        `,
-      });
-    } catch (error) {
-      console.error("Error al cancelar turno:", error);
-      toast.error("Error en el servidor.");
-    }
+  const VerPerfilUsuario = (id) => {
+    navigate(`/verperfilusuario/${id}`);
   };
-
-  const VerPerfilUsuario = (id) => navigate(`/verperfilusuario/${id}`);
+  
 
   // Cargar turnos del proveedor
   // ... (useEffect se mantiene sin cambios)
@@ -94,7 +64,7 @@ function TurnosAgendadosProveedor() {
       try {
         const res = await axios.get(
           `https://api-node-turnos.onrender.com/api/turnosDelUsuario/${user.id}`,
-          { params: { tipoCuenta: user.tipoCuenta } } // 1 para proveedor
+          { params: { tipoCuenta: user.tipoCuenta } }
         );
 
         setTurnosAgendados(res.data?.turnosAgendados || []);

@@ -417,18 +417,24 @@ h3 {
   flex-shrink: 1; /* evita que se expanda */
 }
 
+/* src/routes/css/VerPerfil.css */
+
 .descripcion-servicio {
   font-size: 15px;
   color: #555;
   margin: 0;
+  
+  /* 💥 ELIMINAMOS las restricciones de límite de líneas (line-clamp) */
+  
+  /* Asegura el ajuste de texto normal dentro del contenedor */
+  word-wrap: break-word; /* Soporte para palabras muy largas */
+  overflow-wrap: break-word; /* Alternativa moderna */
 
-  /* Permitir salto de línea normal */
-  white-space: normal;
-
-  /* NO recortar */
+  /* Resetear propiedades de recorte */
+  max-height: none; 
   overflow: visible;
-  text-overflow: unset;
-
-  /* Importante */
-  display: block;
+  display: block; /* Vuelve al display normal */
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+  text-overflow: clip; 
 }

@@ -40,37 +40,7 @@ function TurnosAgendadosUsuario() {
           prev.filter((turno) => turno.id_turno !== id_turno)
         );
 
-        const horasTurno = Array.isArray(horas) ? horas : [horas];
-        const fechaFormateada = new Date(fecha).toLocaleDateString();
-
-        // Correo al proveedor
-        console.log(proveedorGmail);
-        await axios.post("https://api-node-turnos.onrender.com/api/enviar-mail", {
-          email: proveedorGmail,
-          asunto: "Turno cancelado",
-          mensaje: `
-          Hola ${proveedorNombre},<br><br>
-          El usuario <b>${user.nombre}</b> ha CANCELADO un turno contigo.<br>
-          <b>Fecha:</b> ${fechaFormateada}<br>
-          <b>Horas:</b> ${horasTurno.join(", ")}<br><br>
-          Saludos,<br>
-          Tu sistema de turnos.
-        `,
-        });
-
-        // Correo al usuario
-        await axios.post("https://api-node-turnos.onrender.com/api/enviar-mail", {
-          email: user.gmail,
-          asunto: "Turno cancelado",
-          mensaje: `
-          Hola ${user.nombre},<br><br>
-          Has CANCELADO un turno con: <b>${proveedorNombre}</b>.<br>
-          <b>Fecha:</b> ${fechaFormateada}<br>
-          <b>Horas:</b> ${horasTurno.join(", ")}<br><br>
-          Saludos,<br>
-          Tu sistema de turnos.
-        `,
-        });
+        
       } else {
         toast.error(res.data.message || "No se pudo cancelar el turno.");
       }
@@ -83,10 +53,7 @@ function TurnosAgendadosUsuario() {
   const VerPerfil = (id) => {
     navigate(`/verperfilproveedor/${id}`);
   };
-  const VerPerfilUsuario = (id) => {
-    navigate(`/verperfilusuario/${id}`);
-  };
-
+  
   // Cargar turnos agendados
   useEffect(() => {
     if (!user?.id) return;
@@ -113,7 +80,7 @@ function TurnosAgendadosUsuario() {
   }, [user?.id, user?.tipoCuenta]);
 
   return (
-    // 1. Contenedor Principal: Clase para aplicar Flexbox Vertical y 100vh
+
     <main className="main-app-container">
       <header>
         <Toaster
@@ -226,9 +193,7 @@ function TurnosAgendadosUsuario() {
           )}
         </section>
       </div>
-      {/* FIN: content-wrapper */}
 
-      {/* 3. Footer: Este será empujado hacia el final de la ventana */}
       <Footer />
     </main>
   );
