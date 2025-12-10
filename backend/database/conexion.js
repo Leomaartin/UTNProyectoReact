@@ -35,18 +35,7 @@ conexion.getConnection((err, connection) => {
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
 export default function registrarEndpoints(app) {
-¡Absolutamente! Entiendo que quieres asegurarte de que cualquier error sea capturado y mostrado de forma legible en la consola de tu servidor (en Render) para que puedas diagnosticar problemas futuros más fácilmente.
 
-Aquí tienes los endpoints con una estructura de try...catch mejorada y console.log estratégicos. Mantenemos la corrección de conexion.promise().query():
-
-JavaScript
-
-import { upload } from "./ruta/a/upload.js"; 
-import { conexion } from "./database/conexion.js"; 
-
-// =========================================================================
-// ENDPOINT PARA SUBIR FOTO DE PROVEEDOR (POST /api/uploadProveedor)
-// =========================================================================
 app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
   console.log("=================================================");
   console.log("-> INICIO: Procesando /api/uploadProveedor");
