@@ -19,7 +19,7 @@ function VerPerfilUsuario() {
   const [loading, setLoading] = useState(true);
   const [user] = useLocalStorage("user", null);
   
-  // URL base del servidor de archivos para imágenes
+  // URL base del servidor de archivos (Aunque la URL ya viene completa, la definimos)
   const BASE_URL = "https://api-node-turnos.onrender.com"; 
 
   // Cargar perfil desde backend
@@ -48,7 +48,7 @@ function VerPerfilUsuario() {
     fetchPerfil();
   }, [usuarioid]);
 
-  // Función para construir la URL de WhatsApp (sin cambios)
+  // Función para construir la URL de WhatsApp 
   const formatoWhatsapp = (numeroArgentino) => {
     if (!numeroArgentino) return "";
 
@@ -61,12 +61,22 @@ function VerPerfilUsuario() {
   };
 
 
-
   // ==========================================
   // RENDERIZADO CONDICIONAL
   // ==========================================
   if (loading) return <p>Cargando perfil...</p>;
   if (!perfil) return <p>Perfil no encontrado</p>;
+  
+  // 💥 LÓGICA DE IMAGEN CORREGIDA: Definir la foto final con fallback.
+  // Esto asegura que la imagen de 'personita' se use si perfil.fotoPerfil es null/undefined.
+  const fotoPerfilFinal = perfil?.fotoPerfil || personita;
+  
+  // Si la foto viene como ruta relativa, le añade la BASE_URL. 
+  // Aunque el backend ya envía la URL completa, es una buena práctica de seguridad.
+  const fotoURL = fotoPerfilFinal.startsWith(BASE_URL) || fotoPerfilFinal === personita
+    ? fotoPerfilFinal
+    : `${BASE_URL}${fotoPerfilFinal.startsWith("/") ? "" : "/"}${fotoPerfilFinal}`;
+
 
   return (
     // 1. Contenedor Principal
@@ -105,9 +115,9 @@ function VerPerfilUsuario() {
         <div className="dashboard-card">
           <h1>Este es el perfil de {perfil.nombre}!</h1>
 
-          {/* Contenedor de la imagen: Usa la URL construida */}
+          {/* Contenedor de la imagen: USANDO la variable fotoURL con el fallback */}
           <div className="perfil-container">
-            <img src={perfil.fotoPerfil} alt={`Perfil de ${perfil.nombre}`} className="profile-img" />
+            <img src={fotoURL} alt={`Perfil de ${perfil.nombre}`} className="profile-img" />
           </div>
           
           {/* Botón de Gmail */}
