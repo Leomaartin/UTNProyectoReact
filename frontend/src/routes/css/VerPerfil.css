@@ -405,38 +405,49 @@ h3 {
 
   text-overflow: ellipsis !important;
 
-  /* Evita que se expanda por flex */
-  flex-shrink: 1;
-}.servicio-card {
-  align-items: flex-start;
-  overflow: hidden; /* evita que algo se salga de la card */
+/* src/routes/css/VerPerfil.css */
+
+.servicio-card {
+ width: 100%;
+ display: flex;
+ /* ... otras propiedades ... */
+ align-items: flex-start;
+ position: relative;
+ /* --- Anulación Crítica --- */
+ height: auto; /* Fundamental para que crezca */
+ overflow: visible; /* Fundamental para que el contenido no se oculte */
 }
+/* src/routes/css/VerPerfil.css */
 
 .servicio-info {
-  max-width: 100%;
-  flex-shrink: 1; /* evita que se expanda */
+ display: flex;
+ flex-direction: column;
+ gap: 8px;
+ width: 100%;
+ 
+ /* --- Anulaciones Críticas --- */
+ min-height: fit-content; /* Permite que la altura mínima se ajuste al contenido */
+ flex-shrink: 1; 
+ flex-grow: 1; /* Permite que el contenedor crezca */
+ overflow: visible;
 }
-
-/* src/routes/css/VerPerfil.css */
-
-/* src/routes/css/VerPerfil.css */
 
 .descripcion-servicio {
  font-size: 15px;
-  color: #555;
-  margin: 0;
-
-  /* 💥 ELIMINAMOS las restricciones de límite de líneas (line-clamp) */
-
-  /* Asegura el ajuste de texto normal dentro del contenedor */
-  word-wrap: break-word; /* Soporte para palabras muy largas */
-  overflow-wrap: break-word; /* Alternativa moderna */
-
-  /* Resetear propiedades de recorte */
-  max-height: none; 
-  overflow: visible;
-  display: block; /* Vuelve al display normal */
-  -webkit-line-clamp: unset;
-  -webkit-box-orient: unset;
-  text-overflow: clip; 
+ color: #555;
+ margin: 0;
+ 
+ /* --- Anulaciones Críticas --- */
+ max-height: none !important; /* El más importante para la altura */
+ overflow: visible !important; /* Asegura que el contenido sea visible */
+ display: block !important; /* Vuelve a un display de bloque normal */
+ 
+ /* Resetear propiedades de recorte */
+ -webkit-line-clamp: unset !important;
+ -webkit-box-orient: unset !important;
+ text-overflow: clip !important; 
+ 
+ /* Asegura que el texto largo se ajuste */
+ word-wrap: break-word;
+ overflow-wrap: break-word;
 }
