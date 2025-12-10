@@ -422,13 +422,13 @@ h3 {
   color: #555;
   margin: 0;
 
-  /* Limitar altura */
-  max-height: 60px;
+  /* Permitir salto de línea normal */
+  white-space: normal;
 
-  /* recorte sí o sí */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* NO recortar */
+  overflow: visible;
+  text-overflow: unset;
+
+  /* Importante */
+  display: block;
 }

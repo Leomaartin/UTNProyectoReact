@@ -255,7 +255,12 @@ function Dashboard() {
               <div className="edit-panel">
                 <div className="category-form">
                   <label>Elegí una nueva categoría:</label>
-                  <select value={selectedCategory} onChange={handleCategoryChange}>
+                 <select
+  value={selectedCategory}
+  onChange={handleCategoryChange}
+  className="select-edit"
+>
+
                     <option value="">--Seleccioná--</option>
                     {CATEGORIES.map((cat, index) => (
                       <option key={index} value={index}>{cat}</option>
@@ -264,12 +269,29 @@ function Dashboard() {
                   <button onClick={handleSubmitCategory} className="btn-primary-action">Cambiar categoría</button>
                 </div>
 
-                <form onSubmit={handleSubmitDescripcionServicio}>
-                  <input type="text" name="servicio" placeholder="Escribí quien sos o qué ofreces" value={servicio} onChange={(e) => setServicio(e.target.value)} />
-                  <input type="text" name="descripcion" placeholder="Descripción" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
-                  <button type="submit" className="btn-primary-action">Guardar descripción y servicio</button>
-                </form>
+            <form onSubmit={handleSubmitDescripcionServicio} className="edit-form">
+  <input
+    type="text"
+    name="servicio"
+    placeholder="Escribí quién sos o qué ofrecés"
+    className="input-edit"
+    value={servicio}
+    onChange={(e) => setServicio(e.target.value)}
+  />
 
+  <input
+    type="text"
+    name="descripcion"
+    placeholder="Descripción"
+    className="input-edit"
+    value={descripcion}
+    onChange={(e) => setDescripcion(e.target.value)}
+  />
+
+  <button type="submit" className="btn-primary-action">
+    Guardar descripción y servicio
+  </button>
+</form>
                 <p><b>Teléfono:</b> {userData?.telefono}</p>
                 <p>Tu cuenta es de <b>Proveedor</b>.</p>
               </div>

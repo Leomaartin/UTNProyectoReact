@@ -9,6 +9,7 @@ import toast, { Toaster } from "react-hot-toast";
 import banner5 from "../img/banner5.jpg";
 import banner9 from "../img/banner9.jpg";
 import banner6 from "../img/banner6.jpg";
+import { Link } from "react-router-dom";
 
 /* ============================================================
   CARRUSEL SIMPLE
@@ -240,9 +241,9 @@ function Home() {
       {user.tipoCuenta === 1 && (
         <div className="home-card small-card">
           <h2 className="agregar-turnos-titulo">
-            <a href="/turnosdisponibles" className="turno-titulo">
+            <Link to="/turnosdisponibles" className="turno-titulo">
               Turnos Disponibles +
-            </a>
+            </Link>
             <i
               className="fa-solid fa-pen-to-square"
               style={{

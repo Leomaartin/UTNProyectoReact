@@ -494,3 +494,74 @@ p {
   gap: 10px;
   box-shadow: 0px 3px 6px var(--shadow-medium);
 }
+/* -------------------------------------------------------------------------- */
+/*  ESTILO PARA INPUTS Y EDITAR PERFIL                                        */
+/* -------------------------------------------------------------------------- */
+
+.edit-panel {
+  margin-top: 25px;
+  padding: 20px;
+  background: var(--bg-form);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Formularios dentro del panel */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Inputs generales */
+.input-edit {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-blue-soft);
+  background: white;
+  font-size: 1rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.input-edit::placeholder {
+  color: var(--text-secondary);
+}
+
+.input-edit:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 6px rgba(123, 44, 191, 0.35);
+  outline: none;
+}
+
+/* Select de categorías */
+.select-edit {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--color-blue-soft);
+  background: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.select-edit:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 6px rgba(123, 44, 191, 0.35);
+  outline: none;
+}
+
+/* Botones dentro del panel */
+.btn-primary-action {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* Detalles de info del proveedor */
+.edit-panel p {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
