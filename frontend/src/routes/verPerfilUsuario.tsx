@@ -22,7 +22,7 @@ function VerPerfilUsuario() {
     const fetchPerfil = async () => {
       try {
         const res = await axios.get(
-          `https://backend-abc.onrender.com/api/perfilusuario/${usuarioid}`
+          `https://api-node-turnos.onrender.com/api/perfilusuario/${usuarioid}`
         );
 
         console.log("✅ Datos que llegan del backend:", res.data);

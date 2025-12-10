@@ -419,13 +419,15 @@ h3 {
 
 /* src/routes/css/VerPerfil.css */
 
+/* src/routes/css/VerPerfil.css */
+
 .descripcion-servicio {
-  font-size: 15px;
+ font-size: 15px;
   color: #555;
   margin: 0;
-  
+
   /* 💥 ELIMINAMOS las restricciones de límite de líneas (line-clamp) */
-  
+
   /* Asegura el ajuste de texto normal dentro del contenedor */
   word-wrap: break-word; /* Soporte para palabras muy largas */
   overflow-wrap: break-word; /* Alternativa moderna */
