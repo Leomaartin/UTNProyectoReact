@@ -60,26 +60,7 @@ function VerPerfilUsuario() {
     return `+54${sinCero}`;
   };
 
-  // ==========================================
-  // LÓGICA DE CARGA DE IMAGEN (MEJORADA)
-  // ==========================================
-  let fotoURL = personita; // Imagen de respaldo por defecto
 
-  if (perfil && perfil.fotoPerfil) {
-    const fotoPerfilRecibida = perfil.fotoPerfil;
-
-    // 1. Si ya es una URL completa (http/https), la usa.
-    if (fotoPerfilRecibida.startsWith("http")) {
-      fotoURL = fotoPerfilRecibida;
-    } else {
-      // 2. Si es una ruta relativa, construye la URL completa
-      const rutaLimpia = fotoPerfilRecibida.startsWith("/") 
-        ? fotoPerfilRecibida 
-        : `/${fotoPerfilRecibida}`;
-        
-      fotoURL = `${BASE_URL}${rutaLimpia}`;
-    }
-  }
 
   // ==========================================
   // RENDERIZADO CONDICIONAL
@@ -126,7 +107,7 @@ function VerPerfilUsuario() {
 
           {/* Contenedor de la imagen: Usa la URL construida */}
           <div className="perfil-container">
-            <img src={fotoURL} alt={`Perfil de ${perfil.nombre}`} className="profile-img" />
+            <img src={perfil.fotoPerfil} alt={`Perfil de ${perfil.nombre}`} className="profile-img" />
           </div>
           
           {/* Botón de Gmail */}

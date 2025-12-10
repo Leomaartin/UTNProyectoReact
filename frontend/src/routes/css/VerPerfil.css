@@ -391,47 +391,57 @@ h3 {
 
 /* src/routes/css/VerPerfil.css */
 
+/* LISTA DE SERVICIOS - Tarjeta individual */
 .servicio-card {
  width: 100%;
  display: flex;
- /* ... otras propiedades ... */
+ background: white;
+ border-radius: 20px;
+ padding: 20px;
+ margin-bottom: 25px;
+ gap: 20px;
  align-items: flex-start;
  position: relative;
- /* --- Anulación Crítica --- */
- height: auto; /* Fundamental para que crezca */
- overflow: visible; /* Fundamental para que el contenido no se oculte */
+ box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.12);
+ 
+ /* 💥 Cambiar a hidden para contener el contenido dentro del borde redondeado */
+ overflow: hidden; 
 }
+/* src/routes/css/VerPerfil.css */
+
 /* src/routes/css/VerPerfil.css */
 
 .servicio-info {
  display: flex;
  flex-direction: column;
  gap: 8px;
- width: 100%;
+ /* Cambia el ancho al 100% para que use todo el espacio restante */
+ width: 100%; 
  
- /* --- Anulaciones Críticas --- */
- min-height: fit-content; /* Permite que la altura mínima se ajuste al contenido */
- flex-shrink: 1; 
- flex-grow: 1; /* Permite que el contenedor crezca */
- overflow: visible;
+/* --- Anulaciones (MANTENER) --- */
+min-height: fit-content; 
+flex-shrink: 1; 
+flex-grow: 1; 
+overflow: visible;
 }
 
 .descripcion-servicio {
- font-size: 15px;
- color: #555;
- margin: 0;
- 
- /* --- Anulaciones Críticas --- */
- max-height: none !important; /* El más importante para la altura */
- overflow: visible !important; /* Asegura que el contenido sea visible */
- display: block !important; /* Vuelve a un display de bloque normal */
- 
- /* Resetear propiedades de recorte */
- -webkit-line-clamp: unset !important;
- -webkit-box-orient: unset !important;
- text-overflow: clip !important; 
- 
- /* Asegura que el texto largo se ajuste */
- word-wrap: break-word;
- overflow-wrap: break-word;
+font-size: 15px;
+color: #555;
+margin: 0;
+
+/* --- Anulaciones Críticas (las mantienes) --- */
+max-height: none !important; 
+overflow: visible !important; 
+display: block !important; 
+-webkit-line-clamp: unset !important;
+-webkit-box-orient: unset !important;
+text-overflow: clip !important; 
+
+/* Asegura que el texto largo se ajuste (MANTENER) */
+word-wrap: break-word;
+overflow-wrap: break-word;
+    
+/* 💥 NUEVO AJUSTE CRÍTICO: Romper palabras largas si es necesario */
+word-break: break-all;
 }
