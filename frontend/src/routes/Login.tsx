@@ -82,16 +82,7 @@ function Login() {
           marginTop: "10px",
         }}
       >
-        <i
-          className="fa-solid fa-backward"
-          onClick={() => navegar(-1)}
-          style={{ cursor: "pointer" }}
-        ></i>
-        <i
-          className="fa-solid fa-forward"
-          onClick={() => navegar(1)}
-          style={{ cursor: "pointer" }}
-        ></i>
+       
       </div>
       {/* ⚠️ APLICAR CLASE CUSTOM: login-container */}
       <div className="login-container">

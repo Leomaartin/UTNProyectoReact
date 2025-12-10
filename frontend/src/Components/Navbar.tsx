@@ -80,12 +80,12 @@ function Navbar() {
                 <div className="dropdown-menu-custom show">
                   {!user ? (
                     <>
-                      <a className="dropdown-item-custom" href="/login">
+                    <Link className="dropdown-item-custom" to="/login">
                         <FontAwesomeIcon icon={faRightToBracket} /> Login
-                      </a>
-                      <a className="dropdown-item-custom" href="/registrarse">
+                      </Link>
+                    <Link className="dropdown-item-custom" to="/registrarse">
                         <FontAwesomeIcon icon={faRegistered} /> Registrarse
-                      </a>
+                      </Link>
                     </>
                   ) : (
                     <button
