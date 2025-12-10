@@ -388,22 +388,6 @@ h3 {
 .content-wrapper {
   flex-grow: 1;
 }
-.descripcion-servicio {
-  font-size: 15px;
-  color: #555;
-
-  /* Evita que se agrande el contenedor */
-  max-height: 65px;
-
-  /* Oculta lo que sobra sí o sí */
-  overflow: hidden !important;
-
-  /* Crea las 3 líneas */
-  display: -webkit-box !important;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-
-  text-overflow: ellipsis !important;
 
 /* src/routes/css/VerPerfil.css */
 
