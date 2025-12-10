@@ -1,4 +1,3 @@
-JavaScript
 
 import { upload } from "./middleware/upload.js";
 import path from "path";
