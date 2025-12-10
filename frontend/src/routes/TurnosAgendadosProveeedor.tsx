@@ -46,10 +46,18 @@ function TurnosAgendadosProveedor() {
 
       toast.success("Turno cancelado correctamente.");
 
+      
 
-    
+     
 
-  const VerPerfilUsuario = (id) => {
+     
+    } catch (error) {
+      console.error("Error al cancelar turno:", error);
+      toast.error("Error en el servidor.");
+    }
+  };
+
+const VerPerfilUsuario = (id) => {
     navigate(`/verperfilusuario/${id}`);
   };
   
@@ -64,7 +72,7 @@ function TurnosAgendadosProveedor() {
       try {
         const res = await axios.get(
           `https://api-node-turnos.onrender.com/api/turnosDelUsuario/${user.id}`,
-          { params: { tipoCuenta: user.tipoCuenta } }
+          { params: { tipoCuenta: user.tipoCuenta } } // 1 para proveedor
         );
 
         setTurnosAgendados(res.data?.turnosAgendados || []);
