@@ -762,3 +762,57 @@
     gap: 10px;
   }
 }
+/* TARJETAS */
+.home-card {
+  border-radius: 1rem;
+  background-color: #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  flex: 1 1 48%;
+  min-height: 20rem;
+  transition: all 0.3s ease;
+}
+
+.home-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.small-card { min-height: 20rem; }
+.large-card { min-height: 20rem; }
+.full-card { flex: 1 1 100%; min-height: 20rem; }
+
+/* GRID PRINCIPAL */
+.home-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 2rem 5%;
+}
+
+/* RESPONSIVE MÓVIL */
+@media (max-width: 768px) {
+  .home-grid {
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem 5%;
+    gap: 1rem;
+  }
+  .home-card,
+  .small-card,
+  .large-card,
+  .full-card {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+  }
+  .category-grid-buttons.user-mode,
+  .categorias-botones.provider-mode {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
