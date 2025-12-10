@@ -2,7 +2,6 @@ import { upload } from "./middleware/upload.js";
 import path from "path";
 import mysql from "mysql2";
 import dotenv from "dotenv";
-
 import mercadopago from "mercadopago";
 import express from "express";
 
@@ -36,6 +35,94 @@ conexion.getConnection((err, connection) => {
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
 export default function registrarEndpoints(app) {
+ app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
+  // 1. Validar que Multer haya procesado el archivo
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "No se encontró el archivo de imagen.",
+    });
+  }
+
+  const proveedorId = req.body.proveedorId;
+  const fotoUrl = `/uploads/${req.file.filename}`;
+
+  // 2. Validar que se haya enviado el ID
+  if (!proveedorId) {
+    // Si falla aquí, el archivo ya se subió a /uploads. Se recomienda borrarlo.
+    // fs.unlinkSync(path.join(process.cwd(), req.file.path)); 
+    return res.status(400).json({ success: false, message: "ID de Proveedor faltante." });
+  }
+
+  // 3. Actualizar la Base de Datos
+  try {
+    const [result] = await conexion.query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
+      fotoUrl,
+      proveedorId,
+    ]);
+
+    if (result.affectedRows === 0) {
+        // El ID no existe. Se recomienda borrar el archivo.
+        // fs.unlinkSync(path.join(process.cwd(), req.file.path)); 
+        return res.status(404).json({ success: false, message: "Proveedor no encontrado." });
+    }
+
+    // Éxito: retorna la URL relativa
+    res.json({ success: true, url: fotoUrl });
+  } catch (error) {
+    console.error("Error al actualizar la foto del proveedor en DB:", error);
+    // Si falla la DB, se recomienda borrar el archivo.
+    // fs.unlinkSync(path.join(process.cwd(), req.file.path)); 
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor al actualizar la base de datos.",
+    });
+  }
+});
+
+// =========================================================================
+// ENDPOINT PARA SUBIR FOTO DE USUARIO (POST /api/uploadUsuario)
+// Espera: Campo 'foto' (archivo) y 'userId' (en formData)
+// =========================================================================
+app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
+
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "No se encontró el archivo de imagen.",
+    });
+  }
+
+  const userId = req.body.userId;
+  const fotoUrl = `/uploads/${req.file.filename}`;
+
+
+  if (!userId) {
+    return res.status(400).json({ success: false, message: "ID de Usuario faltante." });
+  }
+
+  try {
+    const [result] = await conexion.query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
+      fotoUrl,
+      userId,
+    ]);
+    
+    if (result.affectedRows === 0) {
+      
+        return res.status(404).json({ success: false, message: "Usuario no encontrado." });
+    }
+
+  
+    res.json({ success: true, url: fotoUrl });
+  } catch (error) {
+    console.error("Error al actualizar la foto del usuario en DB:", error);
+  
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor al actualizar la base de datos.",
+    });
+  }
+});
   
 app.post("/api/enviar-mail", async (req, res) => {
   const { email, asunto, mensaje } = req.body;
@@ -68,7 +155,7 @@ app.post("/api/enviar-mail", async (req, res) => {
   app.post("/api/create-order", async (req, res) => {
     console.log("💡 Entró al endpoint /create-order");
     try {
-      const { prod } = req.body; // recibiendo el objeto del frontend
+      const { prod } = req.body; 
       console.log("Datos recibidos del frontend:", prod);
 
       if (!prod || !prod.valorsena)
@@ -833,55 +920,7 @@ app.post("/api/enviar-mail", async (req, res) => {
         res.status(500).json({ success: false, error: err });
       });
   });
-  
-app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
-  try {
-    if (!req.file) return res.status(400).json({ success: false, message: "No se subió ninguna imagen" });
 
-    const userId = Number(req.body.userId);
-    if (!userId) return res.status(400).json({ success: false, message: "Falta userId" });
-
-    const url = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-
-    const [result] = await conexion.promise().query(
-      "UPDATE usuarios SET fotoPerfil = ? WHERE id = ?",
-      [url, userId]
-    );
-
-    if (result.affectedRows === 0)
-      return res.status(404).json({ success: false, message: "Usuario no encontrado" });
-
-    res.json({ success: true, message: "Foto de usuario actualizada", url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Error interno al subir imagen", error });
-  }
-});
-
-// ==================== SUBIR FOTO PROVEEDOR ====================
-app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
-  try {
-    if (!req.file) return res.status(400).json({ success: false, message: "No se subió ninguna imagen" });
-
-    const proveedorId = Number(req.body.proveedorId);
-    if (!proveedorId) return res.status(400).json({ success: false, message: "Falta proveedorId" });
-
-    const url = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-
-    const [result] = await conexion.promise().query(
-      "UPDATE proveedores SET fotoPerfil = ? WHERE id = ?",
-      [url, proveedorId]
-    );
-
-    if (result.affectedRows === 0)
-      return res.status(404).json({ success: false, message: "Proveedor no encontrado" });
-
-    res.json({ success: true, message: "Foto de proveedor actualizada", url });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Error interno al subir imagen", error });
-  }
-});
 
   app.post("/api/agragarservicio", upload.single("imagen"), (req, res) => {
     const { nombreservicio, precio, id_proveedor, descripcion } = req.body;
