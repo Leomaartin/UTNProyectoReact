@@ -35,11 +35,24 @@ conexion.getConnection((err, connection) => {
 //   REGISTRO DE TODOS LOS ENDPOINTS
 // ========================================
 export default function registrarEndpoints(app) {
+¡Absolutamente! Entiendo que quieres asegurarte de que cualquier error sea capturado y mostrado de forma legible en la consola de tu servidor (en Render) para que puedas diagnosticar problemas futuros más fácilmente.
+
+Aquí tienes los endpoints con una estructura de try...catch mejorada y console.log estratégicos. Mantenemos la corrección de conexion.promise().query():
+
+JavaScript
+
+import { upload } from "./ruta/a/upload.js"; 
+import { conexion } from "./database/conexion.js"; 
+
+// =========================================================================
+// ENDPOINT PARA SUBIR FOTO DE PROVEEDOR (POST /api/uploadProveedor)
+// =========================================================================
 app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
-  console.log("-> Se alcanzó /api/uploadProveedor");
+  console.log("=================================================");
+  console.log("-> INICIO: Procesando /api/uploadProveedor");
   
   if (!req.file) {
-    console.log("Error: No se encontró el archivo 'foto' en la solicitud.");
+    console.warn("ADVERTENCIA: Multer no recibió el archivo 'foto'.");
     return res.status(400).json({
       success: false,
       message: "No se encontró el archivo de imagen.",
@@ -49,40 +62,45 @@ app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
   const proveedorId = req.body.proveedorId;
   const fotoUrl = `/uploads/${req.file.filename}`;
 
-  console.log(`ID Proveedor a actualizar: ${proveedorId}`);
-  console.log(`URL de la foto a guardar: ${fotoUrl}`);
+  console.log(`[INFO] ID Proveedor: ${proveedorId}`);
+  console.log(`[INFO] URL de archivo local generado: ${fotoUrl}`);
 
   if (!proveedorId) {
-    console.log("Error: ID de Proveedor faltante en req.body.");
+    console.error("ERROR: ID de Proveedor faltante en la solicitud.");
     return res.status(400).json({ success: false, message: "ID de Proveedor faltante." });
   }
 
   // 3. Actualizar la Base de Datos
   try {
-    // CORRECCIÓN: Usamos .promise().query() para que 'await' funcione
+    console.log("[DB] Intentando actualizar tabla 'usuarios'...");
     const [result] = await conexion.promise().query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
       fotoUrl,
       proveedorId,
     ]);
     
-    console.log("Resultado de la consulta DB:", result);
+    console.log(`[DB] Consulta exitosa. Filas afectadas: ${result.affectedRows}`);
 
     if (result && result.affectedRows === 0) {
-        console.log("Advertencia: El proveedor con ese ID no fue encontrado en la DB.");
-        return res.status(404).json({ success: false, message: "Proveedor no encontrado." });
+        console.warn("ADVERTENCIA: UPDATE afectó 0 filas. El proveedor podría no existir.");
+        return res.status(404).json({ success: false, message: "Proveedor no encontrado o ID incorrecto." });
     }
 
-    console.log("Éxito: Foto del proveedor actualizada.");
+    console.log("-> ÉXITO: Foto del proveedor actualizada y DB sincronizada.");
     res.json({ success: true, url: fotoUrl });
   } catch (error) {
-    // Esto mostrará cualquier error que quede, como credenciales incorrectas
-    console.error("--- ERROR FATAL DB /api/uploadProveedor ---");
-    console.error("Detalle del error:", error);
-    console.error("-------------------------------------------");
+    // Si la DB falla (conexión, credenciales, sintaxis)
+    console.error("=================================================");
+    console.error("!!! ERROR CRÍTICO AL PROCESAR /api/uploadProveedor !!!");
+    console.error("Causa del Error:", error.message);
+    console.error("Detalle Completo:", error);
+    console.error("=================================================");
     res.status(500).json({
       success: false,
-      message: "Error interno del servidor al actualizar la base de datos. (Ver logs del backend)",
+      message: "Error interno del servidor. (Ver logs de Render para detalles)",
     });
+  } finally {
+      console.log("-> FIN: Proceso de /api/uploadProveedor");
+      console.log("=================================================");
   }
 });
 
@@ -90,10 +108,11 @@ app.post("/api/uploadProveedor", upload.single("foto"), async (req, res) => {
 // ENDPOINT PARA SUBIR FOTO DE USUARIO (POST /api/uploadUsuario)
 // =========================================================================
 app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
-  console.log("-> Se alcanzó /api/uploadUsuario");
+  console.log("=================================================");
+  console.log("-> INICIO: Procesando /api/uploadUsuario");
   
   if (!req.file) {
-    console.log("Error: No se encontró el archivo 'foto' en la solicitud.");
+    console.warn("ADVERTENCIA: Multer no recibió el archivo 'foto'.");
     return res.status(400).json({
       success: false,
       message: "No se encontró el archivo de imagen.",
@@ -103,40 +122,45 @@ app.post("/api/uploadUsuario", upload.single("foto"), async (req, res) => {
   const userId = req.body.userId;
   const fotoUrl = `/uploads/${req.file.filename}`;
   
-  console.log(`ID Usuario a actualizar: ${userId}`);
-  console.log(`URL de la foto a guardar: ${fotoUrl}`);
+  console.log(`[INFO] ID Usuario: ${userId}`);
+  console.log(`[INFO] URL de archivo local generado: ${fotoUrl}`);
 
   if (!userId) {
-    console.log("Error: ID de Usuario faltante en req.body.");
+    console.error("ERROR: ID de Usuario faltante en la solicitud.");
     return res.status(400).json({ success: false, message: "ID de Usuario faltante." });
   }
 
   // 3. Actualizar la Base de Datos
   try {
-    // CORRECCIÓN: Usamos .promise().query() para que 'await' funcione
+    console.log("[DB] Intentando actualizar tabla 'usuarios'...");
     const [result] = await conexion.promise().query("UPDATE usuarios SET fotoPerfil = ? WHERE id = ?", [
       fotoUrl,
       userId,
     ]);
     
-    console.log("Resultado de la consulta DB:", result);
+    console.log(`[DB] Consulta exitosa. Filas afectadas: ${result.affectedRows}`);
 
     if (result && result.affectedRows === 0) {
-        console.log("Advertencia: El usuario con ese ID no fue encontrado en la DB.");
-        return res.status(404).json({ success: false, message: "Usuario no encontrado." });
+        console.warn("ADVERTENCIA: UPDATE afectó 0 filas. El usuario podría no existir.");
+        return res.status(404).json({ success: false, message: "Usuario no encontrado o ID incorrecto." });
     }
 
-    console.log("Éxito: Foto del usuario actualizada.");
+    console.log("-> ÉXITO: Foto del usuario actualizada.");
     res.json({ success: true, url: fotoUrl });
   } catch (error) {
-    // Esto mostrará cualquier error que quede, como credenciales incorrectas
-    console.error("--- ERROR FATAL DB /api/uploadUsuario ---");
-    console.error("Detalle del error:", error);
-    console.error("-----------------------------------------");
+    // Si la DB falla (conexión, credenciales, sintaxis)
+    console.error("=================================================");
+    console.error("!!! ERROR CRÍTICO AL PROCESAR /api/uploadUsuario !!!");
+    console.error("Causa del Error:", error.message);
+    console.error("Detalle Completo:", error);
+    console.error("=================================================");
     res.status(500).json({
       success: false,
-      message: "Error interno del servidor al actualizar la base de datos. (Ver logs del backend)",
+      message: "Error interno del servidor. (Ver logs de Render para detalles)",
     });
+  } finally {
+      console.log("-> FIN: Proceso de /api/uploadUsuario");
+      console.log("=================================================");
   }
 });
   
